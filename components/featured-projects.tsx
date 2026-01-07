@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
+import { Magnetic } from "./magnetic"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -164,6 +165,55 @@ export function FeaturedProjects() {
                     </Link>
                 </div>
             ))}
+
+            {/* Final "Explore All" Card - Creative CTA */}
+            <div className="project-card sticky top-0 h-screen flex items-center justify-center p-4 md:p-8 lg:p-12">
+                <div className="relative w-full max-w-7xl h-[85vh] rounded-[2rem] md:rounded-[4rem] border border-primary/20 bg-primary/5 flex flex-col items-center justify-center text-center p-8 md:p-24 group backdrop-blur-3xl">
+                    
+                    {/* Background Decorative Elements */}
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-[inherit]">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] border-2 border-primary/5 rounded-full scale-50 group-hover:scale-100 transition-transform duration-1000" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-primary/10 rounded-full scale-75 group-hover:scale-110 transition-transform duration-1000 delay-100" />
+                    </div>
+
+                    <div className="relative z-10 flex flex-col items-center w-full px-4">
+                        <span className="text-primary text-[10px] md:text-xs uppercase tracking-[0.6em] mb-6 md:mb-10 font-bold opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+                            The Complete Portfolio
+                        </span>
+                        
+                        <h3 className="text-[14vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase mb-16 md:mb-24 mix-blend-difference text-white select-none">
+                            FULL<br/><span className="gradient-text italic">ARCHIVE</span>
+                        </h3>
+
+                        <Magnetic strength={0.4}>
+                            <Link 
+                                href="/projects"
+                                className="relative w-44 h-44 md:w-64 md:h-64 flex items-center justify-center rounded-full bg-primary text-primary-foreground group/btn transition-all duration-700 active:scale-95 overflow-hidden shadow-[0_0_60px_rgba(var(--primary-rgb),0.3)]"
+                                data-cursor-hover
+                            >
+                                {/* Liquid Hover Effect */}
+                                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+                                
+                                <div className="relative z-10 flex flex-col items-center gap-3 md:gap-4 transition-transform duration-500 group-hover/btn:scale-110">
+                                    <ArrowUpRight className="w-10 h-10 md:w-16 md:h-16 stroke-[2.5px]" />
+                                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] pl-1">View Archive</span>
+                                </div>
+                            </Link>
+                        </Magnetic>
+                    </div>
+
+                    {/* Bottom Metadata */}
+                    <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end text-[10px] uppercase tracking-[0.4em] opacity-30 select-none">
+                        <span className="hidden md:block">Ready to Collaborate?</span>
+                        <div className="flex flex-col items-center gap-1">
+                            <span className="text-xs font-black text-primary">026</span>
+                            <span>Salmān</span>
+                        </div>
+                        <span className="hidden md:block">Scroll to Top</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </section>
