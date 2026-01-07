@@ -166,7 +166,7 @@ export function AboutPreview() {
         >
           <div className="image-mask relative aspect-[4/5] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/10 group overflow-hidden">
              <Image 
-                src="/developer-working-at-desk-with-monitors.jpg" 
+                src="/about-portrait.png" 
                 alt="The Craft" 
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
