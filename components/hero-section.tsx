@@ -153,7 +153,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background-rgb),0.8)_100%)] z-0 pointer-events-none" />
 
       {/* Main Content - Diagonal Layout - Centered */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center w-full pointer-events-none mt-20">
+      <div className="relative z-20 flex-1 flex flex-col justify-center w-full pointer-events-none mt-12 mb-16 md:mb-24">
         <h1
           ref={titleRef}
           className="flex flex-col w-full text-[13vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.85] tracking-tighter uppercase mix-blend-difference text-white"
