@@ -14,115 +14,151 @@ export function ThreeScene() {
 
     // Scene setup
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.z = 30
-
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1) // 2D Camera
+    
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
+      powerPreference: "high-performance"
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     containerRef.current.appendChild(renderer.domElement)
 
-    // Create floating particles
-    const particlesGeometry = new THREE.BufferGeometry()
-    const particlesCount = 2000
-    const posArray = new Float32Array(particlesCount * 3)
+    // Shader Material
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uColor1: { value: new THREE.Color("#38bdf8") }, // Cyan
+        uColor2: { value: new THREE.Color("#818cf8") }, // Indigo
+        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        uMouse: { value: new THREE.Vector2(0.5, 0.5) }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3 uColor1;
+        uniform vec3 uColor2;
+        uniform vec2 uResolution;
+        uniform vec2 uMouse;
+        varying vec2 vUv;
 
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 100
-    }
+        // Simplex Noise (Simplified)
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
 
-    particlesGeometry.setAttribute("position", new THREE.BufferAttribute(posArray, 3))
+        float snoise(vec2 v) {
+          const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+                              0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+                             -0.577350269189626,  // -1.0 + 2.0 * C.x
+                              0.024390243902439); // 1.0 / 41.0
+          vec2 i  = floor(v + dot(v, C.yy) );
+          vec2 x0 = v -   i + dot(i, C.xx);
+          vec2 i1;
+          i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+          vec4 x12 = x0.xyxy + C.xxzz;
+          x12.xy -= i1;
+          i = mod289(i);
+          vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+                + i.x + vec3(0.0, i1.x, 1.0 ));
+          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+          m = m*m ;
+          m = m*m ;
+          vec3 x = 2.0 * fract(p * C.www) - 1.0;
+          vec3 h = abs(x) - 0.5;
+          vec3 ox = floor(x + 0.5);
+          vec3 a0 = x - ox;
+          m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+          vec3 g;
+          g.x  = a0.x  * x0.x  + h.x  * x0.y;
+          g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+          return 130.0 * dot(m, g);
+        }
 
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.1,
-      color: new THREE.Color("#38bdf8"),
+        void main() {
+          vec2 uv = vUv;
+          
+          // Mouse Interaction
+          float dist = distance(uv, uMouse);
+          float interaction = 1.0 - smoothstep(0.0, 0.4, dist);
+          
+          // Warp UVs based on mouse
+          vec2 warpedUv = uv - (uv - uMouse) * interaction * 0.1;
+          
+          // Slow moving noise with warp
+          float noise1 = snoise(warpedUv * 1.5 + uTime * 0.1);
+          float noise2 = snoise(warpedUv * 2.5 - uTime * 0.15);
+          
+          // Mix noise
+          float pattern = (noise1 + noise2) * 0.5;
+          
+          // Soft radial glow from center
+          float centerDist = distance(uv, vec2(0.5));
+          float glow = 1.0 - smoothstep(0.0, 1.2, centerDist);
+          
+          // Color Mixing
+          vec3 finalColor = mix(uColor1, uColor2, uv.x + pattern * 0.5);
+          
+          // Alpha mask - only show where pattern is strong
+          // Boost alpha near mouse
+          float alpha = smoothstep(0.2, 0.8, pattern + glow * 0.5) * 0.3; 
+          alpha += interaction * 0.1; // Brighten near mouse
+          
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `,
       transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending,
     })
 
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial)
-    scene.add(particlesMesh)
+    const geometry = new THREE.PlaneGeometry(2, 2)
+    const mesh = new THREE.Mesh(geometry, material)
+    scene.add(mesh)
 
-    // Create floating geometric shapes
-    const shapes: THREE.Mesh[] = []
-    const shapeGeometries = [
-      new THREE.IcosahedronGeometry(1, 0),
-      new THREE.OctahedronGeometry(1, 0),
-      new THREE.TetrahedronGeometry(1, 0),
-    ]
-
-    const shapeMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#38bdf8"),
-      wireframe: true,
-      transparent: true,
-      opacity: 0.3,
-    })
-
-    for (let i = 0; i < 8; i++) {
-      const geometry = shapeGeometries[Math.floor(Math.random() * shapeGeometries.length)]
-      const shape = new THREE.Mesh(geometry, shapeMaterial.clone())
-      shape.position.set((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 30)
-      shape.scale.setScalar(Math.random() * 2 + 1)
-      shapes.push(shape)
-      scene.add(shape)
-    }
-
-    // Mouse movement effect
-    let mouseX = 0
-    let mouseY = 0
+    // Interaction State
     const handleMouseMove = (event: MouseEvent) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1
+        // Update shader uniform directly
+        material.uniforms.uMouse.value.x = event.clientX / window.innerWidth
+        material.uniforms.uMouse.value.y = 1.0 - (event.clientY / window.innerHeight) // Invert Y for shader UVs
     }
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Animation
+    // Animation Loop
     let animationId: number
     const animate = () => {
       animationId = requestAnimationFrame(animate)
-
-      // Rotate particles
-      particlesMesh.rotation.x += 0.0003
-      particlesMesh.rotation.y += 0.0005
-
-      // Animate shapes
-      shapes.forEach((shape, i) => {
-        shape.rotation.x += 0.002 * (i + 1) * 0.5
-        shape.rotation.y += 0.003 * (i + 1) * 0.5
-        shape.position.y += Math.sin(Date.now() * 0.001 + i) * 0.01
-      })
-
-      // Camera follows mouse
-      camera.position.x += (mouseX * 5 - camera.position.x) * 0.02
-      camera.position.y += (mouseY * 5 - camera.position.y) * 0.02
-
+      material.uniforms.uTime.value += 0.005
       renderer.render(scene, camera)
     }
     animate()
 
-    // Handle resize
+    // Handle Resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
+      const width = window.innerWidth
+      const height = window.innerHeight
+      renderer.setSize(width, height)
+      material.uniforms.uResolution.value.set(width, height)
     }
     window.addEventListener("resize", handleResize)
 
     // Cleanup
+    const currentContainer = containerRef.current
     return () => {
       cancelAnimationFrame(animationId)
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
-      containerRef.current?.removeChild(renderer.domElement)
+      if (currentContainer) {
+        currentContainer.removeChild(renderer.domElement)
+      }
       renderer.dispose()
-      particlesGeometry.dispose()
-      particlesMaterial.dispose()
-      shapeMaterial.dispose()
-      shapeGeometries.forEach((g) => g.dispose())
+      geometry.dispose()
+      material.dispose()
     }
   }, [])
 
