@@ -19,17 +19,6 @@ export function AboutPreview() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Immersive Background Transition
-      gsap.to(containerRef.current, {
-        backgroundColor: "#050505",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        }
-      })
-
       // 2. Kinetic Parallax for Floating Background Text
       gsap.to(".bg-token", {
         yPercent: -40,
@@ -104,7 +93,7 @@ export function AboutPreview() {
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-[140vh] py-40 transition-colors duration-1000 overflow-hidden"
+      className="relative min-h-[140vh] py-40 bg-background border-t border-white/5 overflow-hidden"
     >
       {/* Background Kinetic Layer - Large Spectral Tokens */}
       <div className="absolute inset-0 pointer-events-none z-0">

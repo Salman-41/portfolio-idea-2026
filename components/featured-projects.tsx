@@ -92,7 +92,10 @@ export function FeaturedProjects() {
   }, [])
 
   return (
-    <section ref={containerRef} className="relative bg-background pt-20 pb-40">
+    <section 
+      ref={containerRef} 
+      className="relative bg-background pt-20 pb-40 border-t border-white/5"
+    >
         
         {/* Header (Non-sticky, scrolls away) */}
         <div className="container mx-auto px-6 md:px-12 mb-20 text-center">
