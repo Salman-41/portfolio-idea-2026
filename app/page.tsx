@@ -11,11 +11,16 @@ const marqueeItems = [
   "Creative Development",
   "UI/UX Design",
   "Three.js",
-  "WebGL",
   "React",
   "Next.js",
+  "Vue",
+  "Nuxt",
+  "Svelte",
+  "TypeScript",
+  "Tailwind CSS",
   "GSAP Animations",
   "Motion Design",
+  "Framer Motion",
 ]
 
 export default function HomePage() {
@@ -29,7 +34,7 @@ export default function HomePage() {
         <Marquee items={marqueeItems} />
         <FeaturedProjects />
         <AboutPreview />
-        <Marquee items={marqueeItems} direction="right" />
+        <Marquee items={marqueeItems} />
       </main>
       <Footer />
     </SmoothScrollProvider>
