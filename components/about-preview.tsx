@@ -4,119 +4,218 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
+import { Magnetic } from "./magnetic"
+import { cn } from "@/lib/utils"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const stats = [
-  { value: "8+", label: "Years Experience" },
-  { value: "50+", label: "Projects Completed" },
-  { value: "30+", label: "Happy Clients" },
-  { value: "15+", label: "Awards Won" },
-]
-
 export function AboutPreview() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
+  const bgTextRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) return
-
     const ctx = gsap.context(() => {
-      // Content animation
-      gsap.fromTo(
-        contentRef.current?.querySelectorAll(".animate-item") || [],
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: contentRef.current,
-            start: "top 80%",
-          },
-        },
-      )
-
-      // Stats counter animation
-      const statValues = statsRef.current?.querySelectorAll(".stat-value")
-      statValues?.forEach((stat) => {
-        const value = stat.textContent || "0"
-        const numericValue = Number.parseInt(value.replace(/\D/g, ""))
-        const suffix = value.replace(/[0-9]/g, "")
-
-        gsap.fromTo(
-          stat,
-          { textContent: 0 },
-          {
-            textContent: numericValue,
-            duration: 2,
-            ease: "power2.out",
-            snap: { textContent: 1 },
-            scrollTrigger: {
-              trigger: stat,
-              start: "top 90%",
-            },
-            onUpdate: () => {
-              stat.textContent = Math.round(Number.parseFloat(stat.textContent || "0")) + suffix
-            },
-          },
-        )
+      // 1. Immersive Background Transition
+      gsap.to(containerRef.current, {
+        backgroundColor: "#050505",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top center",
+          end: "bottom center",
+          scrub: true,
+        }
       })
-    }, sectionRef)
+
+      // 2. Kinetic Parallax for Floating Background Text
+      gsap.to(".bg-token", {
+        yPercent: -40,
+        rotation: 15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        }
+      })
+
+      // 3. Narrative Layer Parallax (Moves Slower)
+      gsap.to(textRef.current, {
+        y: -100,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5
+        }
+      })
+
+      // 4. Image Layer Parallax & Mask Reveal (Moves Faster)
+      if (imageRef.current) {
+        gsap.to(imageRef.current, {
+          y: -250,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.5
+          }
+        })
+
+        // Mask Reveal
+        gsap.fromTo(".image-mask", 
+          { clipPath: "inset(10% 10% 10% 10% round 2rem)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 1rem)",
+            duration: 1.5,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: imageRef.current,
+              start: "top 80%",
+            }
+          }
+        )
+      }
+
+      // 5. Floating Stats (Rapid Movement)
+      gsap.to(".stat-bubble", {
+        y: -300,
+        stagger: 0.1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.8
+        }
+      })
+
+    }, containerRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-32 md:py-40 relative bg-card/30">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Content */}
-          <div ref={contentRef} className="space-y-8">
-            <span className="animate-item block text-sm uppercase tracking-[0.3em] text-primary">About Me</span>
-            <h2 className="animate-item text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Turning ideas into <span className="gradient-text">immersive</span> digital experiences
-            </h2>
-            <div className="animate-item space-y-4 text-muted-foreground text-lg leading-relaxed">
-              <p>
-                I&apos;m a creative developer passionate about crafting accessible, pixel-perfect user interfaces that
-                blend thoughtful design with robust engineering.
-              </p>
-              <p>
-                My work lies at the intersection of design and development, creating experiences that not only look
-                great but are meticulously built for performance and usability.
-              </p>
-            </div>
-            <Link
-              href="/about"
-              className="animate-item inline-flex items-center gap-2 text-primary font-medium hover:gap-4 transition-all duration-300"
-              data-cursor-hover
-            >
-              <span>Learn More About Me</span>
-              <ArrowUpRight className="w-5 h-5" />
-            </Link>
-          </div>
+    <section 
+      ref={containerRef} 
+      className="relative min-h-[140vh] py-40 transition-colors duration-1000 overflow-hidden"
+    >
+      {/* Background Kinetic Layer - Large Spectral Tokens */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+         <div className="bg-token absolute top-1/4 left-[10%] text-[25vw] font-black text-white/[0.02] select-none leading-none">
+            SY
+         </div>
+         <div className="bg-token absolute bottom-1/4 right-[5%] text-[20vw] font-black text-primary/[0.01] select-none leading-none italic">
+            026
+         </div>
+      </div>
 
-          {/* Stats */}
-          <div ref={statsRef} className="grid grid-cols-2 gap-8">
-            {stats.map((stat, index) => (
-              <div
-                key={stat.label}
-                className="p-8 bg-card border border-border rounded-2xl text-center"
-                style={{ animationDelay: `${index * 0.1}s` }}
+      <div className="container mx-auto px-6 md:px-12 relative h-full">
+        
+        {/* Layer 1: Narrative Block (Middle-Ground) */}
+        <div 
+          ref={textRef}
+          className="relative z-20 max-w-3xl ml-auto lg:mr-20 mt-20"
+        >
+          <div className="flex items-center gap-6 mb-12">
+             <span className="w-16 h-[2px] bg-primary animate-pulse" />
+             <span className="text-xs uppercase tracking-[0.8em] text-primary font-black italic">The Genesis</span>
+          </div>
+          
+          <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase mb-12 mix-blend-difference">
+            WEAVING <span className="text-primary italic">DIGITAL</span><br />
+            FABRICS FROM<br />
+            PURE <span className="gradient-text">LOGIC</span>.
+          </h2>
+
+          <div className="max-w-xl space-y-10">
+            <p className="text-2xl md:text-3xl font-medium text-white/70 leading-[1.1] tracking-tight">
+              I don&apos;t just build websites. I engineer digital ecosystems that pulse with aesthetic intent and technical precision.
+            </p>
+            
+            <p className="text-lg text-white/40 leading-relaxed max-w-md">
+              Bridging the gap between clinical engineering and raw visual emotion. Every line of code is a brushstroke; every interaction is a moment of truth.
+            </p>
+
+            <Magnetic strength={0.25}>
+              <Link
+                href="/about"
+                className="group inline-flex items-center gap-6 text-sm font-black uppercase tracking-[0.5em] text-primary"
+                data-cursor-hover
               >
-                <div className="stat-value text-5xl md:text-6xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-sm uppercase tracking-widest text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+                <div className="relative overflow-hidden w-16 h-16 rounded-full border-2 border-primary/30 flex items-center justify-center transition-all duration-700 group-hover:border-primary group-hover:bg-primary">
+                  <ArrowUpRight className="w-6 h-6 text-primary group-hover:text-black transition-all duration-500" />
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+                </div>
+                <span className="border-b border-primary/20 group-hover:border-primary transition-colors pb-1">Our Manifest</span>
+              </Link>
+            </Magnetic>
           </div>
         </div>
+
+        {/* Layer 2: Visual Collage (Foreground) */}
+        <div 
+          ref={imageRef}
+          className="absolute top-[10%] left-[5%] w-full max-w-sm lg:max-w-md z-30"
+        >
+          <div className="image-mask relative aspect-[4/5] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/10 group overflow-hidden">
+             <Image 
+                src="/developer-working-at-desk-with-monitors.jpg" 
+                alt="The Craft" 
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+             <div className="absolute inset-0 bg-primary/20 mix-blend-color opacity-30 z-10" />
+             
+             <div className="absolute bottom-8 left-8 z-20">
+                <span className="text-[10px] uppercase tracking-[0.6em] text-primary font-bold block mb-2">Process v4.0</span>
+                <span className="text-xl font-black text-white tracking-tighter uppercase italic leading-none">Aesthetic<br />Precision</span>
+             </div>
+          </div>
+
+          {/* Floating Micro-UI Component */}
+          <div className="absolute -right-12 -bottom-12 w-48 p-6 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-2xl z-40 hidden md:block">
+             <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                   <div className="w-2 h-2 rounded-full bg-primary" />
+                   <span className="text-[8px] uppercase tracking-widest text-white/40">Status: Active</span>
+                </div>
+                <div className="h-[1px] bg-white/10" />
+                <p className="text-[10px] text-white/60 font-mono tracking-tight leading-relaxed">
+                   Engineering immersive layouts with kinetic energy and spatial awareness.
+                </p>
+             </div>
+          </div>
+        </div>
+
+        {/* Layer 3: Kinetic Stats Bubbles (Fast-Moving Foreground) */}
+        <div className="absolute right-[5%] top-[20%] space-y-24 z-40">
+           <div className="stat-bubble flex flex-col items-end">
+              <span className="text-8xl font-black tracking-tighter text-white/90 leading-none">08</span>
+              <span className="text-[10px] uppercase tracking-[0.5em] text-primary font-bold mt-2">Years on Planet</span>
+           </div>
+           
+           <div className="stat-bubble flex flex-col items-end opacity-60">
+              <span className="text-7xl font-black tracking-tighter text-white/90 leading-none">50+</span>
+              <span className="text-[10px] uppercase tracking-[0.5em] text-white/30 font-bold mt-2">Visions Refined</span>
+           </div>
+
+           <div className="stat-bubble flex flex-col items-end">
+              <span className="text-9xl font-black tracking-tighter text-white appearance-none select-none opacity-20">AWD</span>
+           </div>
+        </div>
+
       </div>
+
+      {/* Aesthetic Film Grain Overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.05] contrast-150 brightness-150 mix-blend-overlay z-[100]" style={{ backgroundImage: "url('/noise.png')" }} />
     </section>
   )
 }
