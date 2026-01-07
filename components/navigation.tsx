@@ -133,9 +133,6 @@ export function Navigation() {
                   "absolute inset-0 flex items-center justify-end transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
                   isScrolled ? "opacity-100 scale-100 translate-x-0" : "opacity-0 scale-75 translate-x-12 pointer-events-none"
                )}>
-                 <span className="mr-8 text-[10px] font-bold uppercase tracking-widest opacity-60">
-                   Menu
-                 </span>
 
                  <Magnetic strength={0.4}>
                    <button
@@ -174,36 +171,47 @@ export function Navigation() {
       <div
         ref={menuRef}
         className={cn(
-          "fixed inset-0 z-40 bg-[#0C0C0C] flex flex-col items-center justify-center p-12 lg:p-24",
+          "fixed inset-0 z-40 bg-[#0C0C0C] flex flex-col items-center justify-center p-6 md:p-12 lg:p-24",
           isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
         style={{ clipPath: "circle(0% at calc(100% - 4rem) 4rem)" }}
       >
-        <div ref={menuLinksRef} className="flex flex-col items-center justify-center gap-8 md:gap-12 z-10 w-full relative">
+        <div ref={menuLinksRef} className="flex flex-col items-start gap-4 md:gap-8 z-10 w-full max-w-5xl relative">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
               className={cn(
-                "group relative text-5xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-500 transform-gpu",
+                "group relative text-[15vw] md:text-[8vw] font-black uppercase tracking-[-0.05em] leading-[0.8] transition-all duration-700 transform-gpu hover:italic",
                 pathname === link.href ? "text-primary" : "text-white hover:text-primary",
               )}
             >
-              <span className="relative z-10">{link.label}</span>
-              <span className="absolute -left-12 top-1/2 -translate-y-1/2 text-xl font-bold opacity-0 group-hover:opacity-100 group-hover:-translate-x-4 transition-all duration-500 text-primary">
-                0{navLinks.indexOf(link) + 1}
-              </span>
+              <div className="flex items-start gap-4">
+                <span className="text-xs md:text-sm font-bold tracking-widest text-primary/60 mt-4 md:mt-8">
+                  0{navLinks.indexOf(link) + 1}
+                </span>
+                <span className="relative z-10">{link.label}</span>
+              </div>
             </Link>
           ))}
           
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white hover:text-primary transition-all duration-500 transform-gpu group border-t border-white/5 pt-12 mt-4 w-full text-center"
+            className="group flex flex-col gap-4 mt-8 md:mt-16 border-t border-white/10 pt-8 md:pt-16 w-full"
           >
-            Let's Talk
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] text-white/30">Get in touch</span>
+            <div className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white hover:text-primary transition-all duration-500 inline-block w-fit group-hover:translate-x-4">
+              Let's Talk <span className="text-primary italic">—</span>
+            </div>
           </Link>
+        </div>
+
+        {/* Menu Footer Decor */}
+        <div className="absolute bottom-12 left-12 right-12 hidden md:flex justify-between items-end text-[10px] uppercase tracking-[0.4em] opacity-20 select-none">
+          <span>@devousufzai • {new Date().getFullYear()}</span>
+          <span>Based in Pakistan</span>
         </div>
       </div>
     </>
