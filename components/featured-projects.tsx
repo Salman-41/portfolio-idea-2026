@@ -71,15 +71,16 @@ export function FeaturedProjects() {
             const nextCard = cards[index + 1]
             if (!nextCard) return
 
-            // 3D Stack Effect
-            // As the next card scrolls up, the current card scales down and dims
+            // "Ghostly Blur" Exit Transition
+            // As the next card scrolls up, the current one blurs, fades, and drifts
             gsap.to(card, {
-                scale: 0.8,
-                filter: "brightness(0.5)",
+                opacity: 0.3,
+                filter: "blur(12px)",
+                y: -30,
                 scrollTrigger: {
                     trigger: nextCard,
-                    start: "top bottom", // When next card hits bottom of viewport
-                    end: "top top",      // When next card hits top of viewport
+                    start: "top bottom", // Starts when next card peaks at bottom
+                    end: "top top",      // Ends when next card hits the top
                     scrub: true,
                 }
             })
