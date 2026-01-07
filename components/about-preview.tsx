@@ -85,6 +85,17 @@ export function AboutPreview() {
         }
       })
 
+      // 6. Atmospheric Glow Animation
+      gsap.to(".bg-glow-blob", {
+        x: "random(-100, 100)",
+        y: "random(-100, 100)",
+        duration: "random(10, 20)",
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: 2
+      })
+
     }, containerRef)
 
     return () => ctx.revert()
@@ -95,12 +106,17 @@ export function AboutPreview() {
       ref={containerRef} 
       className="relative min-h-[140vh] py-40 bg-background border-t border-white/5 overflow-hidden"
     >
-      {/* Background Kinetic Layer - Large Spectral Tokens */}
+      {/* Background Kinetic Layer - Spectral Tokens & Atmospheric Glows */}
       <div className="absolute inset-0 pointer-events-none z-0">
-         <div className="bg-token absolute top-1/4 left-[10%] text-[25vw] font-black text-white/[0.02] select-none leading-none">
+         {/* Atmospheric Color Blobs */}
+         <div className="bg-glow-blob absolute top-[20%] left-[15%] w-[40vw] h-[40vw] bg-primary/10 rounded-full blur-[120px] mix-blend-screen opacity-50" />
+         <div className="bg-glow-blob absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] bg-blue-500/10 rounded-full blur-[100px] mix-blend-screen opacity-40" />
+         <div className="bg-glow-blob absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-primary/5 rounded-full blur-[150px] mix-blend-overlay" />
+
+         <div className="bg-token absolute top-1/4 left-[10%] text-[25vw] font-black text-primary/[0.04] select-none leading-none blur-sm">
             SY
          </div>
-         <div className="bg-token absolute bottom-1/4 right-[5%] text-[20vw] font-black text-primary/[0.01] select-none leading-none italic">
+         <div className="bg-token absolute bottom-1/4 right-[5%] text-[20vw] font-black text-primary/[0.03] select-none leading-none italic blur-[2px]">
             026
          </div>
       </div>
