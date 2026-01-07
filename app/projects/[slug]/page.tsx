@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/navigation"
+import Navigation from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CustomCursor } from "@/components/custom-cursor"
 import { SmoothScrollProvider } from "@/components/smooth-scroll-provider"

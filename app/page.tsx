@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/navigation"
+import Navigation from "@/components/navigation"
 import { HeroSection } from "@/components/hero-section"
 import { FeaturedProjects } from "@/components/featured-projects"
 import { AboutPreview } from "@/components/about-preview"
