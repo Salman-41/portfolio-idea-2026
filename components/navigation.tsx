@@ -33,25 +33,28 @@ export function Navigation() {
     const nav = navRef.current
     if (!nav) return
 
-    gsap.fromTo(nav, { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.5 })
+    gsap.fromTo(nav, { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.5 })
   }, [])
 
   useEffect(() => {
+    // Coordinate for the burger button visual center
+    const circleOrigin = "calc(100% - 4rem) 4rem"
+
     if (isMenuOpen) {
       gsap.to(menuRef.current, {
-        clipPath: "circle(150% at calc(100% - 3rem) 3rem)",
-        duration: 1,
+        clipPath: `circle(150% at ${circleOrigin})`,
+        duration: 1.2,
         ease: "power4.inOut",
       })
       gsap.fromTo(
         menuLinksRef.current?.children || [],
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, delay: 0.3, ease: "power3.out" },
+        { y: 120, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.08, delay: 0.4, ease: "power4.out" },
       )
     } else {
       gsap.to(menuRef.current, {
-        clipPath: "circle(0% at calc(100% - 3rem) 3rem)",
-        duration: 0.8,
+        clipPath: `circle(0% at ${circleOrigin})`,
+        duration: 0.9,
         ease: "power4.inOut",
       })
     }
@@ -59,107 +62,127 @@ export function Navigation() {
 
   return (
     <>
-      <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 lg:px-20 transition-all duration-300">
-        <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-12">
+      <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 lg:px-20 transition-all duration-500">
+        <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-14">
           
-          {/* Logo - Fixed Position */}
-          <Link href="/" className="relative z-50 group shrink-0" data-cursor-hover>
-            <span className="text-xl md:text-2xl font-black tracking-tight text-white mix-blend-difference">
+          {/* Logo - Fixed Left */}
+          <Link href="/" className="absolute left-0 z-50 group shrink-0 mix-blend-difference" data-cursor-hover>
+            <span className="text-xl md:text-2xl font-bold tracking-tight text-white">
               Salman<span className="text-primary">.</span>yz
             </span>
           </Link>
 
-          {/* Navigation Container - Stable Right Side */}
-          <div className="relative flex items-center justify-end h-full">
+          {/* Navigation Engine */}
+          <div className="flex items-center gap-10 relative flex-1 justify-end h-full">
             
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Fades out neutrally */}
             <div className={cn(
-               "hidden md:flex items-center gap-8 transition-all duration-700 ease-in-out transform-gpu",
+               "hidden md:flex items-center gap-10 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
                isScrolled 
-                ? "opacity-0 translate-x-8 pointer-events-none blur-sm scale-95" 
-                : "opacity-100 translate-x-0 scale-100 blur-0"
+                ? "opacity-0 -translate-x-8 blur-md pointer-events-none" 
+                : "opacity-100 translate-x-0 blur-0"
             )}>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative text-sm uppercase font-medium tracking-[0.2em] transition-colors duration-300",
-                    pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                    "relative text-sm uppercase font-medium tracking-widest transition-all duration-300 hover:text-primary",
+                    pathname === link.href ? "text-primary" : "text-muted-foreground/80 hover:text-white",
                   )}
                   data-cursor-hover
                 >
                   {link.label}
                 </Link>
               ))}
-              
-              <Link
+            </div>
+
+            {/* Spatial Swap Action Slot - Button <-> Burger */}
+            <div className="relative flex items-center justify-end min-w-[120px] h-12">
+               
+               {/* "Let's Talk" Button - Visible at Top */}
+               <Link
                 href="/contact"
-                className="ml-4 px-6 py-2 text-xs uppercase tracking-[0.2em] font-bold border border-primary/30 text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-500 rounded-full"
+                className={cn(
+                  "hidden md:flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-700 rounded-full whitespace-nowrap transform-gpu",
+                  isScrolled ? "opacity-0 translate-x-8 pointer-events-none scale-90" : "opacity-100 translate-x-0 scale-100"
+                )}
                 data-cursor-hover
               >
                 Let's Talk
               </Link>
-            </div>
 
-            {/* Mobile/Burger Button - Coordinated Fade-in */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={cn(
-                 "relative z-50 w-12 h-12 flex flex-col items-center justify-center gap-1.5 transition-all duration-700 ease-out rounded-full hover:bg-white/10 transform-gpu",
-                 isScrolled 
-                  ? "opacity-100 scale-100 rotate-0 translate-x-0" 
-                  : "md:opacity-0 md:scale-50 md:-rotate-45 md:pointer-events-none translate-x-12"
-              )}
-              aria-label="Toggle menu"
-              data-cursor-hover
-            >
-              <span
-                className={cn(
-                  "w-6 h-0.5 bg-white transition-all duration-300 mix-blend-difference",
-                  isMenuOpen && "rotate-45 translate-y-2",
-                )}
-              />
-              <span className={cn("w-6 h-0.5 bg-white transition-all duration-300 mix-blend-difference", isMenuOpen && "opacity-0")} />
-              <span
-                className={cn(
-                  "w-6 h-0.5 bg-white transition-all duration-300 mix-blend-difference",
-                  isMenuOpen && "-rotate-45 -translate-y-2",
-                )}
-              />
-            </button>
+               {/* Burger Container - Visible on Scroll */}
+               <div className={cn(
+                  "absolute inset-0 flex items-center justify-end transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
+                  isScrolled ? "opacity-100 scale-100 translate-x-0" : "opacity-0 scale-75 translate-x-12 pointer-events-none"
+               )}>
+                 <span className="mr-4 text-[10px] font-bold uppercase tracking-widest">
+                   Menu
+                 </span>
+
+                 <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="relative z-50 w-12 h-12 flex flex-col items-end justify-center gap-1.5 group rounded-full hover:bg-white/5 transition-all duration-300 transform-gpu"
+                  aria-label="Toggle menu"
+                  data-cursor-hover
+                >
+                  <span
+                    className={cn(
+                      "h-[2px] bg-white transition-all duration-500 rounded-full",
+                      isMenuOpen ? "w-7 rotate-45 translate-y-[8px]" : "w-7 group-hover:w-5",
+                    )}
+                  />
+                  <span className={cn(
+                    "h-[2px] bg-white transition-all duration-500 rounded-full", 
+                    isMenuOpen ? "opacity-0" : "w-4 group-hover:w-7"
+                  )} />
+                  <span
+                    className={cn(
+                      "h-[2px] bg-white transition-all duration-500 rounded-full",
+                      isMenuOpen ? "w-7 -rotate-45 -translate-y-[8px]" : "w-6 group-hover:w-4",
+                    )}
+                  />
+                </button>
+              </div>
+
+            </div>
           </div>
 
         </div>
       </nav>
 
-      {/* Full Screen Menu Overlay */}
+      {/* Cinematic Full Screen Menu */}
       <div
         ref={menuRef}
         className={cn(
-          "fixed inset-0 z-40 bg-background flex flex-col items-center justify-center",
+          "fixed inset-0 z-40 bg-[#0C0C0C] flex flex-col items-center justify-center p-12 lg:p-24",
           isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
-        style={{ clipPath: "circle(0% at calc(100% - 3rem) 3rem)" }}
+        style={{ clipPath: "circle(0% at calc(100% - 4rem) 4rem)" }}
       >
-        <div ref={menuLinksRef} className="flex flex-col items-center justify-center gap-10">
+        <div ref={menuLinksRef} className="flex flex-col items-center justify-center gap-8 md:gap-12 z-10 w-full relative">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
               className={cn(
-                "text-5xl md:text-7xl font-black uppercase tracking-tighter transition-all duration-500 hover:text-primary transform-gpu hover:scale-110",
+                "group relative text-5xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-500 transform-gpu",
                 pathname === link.href ? "text-primary" : "text-white hover:text-primary",
               )}
             >
-              {link.label}
+              <span className="relative z-10">{link.label}</span>
+              <span className="absolute -left-12 top-1/2 -translate-y-1/2 text-xl font-bold opacity-0 group-hover:opacity-100 group-hover:-translate-x-4 transition-all duration-500 text-primary">
+                0{navLinks.indexOf(link) + 1}
+              </span>
             </Link>
           ))}
+          
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="text-5xl md:text-7xl font-black uppercase tracking-tighter transition-all duration-500 text-white hover:text-primary mt-6 transform-gpu hover:scale-110"
+            className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white hover:text-primary transition-all duration-500 transform-gpu group border-t border-white/5 pt-12 mt-4 w-full text-center"
           >
             Let's Talk
           </Link>
@@ -168,4 +191,3 @@ export function Navigation() {
     </>
   )
 }
-
