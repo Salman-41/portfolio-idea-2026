@@ -28,7 +28,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <SmoothScrollProvider>
       <CustomCursor />
-      <div className="noise-overlay" />
       <Navigation />
       <main>
         <ProjectDetail slug={slug} />

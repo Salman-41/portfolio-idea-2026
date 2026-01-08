@@ -15,7 +15,6 @@ export default function ContactPage() {
   return (
     <SmoothScrollProvider>
       <CustomCursor />
-      <div className="noise-overlay" />
       <Navigation />
       <main className="bg-background min-h-screen">
         <ContactHero />

@@ -33,7 +33,6 @@ export default function HomePage() {
   return (
     <SmoothScrollProvider>
       <CustomCursor />
-      <div className="noise-overlay" />
       <Navigation />
       <main>
         <HeroSection />
