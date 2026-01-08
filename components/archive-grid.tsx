@@ -34,13 +34,13 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
       gsap.to(cursorRef.current, {
         x: e.clientX,
         y: e.clientY,
-        duration: 0.5,
+        duration: 0.8, // Increased weight
         ease: "power3.out"
       })
       gsap.to(cursorLabelRef.current, {
         x: e.clientX,
         y: e.clientY,
-        duration: 0.45,
+        duration: 0.7,
         ease: "power3.out"
       })
     }
@@ -77,6 +77,27 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
       gsap.to(cursorLabelRef.current, { scale: 0, opacity: 0, duration: 0.5, ease: "expo.out" })
     }
   }, [activeProject])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const el = e.currentTarget
+    const title = el.querySelector(".project-title") as HTMLElement
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    
+    gsap.to(title, {
+        x: x * 0.1, // Magnetic strength
+        y: y * 0.1,
+        duration: 0.5,
+        ease: "power3.out"
+    })
+  }
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setActiveProject(null)
+    const title = e.currentTarget.querySelector(".project-title") as HTMLElement
+    gsap.to(title, { x: 0, y: 0, duration: 0.5, ease: "power3.out" })
+  }
 
   return (
     <section ref={containerRef} className="pb-32 px-6 md:px-12 min-h-screen relative bg-background">
@@ -124,14 +145,15 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
                href={project.href}
                className="project-row group grid grid-cols-1 md:grid-cols-12 gap-4 py-8 md:py-12 border-b border-white/5 items-center hover:bg-white/[0.02] transition-colors duration-300"
                onMouseEnter={() => setActiveProject(project.id)}
-               onMouseLeave={() => setActiveProject(null)}
+               onMouseLeave={handleMouseLeave}
+               onMouseMove={handleMouseMove}
              >
                 <div className="hidden md:block col-span-1 text-xs font-mono text-muted-foreground/40">
                    {index < 9 ? `0${index + 1}` : index + 1}
                 </div>
                 
                 <div className="col-span-1 md:col-span-5">
-                   <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-white group-hover:text-primary transition-colors duration-300 group-hover:translate-x-4 transition-transform ease-out">
+                   <h3 className="project-title text-3xl md:text-5xl font-bold tracking-tight text-white group-hover:text-primary transition-colors duration-300 inline-block">
                      {project.title}
                    </h3>
                 </div>

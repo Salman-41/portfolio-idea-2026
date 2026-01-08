@@ -37,14 +37,40 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         ease: "power3.out"
       })
 
+      // Counter Animation
+      const counterObj = { value: 0 }
+      const counterEl = document.getElementById("project-counter")
+      if (counterEl) {
+        gsap.to(counterObj, {
+            value: totalProjects,
+            duration: 2.5,
+            ease: "expo.out",
+            onUpdate: () => {
+                counterEl.textContent = Math.floor(counterObj.value).toString().padStart(2, '0')
+            }
+        })
+      }
+
+      // Scroll Focus Effect (Fade out hero)
+      gsap.to(".hero-content", {
+        opacity: 0,
+        y: -50,
+        scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        }
+      })
+
     }, containerRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [totalProjects])
 
   return (
     <section ref={containerRef} className="relative pt-40 pb-20 md:pt-52 md:pb-32 px-6 md:px-12 grid-bg border-b border-white/5">
-      <div className="container mx-auto">
+      <div className="container mx-auto hero-content">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 md:mb-32">
            {/* Kinetic Header */}
            <div className="relative overflow-hidden perspective-[1000px]">
@@ -59,8 +85,8 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
 
            {/* Data Counter */}
            <div className="flex flex-col items-end gap-2 mt-8 md:mt-0 opacity-60 mix-blend-difference">
-              <span className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter text-white">
-                {totalProjects < 10 ? `0${totalProjects}` : totalProjects}
+              <span id="project-counter" className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter text-white">
+                00
               </span>
               <span className="text-xs uppercase tracking-[0.3em] text-white">Total Cases</span>
            </div>
