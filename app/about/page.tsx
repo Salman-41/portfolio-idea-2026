@@ -1,35 +1,33 @@
+"use client"
+
 import Navigation from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CustomCursor } from "@/components/custom-cursor"
 import { SmoothScrollProvider } from "@/components/smooth-scroll-provider"
-import { AboutHero } from "@/components/about-hero"
-import { AboutBio } from "@/components/about-bio"
-import { ExperienceTimeline } from "@/components/experience-timeline"
-import { SkillsSection } from "@/components/skills-section"
+import { IdentityHero } from "@/components/identity-hero"
+import { NarrativeBio } from "@/components/narrative-bio"
+import { PhilosophyGrid } from "@/components/philosophy-grid"
+import { CinematicExperience } from "@/components/cinematic-experience"
 import { Marquee } from "@/components/marquee"
-import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "About | Alex Chen - Creative Developer",
-  description:
-    "Learn about my journey as a creative developer, my experience, skills, and the philosophy behind my work.",
-}
-
-const marqueeItems = ["Problem Solver", "Creative Thinker", "Detail Oriented", "Team Player", "Always Learning"]
+const marqueeItems = ["Creative Developer", "UI/UX Designer", "Motion Enthusiast", "System Architect", "Available for Work"]
 
 export default function AboutPage() {
   return (
     <SmoothScrollProvider>
       <CustomCursor />
-      <div className="noise-overlay" />
       <Navigation />
-      <main>
-        <AboutHero />
-        <AboutBio />
-        <Marquee items={marqueeItems} />
-        <ExperienceTimeline />
-        <SkillsSection />
+      
+      <main className="min-h-screen bg-background text-foreground">
+        <IdentityHero />
+        <NarrativeBio />
+        <CinematicExperience />
+        <PhilosophyGrid />
+        <div className="py-20">
+           <Marquee items={marqueeItems} direction="left" speed={0.4} />
+        </div>
       </main>
+
       <Footer />
     </SmoothScrollProvider>
   )
