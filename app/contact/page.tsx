@@ -7,8 +7,8 @@ import { CinematicContact } from "@/components/cinematic-contact"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Contact | Alex Chen - Creative Developer",
-  description: "Get in touch to discuss your next project. I'm always open to new opportunities and collaborations.",
+  title: "Contact | Salman Yousufzai - Creative Developer",
+  description: "Get in touch with Salman Yousufzai to discuss your next creative or technical project. Based in Swat, Pakistan, available for global collaborations.",
 }
 
 export default function ContactPage() {

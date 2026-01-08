@@ -65,7 +65,7 @@ export function AboutBio() {
               </p>
             </div>
             <Link
-              href="/alex-chen-resume.pdf"
+              href="/salman-yousufzai-resume.pdf"
               className="animate-item inline-flex items-center gap-3 px-6 py-3 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
               data-cursor-hover
             >
@@ -79,11 +79,11 @@ export function AboutBio() {
             <h3 className="animate-item text-sm uppercase tracking-widest text-muted-foreground">Quick Facts</h3>
             <div className="animate-item grid gap-6">
               {[
-                { label: "Location", value: "San Francisco, CA" },
+                { label: "Location", value: "Swat, Pakistan" },
                 { label: "Experience", value: "8+ Years" },
                 { label: "Specialization", value: "Frontend & Creative Development" },
-                { label: "Education", value: "B.S. Computer Science, Stanford" },
-                { label: "Languages", value: "English, Mandarin, Spanish" },
+                { label: "Education", value: "Computer Science" },
+                { label: "Languages", value: "English, Pashto, Urdu" },
                 { label: "Interests", value: "Climbing, Reading, Gaming" },
               ].map((fact) => (
                 <div key={fact.label} className="flex justify-between items-center py-4 border-b border-border">

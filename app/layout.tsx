@@ -15,25 +15,36 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Alex Chen | Creative Developer & Designer",
+  title: "Salman Yousufzai | Creative Developer & Designer",
   description:
-    "Award-winning creative developer specializing in immersive web experiences, 3D animations, and cutting-edge digital products.",
-  keywords: ["developer", "designer", "portfolio", "creative", "web development", "three.js", "react"],
-  authors: [{ name: "Alex Chen" }],
-  creator: "Alex Chen",
+    "Salman Yousufzai is a creative developer and designer based in Swat, Pakistan, specializing in immersive web experiences, 3D animations, and cutting-edge digital products.",
+  keywords: [
+    "Salman Yousufzai", 
+    "Creative Developer", 
+    "Designer", 
+    "Swat", 
+    "Pakistan", 
+    "Portfolio", 
+    "Three.js", 
+    "WebGL", 
+    "React Developer", 
+    "Motion Design"
+  ],
+  authors: [{ name: "Salman Yousufzai" }],
+  creator: "Salman Yousufzai",
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "Alex Chen | Creative Developer & Designer",
-    description: "Award-winning creative developer specializing in immersive web experiences.",
-    siteName: "Alex Chen Portfolio",
+    title: "Salman Yousufzai | Creative Developer & Designer",
+    description: "Creative developer specializing in immersive web experiences and 3D animations.",
+    siteName: "Salman Yousufzai Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Alex Chen | Creative Developer & Designer",
-    description: "Award-winning creative developer specializing in immersive web experiences.",
+    title: "Salman Yousufzai | Creative Developer & Designer",
+    description: "Creative developer specializing in immersive web experiences and 3D animations.",
   },
-    generator: 'v0.app'
+  generator: 'next.js'
 }
 
 export const viewport: Viewport = {

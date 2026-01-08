@@ -11,13 +11,13 @@ const contactDetails = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@alexchen.dev",
-    href: "mailto:hello@alexchen.dev",
+    value: "hello@salman.dev",
+    href: "mailto:hello@salman.dev",
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "San Francisco, CA",
+    value: "Swat, Pakistan",
     href: null,
   },
   {

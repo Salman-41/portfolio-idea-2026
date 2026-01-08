@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     .join(" ")
 
   return {
-    title: `${title} | Alex Chen - Projects`,
-    description: `Explore the ${title} project - a showcase of creative development and immersive design.`,
+    title: `${title} | Salman Yousufzai - Projects`,
+    description: `Detailed look into ${title}, a project by Salman Yousufzai showcasing creative development and design expertise in Swat, Pakistan.`,
   }
 }
 

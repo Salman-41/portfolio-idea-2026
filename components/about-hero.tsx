@@ -9,7 +9,7 @@ const socialLinks = [
   { icon: Github, href: "https://github.com", label: "GitHub" },
   { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Mail, href: "mailto:hello@alexchen.dev", label: "Email" },
+  { icon: Mail, href: "mailto:hello@salman.dev", label: "Email" },
 ]
 
 export function AboutHero() {
@@ -50,7 +50,7 @@ export function AboutHero() {
             <div className="aspect-[4/5] relative rounded-2xl overflow-hidden">
               <Image
                 src="/professional-developer-portrait-dark-aesthetic.jpg"
-                alt="Alex Chen - Creative Developer"
+                alt="Salman Yousufzai - Creative Developer"
                 fill
                 className="object-cover"
                 priority
@@ -68,13 +68,13 @@ export function AboutHero() {
               About Me
             </span>
             <h1 className="animate-item text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
-              Alex Chen
+              Salman Yousufzai
             </h1>
             <p className="animate-item text-xl md:text-2xl text-primary font-medium mb-6">
               Creative Developer & Designer
             </p>
             <p className="animate-item text-lg text-muted-foreground leading-relaxed mb-8">
-              I build accessible, pixel-perfect digital experiences for the web. Currently based in San Francisco,
+              I build accessible, pixel-perfect digital experiences for the web. Currently based in Swat, Pakistan,
               working with clients worldwide to bring their visions to life.
             </p>
 

@@ -7,6 +7,12 @@ import { GraphicServices } from "@/components/graphic-services"
 import { KineticProcess } from "@/components/kinetic-process"
 import { Marquee } from "@/components/marquee"
 import { TestimonialsSection } from "@/components/testimonials-section"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Services | Salman Yousufzai - Creative Solutions",
+  description: "Discover the range of creative and technical services offered by Salman Yousufzai, including WebGL, Three.js, and high-end frontend development.",
+}
 
 const marqueeItems = ["Web Development", "Creative Coding", "UI/UX Design", "Consulting", "3D & WebGL"]
 

@@ -176,7 +176,7 @@ export function HeroSection() {
         {/* Floating Metadata - Right Side above ARTISTRY */}
         <div className="absolute right-[5vw] top-[55%] md:top-[50%] -translate-y-full flex flex-col gap-1 items-end text-right pointer-events-auto mix-blend-difference text-white">
             <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">Creative Developer</span>
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] opacity-70">San Francisco, CA</span>
+            <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] opacity-70">Swat, Pakistan</span>
         </div>
       </div>
 

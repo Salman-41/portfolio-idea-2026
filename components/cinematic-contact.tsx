@@ -84,7 +84,7 @@ export function CinematicContact() {
               </div>
               <div>
                 <span className="block text-sm text-muted-foreground uppercase tracking-widest mb-1">Email Me</span>
-                <span className="text-2xl md:text-3xl font-medium text-white break-all">hello@alexchen.dev</span>
+                <span className="text-2xl md:text-3xl font-medium text-white break-all">hello@salman.dev</span>
               </div>
             </div>
             
@@ -94,7 +94,7 @@ export function CinematicContact() {
               </div>
               <div>
                 <span className="block text-sm text-muted-foreground uppercase tracking-widest mb-1">Base</span>
-                <span className="text-2xl md:text-3xl font-medium text-white">San Francisco, CA</span>
+                <span className="text-2xl md:text-3xl font-medium text-white">Swat, Pakistan</span>
               </div>
             </div>
           </div>
