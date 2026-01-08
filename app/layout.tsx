@@ -54,6 +54,7 @@ export const viewport: Viewport = {
 }
 
 import { PageTransitionOverlay } from "@/components/page-transition-overlay"
+import { Preloader } from "@/components/preloader"
 
 export default function RootLayout({
   children,
@@ -63,6 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <body className="font-sans antialiased overflow-x-hidden">
+        <Preloader />
         <PageTransitionOverlay />
         {children}
         <Analytics />
