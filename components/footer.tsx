@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
+import { TransitionLink } from "./transition-link"
 import { ArrowUp, Github, Linkedin, Twitter } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -80,9 +81,9 @@ export function Footer() {
 
           {/* Right: Logo + Back to Top */}
           <div className="animate-item flex items-center gap-6">
-            <Link href="/" className="text-xl font-bold tracking-tight">
+            <TransitionLink href="/" className="text-xl font-bold tracking-tight">
               Salman<span className="text-primary">.</span>yz
-            </Link>
+            </TransitionLink>
             <button 
               onClick={scrollToTop}
               className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors group"

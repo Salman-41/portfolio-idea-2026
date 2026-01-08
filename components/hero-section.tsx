@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
+import { TransitionLink } from "./transition-link"
 import { ArrowDown } from "lucide-react"
 import { ThreeScene } from "./three-scene"
 
@@ -233,21 +234,21 @@ export function HeroSection() {
          {/* Bottom Right Group: CTAs */}
          <div className="flex flex-col gap-6 items-end text-right pointer-events-auto">
             <div ref={ctaRef} className="flex flex-row gap-4 items-center justify-end">
-               <Link
+               <TransitionLink
                  href="/projects"
                  className="group relative px-6 py-3 bg-background/5 backdrop-blur-sm border border-white/10 text-white font-medium rounded-full overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary mix-blend-difference"
                  data-cursor-hover
                >
                  <span className="relative z-10 text-xs uppercase tracking-widest transition-colors">View Projects</span>
-               </Link>
+               </TransitionLink>
                
-               <Link
+               <TransitionLink
                  href="/contact"
                  className="group relative w-12 h-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]"
                  data-cursor-hover
                >
                   <ArrowDown className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-               </Link>
+               </TransitionLink>
              </div>
          </div>
       </div>

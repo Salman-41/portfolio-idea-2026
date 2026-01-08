@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
+import { TransitionLink } from "./transition-link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
 import { Magnetic } from "./magnetic"
@@ -112,7 +113,7 @@ export function FeaturedProjects() {
                     className="project-card sticky top-0 h-screen flex items-center justify-center p-4 md:p-8"
                 >
                     {/* Card Container */}
-                    <Link 
+                    <TransitionLink 
                         href={project.href}
                         className="relative w-full max-w-6xl h-[80vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group"
                         style={{ backgroundColor: project.color }}
@@ -165,7 +166,7 @@ export function FeaturedProjects() {
                             </div>
 
                         </div>
-                    </Link>
+                    </TransitionLink>
                 </div>
             ))}
 
@@ -190,7 +191,7 @@ export function FeaturedProjects() {
                         </h3>
 
                         <Magnetic strength={0.4}>
-                            <Link 
+                            <TransitionLink 
                                 href="/projects"
                                 className="relative w-44 h-44 md:w-64 md:h-64 flex items-center justify-center rounded-full bg-primary text-primary-foreground group/btn transition-all duration-700 active:scale-95 overflow-hidden shadow-[0_0_60px_rgba(var(--primary-rgb),0.3)]"
                                 data-cursor-hover
@@ -202,7 +203,7 @@ export function FeaturedProjects() {
                                     <ArrowUpRight className="w-10 h-10 md:w-16 md:h-16 stroke-[2.5px]" />
                                     <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] pl-1">View Archive</span>
                                 </div>
-                            </Link>
+                            </TransitionLink>
                         </Magnetic>
                     </div>
 

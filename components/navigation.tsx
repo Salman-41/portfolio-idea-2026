@@ -16,12 +16,13 @@ const navLinks = [
 // --- Helper Components ---
 
 import { Magnetic } from "./magnetic"
+import { TransitionLink } from "./transition-link"
 
 const ScrambleLink = memo(({ href, label, active }: { href: string; label: string; active: boolean }) => {
   const { displayText, scramble } = useTextScramble(label, { duration: 800, speed: 40 })
 
   return (
-    <Link
+    <TransitionLink
       href={href}
       onMouseEnter={scramble}
       className={cn(
@@ -31,7 +32,7 @@ const ScrambleLink = memo(({ href, label, active }: { href: string; label: strin
       data-cursor-hover
     >
       {displayText}
-    </Link>
+    </TransitionLink>
   )
 })
 ScrambleLink.displayName = "ScrambleLink"
@@ -83,11 +84,11 @@ export function Navigation() {
         <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-14">
           
           {/* Logo - Fixed Left */}
-          <Link href="/" className="absolute left-0 z-50 group shrink-0 mix-blend-difference" data-cursor-hover>
+          <TransitionLink href="/" className="absolute left-0 z-50 group shrink-0 mix-blend-difference" data-cursor-hover>
             <span className="text-xl md:text-2xl font-bold tracking-tight text-white">
               Salman<span className="text-primary">.</span>yz
             </span>
-          </Link>
+          </TransitionLink>
 
           {/* Right-Aligned Navigation Engine */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-end h-12 gap-10">
@@ -118,13 +119,13 @@ export function Navigation() {
                   isScrolled ? "opacity-0 translate-x-12 pointer-events-none scale-90" : "opacity-100 translate-x-0 scale-100"
                )}>
                  <Magnetic strength={0.2}>
-                   <Link
+                   <TransitionLink
                     href="/contact"
                     className="hidden md:flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-500 rounded-full whitespace-nowrap"
                     data-cursor-hover
                   >
                     Let's Talk
-                  </Link>
+                  </TransitionLink>
                  </Magnetic>
                </div>
 
@@ -178,7 +179,7 @@ export function Navigation() {
       >
         <div ref={menuLinksRef} className="flex flex-col items-start gap-4 md:gap-8 z-10 w-full max-w-5xl relative">
           {navLinks.map((link) => (
-            <Link
+            <TransitionLink
               key={link.href}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
@@ -193,10 +194,10 @@ export function Navigation() {
                 </span>
                 <span className="relative z-10">{link.label}</span>
               </div>
-            </Link>
+            </TransitionLink>
           ))}
           
-          <Link
+          <TransitionLink
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
             className="group flex flex-col gap-4 mt-8 md:mt-16 border-t border-white/10 pt-8 md:pt-16 w-full"
@@ -205,7 +206,7 @@ export function Navigation() {
             <div className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white hover:text-primary transition-all duration-500 inline-block w-fit group-hover:translate-x-4">
               Let's Talk <span className="text-primary italic">—</span>
             </div>
-          </Link>
+          </TransitionLink>
         </div>
 
         {/* Menu Footer Decor */}
