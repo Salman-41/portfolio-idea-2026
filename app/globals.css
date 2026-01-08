@@ -220,3 +220,16 @@ html.lenis body {
 .ease-expo {
   transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+/* Stroke Text Utilities */
+.stroke-text {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+}
+
+.stroke-text-2 {
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
+}
+
+.stroke-primary {
+  -webkit-text-stroke: 1px var(--primary);
+}

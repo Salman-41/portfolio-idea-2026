@@ -10,26 +10,23 @@ gsap.registerPlugin(ScrollTrigger)
 
 const testimonials = [
   {
-    quote:
-      "Alex transformed our vision into a stunning reality. His attention to detail and creative approach exceeded all expectations. The website has significantly improved our online presence.",
-    author: "Sarah Chen",
-    role: "CEO, TechStart Inc.",
-    image: "/testimonial-avatar-professional-woman.jpg",
+    quote: "Alex transformed our vague ideas into a stunning digital reality. The attention to detail is unmatched.",
+    author: "Sarah Jenkins",
+    role: "CTO, FinTech Co",
+    avatar: "/placeholder-user.jpg"
   },
   {
-    quote:
-      "Working with Alex was an absolute pleasure. His technical expertise combined with his design sensibility resulted in a product that truly stands out. Highly recommended!",
-    author: "Michael Torres",
-    role: "Creative Director, Studio Nova",
-    image: "/testimonial-avatar-professional-man.jpg",
+    quote: "The physics-based interactions completely changed how users engage with our platform. Simply brilliant.",
+    author: "Michael Chang",
+    role: "Product Lead, CryptoWise",
+    avatar: "/placeholder-user.jpg"
   },
   {
-    quote:
-      "The 3D web experience Alex created for us was mind-blowing. He pushed the boundaries of what we thought was possible on the web. Our customers love the immersive experience.",
-    author: "Emily Watson",
-    role: "Marketing Director, Luxe Brands",
-    image: "/testimonial-avatar-professional-woman-2.jpg",
-  },
+    quote: "Not just a developer, but a true creative partner. The code is clean, the design is art.",
+    author: "Elena Rodriguez",
+    role: "Founder, ArtSpace",
+    avatar: "/placeholder-user.jpg"
+  }
 ]
 
 export function TestimonialsSection() {

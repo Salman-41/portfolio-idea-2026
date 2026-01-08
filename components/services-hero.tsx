@@ -1,54 +1,88 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 
 export function ServicesHero() {
-  const heroRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
+  const spotlightRef = useRef<HTMLDivElement>(null)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) return
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return
+      const rect = containerRef.current.getBoundingClientRect()
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      })
+    }
 
+    const container = containerRef.current
+    if (container) {
+       container.addEventListener("mousemove", handleMouseMove)
+    }
+
+    // Entrance Animation
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        contentRef.current?.querySelectorAll(".animate-item") || [],
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease: "power3.out", delay: 0.5 },
-      )
-    }, heroRef)
+        gsap.from(".hero-text-char", {
+            y: 100,
+            opacity: 0,
+            duration: 1.5,
+            stagger: 0.05,
+            ease: "power4.out"
+        })
+    }, containerRef)
 
-    return () => ctx.revert()
+    return () => {
+        if (container) container.removeEventListener("mousemove", handleMouseMove)
+        ctx.revert()
+    }
   }, [])
 
   return (
-    <section ref={heroRef} className="pt-40 pb-20 md:pt-48 md:pb-32 relative grid-bg">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-      <div ref={contentRef} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="max-w-4xl">
-          <span className="animate-item inline-block px-4 py-2 text-xs uppercase tracking-[0.3em] text-primary border border-primary/30 rounded-full mb-8">
-            Services
-          </span>
-          <h1 className="animate-item text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-8 leading-[0.95]">
-            How I Can <span className="gradient-text">Help</span>
-          </h1>
-          <p className="animate-item text-xl md:text-2xl text-muted-foreground leading-relaxed mb-10 max-w-2xl">
-            From concept to deployment, I provide end-to-end solutions for businesses looking to make an impact in the
-            digital space.
-          </p>
-          <Link
-            href="/contact"
-            className="animate-item inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
-            data-cursor-hover
-          >
-            <span>Start a Project</span>
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
+    <section 
+        ref={containerRef} 
+        className="h-screen relative flex items-center justify-center overflow-hidden bg-black cursor-none"
+    >
+      
+      {/* 1. GHOST LAYER (Always Visible, Barely) */}
+      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none select-none">
+         <div className="text-center opacity-20 mix-blend-difference">
+            <h1 className="text-[15vw] leading-[0.8] font-black uppercase tracking-tighter text-[#333]">
+                <span className="hero-text-char inline-block">Digital</span><br/>
+                <span className="hero-text-char inline-block">Reality</span>
+            </h1>
+         </div>
       </div>
+
+      {/* 2. SPOTLIGHT LAYER (Revealed by Mask) */}
+      <div 
+        ref={spotlightRef}
+        className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none select-none bg-black"
+        style={{
+            clipPath: `circle(250px at ${mousePos.x}px ${mousePos.y}px)`
+        }}
+      >
+         {/* Background Grid within Spotlight */}
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50" />
+         
+         <div className="text-center relative">
+            <span className="block text-primary text-sm uppercase tracking-[1em] mb-4 font-mono">
+                // System.Explore
+            </span>
+            <h1 className="text-[15vw] leading-[0.8] font-black uppercase tracking-tighter text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+               Digital<br/>
+               Reality
+            </h1>
+         </div>
+      </div>
+
+      {/* 3. Instruction Hint */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/30 text-xs uppercase tracking-widest animate-pulse z-30 pointer-events-none">
+          Use spotlight to reveal
+      </div>
+
     </section>
   )
 }
