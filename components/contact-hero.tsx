@@ -5,37 +5,65 @@ import gsap from "gsap"
 
 export function ContactHero() {
   const heroRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
+  const title1Ref = useRef<HTMLSpanElement>(null)
+  const title2Ref = useRef<HTMLSpanElement>(null)
+  const bgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) return
-
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        contentRef.current?.querySelectorAll(".animate-item") || [],
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease: "power3.out", delay: 0.5 },
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
+
+      tl.fromTo(
+        title1Ref.current,
+        { y: 200, rotate: 10, opacity: 0 },
+        { y: 0, rotate: 0, opacity: 1, duration: 1.5, delay: 0.2 }
       )
+      tl.fromTo(
+        title2Ref.current,
+        { y: 200, rotate: -5, opacity: 0 },
+        { y: 0, rotate: 0, opacity: 1, duration: 1.5 },
+        "-=1.2"
+      )
+      tl.fromTo(
+        ".hero-desc",
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1 },
+        "-=0.8"
+      )
+      
+      gsap.to(bgRef.current, {
+        y: -50,
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        }
+      })
     }, heroRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={heroRef} className="pt-40 pb-16 md:pt-48 md:pb-24 relative grid-bg">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-      <div ref={contentRef} className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="max-w-3xl">
-          <span className="animate-item inline-block px-4 py-2 text-xs uppercase tracking-[0.3em] text-primary border border-primary/30 rounded-full mb-8">
-            Contact
+    <section ref={heroRef} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-background">
+      <div ref={bgRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] opacity-5 pointer-events-none select-none z-0">
+        <h2 className="text-[40vw] font-black uppercase tracking-tighter text-white whitespace-nowrap leading-none stroke-text">
+          SAY HELLO
+        </h2>
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col">
+          <span className="text-primary text-xs uppercase tracking-[0.5em] mb-8 animate-pulse inline-block">
+            // Init.Dialogue
           </span>
-          <h1 className="animate-item text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-8 leading-[0.95]">
-            Let&apos;s <span className="gradient-text">Connect</span>
+          <h1 className="flex flex-col text-[16vw] md:text-[14vw] leading-[0.8] font-black uppercase tracking-tighter mix-blend-difference mb-12">
+            <span ref={title1Ref} className="inline-block">The</span>
+            <span ref={title2Ref} className="inline-block text-transparent stroke-text-2">Conversation</span>
           </h1>
-          <p className="animate-item text-xl md:text-2xl text-muted-foreground leading-relaxed">
-            Have a project in mind? I&apos;d love to hear about it. Let&apos;s discuss how we can work together to bring
-            your vision to life.
+          <p className="hero-desc max-w-2xl text-xl md:text-2xl text-muted-foreground leading-relaxed">
+            I’m always open to new challenges and creative collaborations. Let’s build something that matters.
           </p>
         </div>
       </div>
