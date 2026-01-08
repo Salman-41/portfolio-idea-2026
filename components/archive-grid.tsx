@@ -130,7 +130,7 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
       <div className="container mx-auto">
         <div className="flex flex-col">
            {/* Header Row */}
-           <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-white/10 text-xs uppercase tracking-[0.2em] text-muted-foreground/50 sticky top-40 bg-background/95 backdrop-blur-sm z-20 py-4">
+           <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-white/10 text-xs uppercase tracking-[0.2em] text-muted-foreground/50 z-20 py-4">
               <div className="col-span-1">No.</div>
               <div className="col-span-5">Project Name</div>
               <div className="col-span-3">Services</div>
