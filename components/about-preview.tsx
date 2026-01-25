@@ -171,10 +171,10 @@ export function AboutPreview() {
         >
           <div className="image-mask relative aspect-[4/5] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/10 group overflow-hidden">
              <Image 
-                src="/about-portrait.png" 
+                src="/images/11.jpeg" 
                 alt="The Craft" 
                 fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                className="object-cover object-top transition-transform duration-1000 group-hover:scale-110"
              />
              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
              <div className="absolute inset-0 bg-primary/20 mix-blend-color opacity-30 z-10" />

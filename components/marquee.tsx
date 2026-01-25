@@ -6,35 +6,28 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Safe useLayoutEffect for SSR
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect
 
-interface MarqueeProps {
+interface MarqueeRowProps {
   items: string[]
   direction?: "left" | "right"
   speed?: number
+  className?: string
 }
 
-export function Marquee({ items, direction = "left", speed = 100 }: MarqueeProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+function MarqueeRow({ items, direction = "left", speed = 100, className }: MarqueeRowProps) {
+  const rowRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
   useIsomorphicLayoutEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) return
-
     const content = contentRef.current
     if (!content) return
 
     let ctx = gsap.context(() => {
-      // Precise measurement of single content block
       const scrollWidth = content.scrollWidth
       const contentWidth = scrollWidth / 3
-      
       if (contentWidth <= 0) return
 
-      // INSTANT initialization to avoid flicker
-      // We essentially teleport the strip to the start of the valid range
       const xStart = direction === "left" ? 0 : -contentWidth
       gsap.set(content, { x: xStart })
 
@@ -44,64 +37,75 @@ export function Marquee({ items, direction = "left", speed = 100 }: MarqueeProps
         ease: "none",
         repeat: -1,
         modifiers: {
-          x: gsap.utils.unitize((x) => {
-            const val = parseFloat(x)
-            // Mathematically identical wrapping for both directions
-            return val % contentWidth
-          })
+          x: gsap.utils.unitize((x) => parseFloat(x) % contentWidth)
         },
-        paused: false,
       })
 
-      // Scroll Velocity Integration
-      const st = ScrollTrigger.create({
-        onUpdate: (self) => {
-          const velocity = self.getVelocity() / 80
-          const scrollDir = self.direction // 1 (down), -1 (up)
-          
-          // Down (1) -> Reverse logic, Up (-1) -> Speed up
-          const targetTimeScale = scrollDir === -1 ? (1 + Math.abs(velocity)) : -(1 + Math.abs(velocity))
+      const timeScaleSetter = gsap.quickTo(loop, "timeScale", {
+        duration: 0.5,
+        ease: "power2.out"
+      })
 
-          gsap.to(loop, {
-            timeScale: targetTimeScale,
-            duration: 0.3,
-            overwrite: "auto",
-            ease: "power2.out"
-          })
+      ScrollTrigger.create({
+        onUpdate: (self) => {
+          const velocity = Math.abs(self.getVelocity() / 100)
+          timeScaleSetter(1 + velocity)
         }
       })
 
       const onScrollEnd = () => {
         gsap.to(loop, { timeScale: 1, duration: 1.2, ease: "power2.inOut" })
       }
-
       ScrollTrigger.addEventListener("scrollEnd", onScrollEnd)
-
-      return () => {
-        ScrollTrigger.removeEventListener("scrollEnd", onScrollEnd)
-      }
-    }, contentRef)
+      return () => ScrollTrigger.removeEventListener("scrollEnd", onScrollEnd)
+    }, content)
 
     return () => ctx.revert()
   }, [items, direction, speed])
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden py-10 md:py-16 border-y border-white/5 bg-background select-none">
-      <div 
-        ref={contentRef} 
-        className="flex items-center gap-12 md:gap-20 whitespace-nowrap will-change-transform" 
-        style={{ width: "fit-content" }}
-      >
-        {/* Triple-cloned items for absolute gapless looping */}
+    <div ref={rowRef} className={`whitespace-nowrap flex overflow-hidden ${className}`}>
+      <div ref={contentRef} className="flex items-center gap-12 md:gap-20 will-change-transform">
         {[...items, ...items, ...items].map((item, i) => (
           <div key={i} className="flex items-center gap-12 md:gap-20">
-            <span className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-foreground/15 transition-colors duration-500 hover:text-primary/30">
+            <span className={`text-5xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-700 hover:text-primary ${
+              i % 2 === 0 ? "text-foreground" : "text-transparent stroke-text opacity-40"
+            }`}>
               {item}
             </span>
-            <span className="text-primary text-3xl md:text-5xl opacity-30">✦</span>
+            <span className="text-primary text-3xl md:text-5xl opacity-40">✦</span>
           </div>
         ))}
       </div>
+    </div>
+  )
+}
+
+export function Marquee({ items }: { items: string[] }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Split items for variety
+  const row1 = items.slice(0, Math.ceil(items.length / 2))
+  const row2 = items.slice(Math.ceil(items.length / 2))
+
+  return (
+    <div ref={containerRef} className="relative py-24 md:py-32 overflow-hidden bg-background select-none">
+      {/* Background kinetic layers */}
+      <div className="absolute inset-0 z-0 opacity-5 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-black leading-none text-primary uppercase select-none">
+          SKILLS
+        </div>
+      </div>
+
+      <div className="relative z-10 space-y-4 md:space-y-4 -rotate-3 scale-110">
+        <MarqueeRow items={row1} direction="left" speed={120} className="py-2" />
+        <MarqueeRow items={row2} direction="right" speed={100} className="py-2" />
+        <MarqueeRow items={[...row1].reverse()} direction="left" speed={140} className="py-2 opacity-50" />
+      </div>
+      
+      {/* Gradient fades on sides */}
+      <div className="absolute inset-y-0 left-0 w-[20%] bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-[20%] bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
     </div>
   )
 }
