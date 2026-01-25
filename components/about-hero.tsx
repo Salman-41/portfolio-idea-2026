@@ -49,10 +49,10 @@ export function AboutHero() {
           <div ref={imageRef} className="relative order-2 lg:order-1">
             <div className="aspect-[4/5] relative rounded-2xl overflow-hidden">
               <Image
-                src="/professional-developer-portrait-dark-aesthetic.jpg"
+                src="/images/10.jpeg"
                 alt="Salman Yousufzai - Creative Developer"
                 fill
-                className="object-cover"
+                className="object-cover object-top"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />

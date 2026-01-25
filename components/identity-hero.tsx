@@ -96,12 +96,12 @@ export function IdentityHero() {
 
           {/* PORTRAIT CONTAINER (Overlapping) */}
           <div className="relative z-0 -my-12 md:-my-24 w-[70vw] md:w-[35vw] aspect-[3/4]">
-             <div ref={imageWrapperRef} className="relative w-full h-full overflow-hidden rounded-sm grayscale contrast-125">
+             <div ref={imageWrapperRef} className="relative w-full h-full overflow-hidden rounded-sm">
                  <Image
-                    src="/about-portrait.png" 
+                    src="/images/11.jpeg" 
                     alt="Salman Yousufzai"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                     priority
                  />
                  <div className="absolute inset-0 bg-primary/20 mix-blend-overlay" />
