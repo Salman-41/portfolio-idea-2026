@@ -71,7 +71,7 @@ export default function ProjectsPage() {
       <CustomCursor />
       <Navigation />
       
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="bg-background text-foreground overflow-x-hidden">
         <ArchiveHero 
            activeFilter={activeFilter} 
            onFilterChange={setActiveFilter}

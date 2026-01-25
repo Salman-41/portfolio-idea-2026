@@ -12,6 +12,8 @@
   --popover: oklch(0.16 0.02 250);
   --popover-foreground: oklch(0.95 0.01 250);
   --primary: oklch(0.75 0.15 190);
+  --primary-rgb: 94, 211, 222;
+  --background-rgb: 26, 32, 44;
   --primary-foreground: oklch(0.13 0.02 250);
   --secondary: oklch(0.22 0.02 250);
   --secondary-foreground: oklch(0.95 0.01 250);
@@ -35,9 +37,23 @@
   --sidebar-primary: oklch(0.75 0.15 190);
   --sidebar-primary-foreground: oklch(0.13 0.02 250);
   --sidebar-accent: oklch(0.22 0.02 250);
-  --sidebar-accent-foreground: oklch(0.95 0.01 250);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.28 0.02 250);
   --sidebar-ring: oklch(0.75 0.15 190);
+}
+
+/* Atmospheric Noise Texture */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: overlay;
 }
 
 @theme inline {

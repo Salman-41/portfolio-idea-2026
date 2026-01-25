@@ -24,40 +24,42 @@ function MarqueeRow({ items, direction = "left", speed = 100, className }: Marqu
     if (!content) return
 
     let ctx = gsap.context(() => {
-      const scrollWidth = content.scrollWidth
-      const contentWidth = scrollWidth / 3
-      if (contentWidth <= 0) return
+      // Use a ticker or small delay to ensure styles are applied and measured correctly
+      gsap.delayedCall(0.1, () => {
+        const scrollWidth = content.scrollWidth
+        const contentWidth = scrollWidth / 3
+        if (contentWidth <= 0) return
 
-      const xStart = direction === "left" ? 0 : -contentWidth
-      gsap.set(content, { x: xStart })
+        const xStart = direction === "left" ? 0 : -contentWidth
+        gsap.set(content, { x: xStart })
 
-      const loop = gsap.to(content, {
-        x: direction === "left" ? -contentWidth : 0,
-        duration: contentWidth / speed,
-        ease: "none",
-        repeat: -1,
-        modifiers: {
-          x: gsap.utils.unitize((x) => parseFloat(x) % contentWidth)
-        },
-      })
+        const loop = gsap.to(content, {
+          x: direction === "left" ? -contentWidth : 0,
+          duration: Math.max(10, contentWidth / speed), // Clamp duration to avoid infinite speed
+          ease: "none",
+          repeat: -1,
+          modifiers: {
+            x: gsap.utils.unitize((x) => parseFloat(x) % contentWidth)
+          }
+        })
 
-      const timeScaleSetter = gsap.quickTo(loop, "timeScale", {
-        duration: 0.5,
-        ease: "power2.out"
-      })
+        const timeScaleSetter = gsap.quickTo(loop, "timeScale", {
+          duration: 0.5,
+          ease: "power2.out"
+        })
 
-      ScrollTrigger.create({
-        onUpdate: (self) => {
-          const velocity = Math.abs(self.getVelocity() / 100)
-          timeScaleSetter(1 + velocity)
+        ScrollTrigger.create({
+          onUpdate: (self) => {
+            const velocity = Math.abs(self.getVelocity() / 120)
+            timeScaleSetter(1 + velocity)
+          }
+        })
+
+        const onScrollEnd = () => {
+          gsap.to(loop, { timeScale: 1, duration: 1.5, ease: "power2.inOut" })
         }
+        ScrollTrigger.addEventListener("scrollEnd", onScrollEnd)
       })
-
-      const onScrollEnd = () => {
-        gsap.to(loop, { timeScale: 1, duration: 1.2, ease: "power2.inOut" })
-      }
-      ScrollTrigger.addEventListener("scrollEnd", onScrollEnd)
-      return () => ScrollTrigger.removeEventListener("scrollEnd", onScrollEnd)
     }, content)
 
     return () => ctx.revert()

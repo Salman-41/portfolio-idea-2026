@@ -1,11 +1,58 @@
+"use client"
+
 import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { cn } from "@/lib/utils"
+import { ThreeScene } from "./three-scene"
+import { ArrowDown } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const filters = ["All", "Web App", "E-commerce", "Creative", "3D/WebGL"]
+const CHARS = "ABCDEFGHIKLMNOPQRSTUVWYZ0123456789!@#$%^&*()_+"
+
+function ScrambleText({ text, delay = 0 }: { text: string; delay?: number }) {
+  const [displayText, setDisplayText] = useState("")
+  const [isRevealed, setIsRevealed] = useState(false)
+  
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    const startTimeout = setTimeout(() => {
+      let iteration = 0
+      interval = setInterval(() => {
+        setDisplayText(
+          text
+            .split("")
+            .map((char, index) => {
+              if (index < iteration) {
+                return text[index]
+              }
+              if (char === " ") return " "
+              return CHARS[Math.floor(Math.random() * CHARS.length)]
+            })
+            .join("")
+        )
+
+        if (iteration >= text.length) {
+          clearInterval(interval)
+          setIsRevealed(true)
+        }
+
+        iteration += 1 / 3
+      }, 30)
+    }, delay * 1000)
+
+    return () => {
+      clearTimeout(startTimeout)
+      if (interval) clearInterval(interval)
+    }
+  }, [text, delay])
+
+  return (
+    <span className={isRevealed ? "" : "font-mono opacity-80"}>
+      {displayText || "\u00A0".repeat(text.length)}
+    </span>
+  )
+}
 
 interface ArchiveHeroProps {
   activeFilter: string
@@ -13,116 +60,98 @@ interface ArchiveHeroProps {
   totalProjects: number
 }
 
+const filters = ["All", "Web App", "E-commerce", "Creative", "3D/WebGL"]
+
 export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: ArchiveHeroProps) {
   const containerRef = useRef<HTMLElement>(null)
-  const title1Ref = useRef<HTMLSpanElement>(null)
-  const title2Ref = useRef<HTMLSpanElement>(null)
-  const bgRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
-      
-      // 1. Title Reveal
-      tl.fromTo(title1Ref.current, 
-        { y: 200, rotate: 10, opacity: 0 },
-        { y: 0, rotate: 0, opacity: 1, duration: 1.5, delay: 0.2 }
-      )
-      tl.fromTo(title2Ref.current, 
-        { y: 200, rotate: -5, opacity: 0 },
-        { y: 0, rotate: 0, opacity: 1, duration: 1.5 },
-        "-=1.2"
-      )
-
-      // 2. Filter Bar & Stats Reveal
-      tl.fromTo([".filter-bar", ".stats-block"], {
-        y: 40,
-        opacity: 0
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out"
-      }, "-=0.8")
-
-      // 3. Background Parallax
-      gsap.to(bgRef.current, {
-        y: -100,
+      // Parallax Effects
+      gsap.to(".hero-title-line", {
+        x: (i) => (i % 2 === 0 ? -100 : 100),
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: true
-        }
+          scrub: 1,
+        },
+      })
+      
+      gsap.to(".hero-bg-container", {
+        y: 150,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
       })
 
-      // 4. Counter Animation
-      const counterObj = { value: 0 }
-      const counterEl = document.getElementById("project-counter")
-      if (counterEl) {
-        gsap.to(counterObj, {
-            value: totalProjects,
-            duration: 2.5,
-            ease: "expo.out",
-            onUpdate: () => {
-                counterEl.textContent = Math.floor(counterObj.value).toString().padStart(2, '0')
-            }
-        })
-      }
-
+      // Simple Fade In for Filter Bar
+      gsap.fromTo(".filter-bar", 
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, delay: 1.5, ease: "power3.out" }
+      )
     }, containerRef)
 
     return () => ctx.revert()
-  }, [totalProjects])
+  }, [])
 
   return (
-    <section ref={containerRef} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-background">
-      {/* Massive Background Text */}
-      <div ref={bgRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] opacity-5 pointer-events-none select-none z-0">
-        <h2 className="text-[30vw] font-black uppercase tracking-tighter text-white whitespace-nowrap leading-none stroke-text text-center">
-          SELECTED<br/>WORKS
-        </h2>
+    <section ref={containerRef} className="relative h-[80vh] w-full overflow-hidden flex flex-col justify-center p-6 md:p-12 lg:p-16 grid-bg">
+      {/* 3D Background */}
+      <div className="absolute inset-0 z-0 hero-bg-container pointer-events-none">
+        <ThreeScene />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col mb-20 md:mb-32">
-           <span className="text-primary text-xs uppercase tracking-[0.5em] mb-8 animate-pulse inline-block">
-             // Index_01
-           </span>
-           <h1 className="flex flex-col text-[16vw] md:text-[14vw] leading-[0.8] font-black uppercase tracking-tighter mix-blend-difference mb-12">
-             <span ref={title1Ref} className="inline-block">The</span>
-             <span ref={title2Ref} className="inline-block text-transparent stroke-text-2">Archive</span>
-           </h1>
-        </div>
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-background/90 z-0 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background-rgb),0.8)_100%)] z-0 pointer-events-none" />
 
-        <div className="flex flex-col md:flex-row justify-between items-end gap-12">
-           {/* Sticky Filter Bar */}
-           <div className="filter-bar flex flex-wrap gap-2 md:gap-4 p-2 bg-background/5 backdrop-blur-md border border-white/10 rounded-full w-fit max-w-full overflow-x-auto no-scrollbar">
-              {filters.map((filter) => (
-                 <button
-                   key={filter}
-                   onClick={() => onFilterChange(filter)}
-                   className={cn(
-                     "px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap",
-                     activeFilter === filter 
-                       ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]" 
-                       : "hover:bg-white/5 text-muted-foreground hover:text-white"
-                   )}
-                 >
-                    {filter}
-                 </button>
-              ))}
-           </div>
+      {/* Main Content */}
+      <div className="relative z-20 flex-1 flex flex-col justify-center w-full pointer-events-none mb-16">
+        <h1 className="flex flex-col w-full text-[13vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.85] tracking-tighter uppercase mix-blend-difference text-white text-center">
+            <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500">
+                <ScrambleText text="DIGITAL" delay={0.2} />
+            </span>
+            <span className="hero-title-line block gradient-text pointer-events-auto">
+                <ScrambleText text="ARCHIVE" delay={0.5} />
+            </span>
+        </h1>
 
-           {/* Data Counter */}
-           <div className="stats-block flex flex-col items-end gap-2 opacity-80 mix-blend-difference">
-              <span id="project-counter" className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter text-white leading-none">
-                00
-              </span>
-              <span className="text-xs uppercase tracking-[0.3em] text-primary">Total Cases</span>
-           </div>
+        <div className="text-center mt-12 mix-blend-difference text-white">
+            <p className="text-sm md:text-base font-light tracking-widest uppercase opacity-70">
+                {totalProjects} Curated Experiences & Counting
+            </p>
         </div>
+      </div>
+
+       {/* Filter Bar - Clean & Minimal - Recreated to match aesthetic */}
+       <div className="filter-bar absolute bottom-12 left-0 right-0 z-30 flex justify-center pointer-events-auto">
+          <div className="flex flex-wrap gap-2 px-6 py-3 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-2xl">
+            {filters.map((filter) => (
+                <button
+                key={filter}
+                onClick={() => onFilterChange(filter)}
+                className={`px-4 py-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 ${
+                    activeFilter === filter
+                    ? "bg-primary text-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
+                >
+                {filter}
+                </button>
+            ))}
+          </div>
+       </div>
+
+      {/* Side Decorations */}
+      <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 text-right pointer-events-auto mix-blend-difference text-white">
+        <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] [writing-mode:vertical-lr]">
+           INDEX // 2026
+        </span>
+        <div className="w-[1px] h-24 bg-gradient-to-t from-white/50 via-white to-transparent mx-auto" />
       </div>
     </section>
   )
