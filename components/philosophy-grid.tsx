@@ -3,38 +3,50 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Crosshair, Zap, Eye, Boxes } from "lucide-react"
+import { Crosshair, Zap, Eye, Boxes, ArrowRight } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
 const philosophies = [
   {
+    id: "01",
     title: "Precision",
     desc: "Pixel-perfect isn't a goal, it's the baseline. Every detail is a deliberate decision.",
     icon: Crosshair,
-    colSpan: "col-span-1 md:col-span-2",
-    bg: "bg-primary/5"
+    colSpan: "md:col-span-2",
+    bg: "bg-white/5",
+    accent: "text-blue-500",
+    border: "group-hover:border-blue-500/50"
   },
   {
+    id: "02",
     title: "Motion",
     desc: "Designing feel, not just look. Interactions that mimic the physical world.",
     icon: Zap,
-    colSpan: "col-span-1",
-    bg: "bg-background border border-white/10"
+    colSpan: "md:col-span-1",
+    bg: "bg-white/5",
+    accent: "text-yellow-500",
+     border: "group-hover:border-yellow-500/50"
   },
   {
+    id: "03",
     title: "Clarity",
     desc: "Signal over noise. We distill complex problems into effortless journeys.",
     icon: Eye,
-    colSpan: "col-span-1",
-    bg: "bg-white/5"
+    colSpan: "md:col-span-1",
+    bg: "bg-white/5",
+    accent: "text-green-500",
+    border: "group-hover:border-green-500/50"
   },
   {
+    id: "04",
     title: "Architecture",
     desc: "Thinking in systems, not pages. Robust codebases built for future scale.",
     icon: Boxes,
-    colSpan: "col-span-1 md:col-span-2",
-    bg: "bg-gradient-to-br from-primary/10 to-transparent"
+    colSpan: "md:col-span-2",
+    bg: "bg-white/5",
+    accent: "text-purple-500",
+    border: "group-hover:border-purple-500/50"
   }
 ]
 
@@ -43,106 +55,76 @@ export function PhilosophyGrid() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".philosophy-card", {
-        y: 60,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%"
+      gsap.fromTo(".philosophy-card",
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%"
+          }
         }
-      })
+      )
     }, sectionRef)
     return () => ctx.revert()
   }, [])
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    
-    // 3D Tilt
-    const rotateX = ((y - centerY) / centerY) * -5 
-    const rotateY = ((x - centerX) / centerX) * 5
-
-    gsap.to(card, {
-        rotateX: rotateX,
-        rotateY: rotateY,
-        scale: 1.02,
-        duration: 0.4,
-        ease: "power2.out"
-    })
-
-    // Spotlight Border update
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-  }
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    gsap.to(e.currentTarget, {
-        rotateX: 0,
-        rotateY: 0,
-        scale: 1,
-        duration: 0.5,
-        ease: "elastic.out(1, 0.5)"
-    })
-  }
-
   return (
-    <section ref={sectionRef} className="py-32 px-6 md:px-12 bg-background border-t border-white/5">
-       <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16">
-             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">
-                Core <span className="text-primary italic">Philosophy</span>
-             </h2>
-             <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest mt-4 md:mt-0">
-                // guiding_principles
+    <section ref={sectionRef} className="py-32 px-4 md:px-12 bg-background border-t border-white/5 relative overflow-hidden">
+       {/* Section Header - Asymmetric Layout */}
+       <div className="container mx-auto mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
+          <div>
+            <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white leading-[0.9]">
+               Core<br/>
+               <span className="text-transparent stroke-text-2">Philosophy</span>
+            </h2>
+          </div>
+          <div className="flex items-center gap-4 mb-2">
+             <div className="w-12 h-[1px] bg-primary" />
+             <span className="text-xs font-mono uppercase tracking-[0.3em] text-primary">
+               Guiding_Principles
              </span>
           </div>
+       </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
-             {philosophies.map((item, i) => (
+       {/* Technical Grid */}
+       <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {philosophies.map((item) => (
                 <div 
-                   key={item.title}
-                   className={`philosophy-card perspective-[1000px] group relative rounded-3xl overflow-hidden p-8 flex flex-col justify-between ${item.colSpan} ${item.bg} border border-white/5`}
-                   onMouseMove={handleMouseMove}
-                   onMouseLeave={handleMouseLeave}
-                   style={{
-                     // @ts-ignore
-                     "--mouse-x": "0px",
-                     "--mouse-y": "0px"
-                   }}
+                   key={item.id}
+                   className={`philosophy-card group relative p-8 md:p-10 rounded-xl border border-white/10 ${item.bg} ${item.colSpan} overflow-hidden transition-all duration-500 hover:shadow-2xl ${item.border}`}
                 >
-                   {/* Spotlight Border */}
-                   <div 
-                     className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                     style={{
-                        background: `radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%)`
-                     }}
-                   />
-                   
-                   {/* Noise Texture */}
-                   <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('/noise.png')] bg-repeat" />
+                   {/* Background Number */}
+                   <span className="absolute -top-6 -right-6 text-[120px] font-black text-white/[0.02] leading-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:text-white/[0.04]">
+                      {item.id}
+                   </span>
 
-                   <div className="relative z-10 pointer-events-none">
-                      <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-6 text-primary bg-white/5 group-hover:scale-110 transition-transform duration-300">
-                         <item.icon className="w-5 h-5" />
+                   {/* Content Layout */}
+                   <div className="relative z-10 flex flex-col h-full justify-between gap-12">
+                      <div className="flex justify-between items-start">
+                         <div className={`p-4 rounded-lg bg-white/5 border border-white/10 ${item.accent} group-hover:bg-white/10 transition-colors`}>
+                            <item.icon className="w-6 h-6" />
+                         </div>
+                         <ArrowRight className={`w-5 h-5 text-white/20 -rotate-45 transition-all duration-300 group-hover:rotate-0 group-hover:text-primary opacity-0 group-hover:opacity-100`} />
                       </div>
-                      <h3 className="text-2xl font-bold uppercase tracking-tight mb-3">
-                         {item.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed max-w-xs group-hover:text-white transition-colors">
-                         {item.desc}
-                      </p>
+
+                      <div>
+                         <h3 className="text-2xl font-bold uppercase tracking-tight mb-4 text-white group-hover:text-primary transition-colors">
+                            {item.title}
+                         </h3>
+                         <p className="text-muted-foreground leading-relaxed text-sm md:text-base max-w-md group-hover:text-white/80 transition-colors">
+                            {item.desc}
+                         </p>
+                      </div>
                    </div>
-                   
-                   {/* Inner Glow */}
-                   <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10" />
+
+                   {/* Hover Gradient Overlay */}
+                   <div className={`absolute inset-0 bg-gradient-to-br ${item.accent.replace('text-', 'from-')}/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
                 </div>
              ))}
           </div>

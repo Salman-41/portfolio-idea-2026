@@ -127,10 +127,7 @@ export function IdentityHero() {
              YOUSUFZAI
           </h1>
 
-          <div className="mt-12 md:mt-24 flex items-center gap-4 animate-bounce">
-              <span className="text-xs uppercase tracking-widest text-muted-foreground">Scroll to Explore</span>
-              <div className="w-[1px] h-8 bg-muted-foreground/50" />
-          </div>
+
 
        </div>
     </section>

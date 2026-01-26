@@ -1,70 +1,91 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
-  const cursorDotRef = useRef<HTMLDivElement>(null)
-
+  const svgRef = useRef<SVGSVGElement>(null)
+  
+  const [isHovering, setIsHovering] = useState(false)
+  
   useEffect(() => {
     const cursor = cursorRef.current
-    const cursorDot = cursorDotRef.current
-    if (!cursor || !cursorDot) return
+    if (!cursor) return
 
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) {
+    // Check pre-requisites
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || "ontouchstart" in window) {
       cursor.style.display = "none"
-      cursorDot.style.display = "none"
       return
     }
 
-    // Hide on touch devices
-    if ("ontouchstart" in window) {
-      cursor.style.display = "none"
-      cursorDot.style.display = "none"
-      return
+    // Default cursor params
+    const pos = { x: 0, y: 0 }
+    const vel = { x: 0, y: 0 }
+    let scale = 1
+    let rotation = 0
+
+    // Set initial position
+    gsap.set(cursor, { xPercent: -50, yPercent: -50 })
+
+    const update = () => {
+      // Calculate velocity for distortion effects
+      const dx = pos.x - gsap.getProperty(cursor, "x") as number
+      const dy = pos.y - gsap.getProperty(cursor, "y") as number
+      
+      vel.x += (dx - vel.x) * 0.2
+      vel.y += (dy - vel.y) * 0.2
+      
+      const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y)
+      const maxSpeed = 50
+      
+      // Dynamic stretching based on velocity (Jelly Effect)
+      const stretchAmount = Math.min(speed / maxSpeed, 0.5)
+      const scaleX = 1 + stretchAmount
+      const scaleY = 1 - stretchAmount * 0.5
+      
+      // Rotate based on movement direction
+      if (speed > 1) {
+         rotation = Math.atan2(vel.y, vel.x) * (180 / Math.PI)
+      }
+
+      gsap.to(cursor, {
+        x: pos.x,
+        y: pos.y,
+        rotation: rotation,
+        scaleX: scaleX * scale,
+        scaleY: scaleY * scale,
+        duration: 0.1, // super responsive
+        ease: "power2.out"
+      })
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX - 20,
-        y: e.clientY - 20,
-        duration: 0.5,
-        ease: "power3.out",
-      })
-      gsap.to(cursorDot, {
-        x: e.clientX - 4,
-        y: e.clientY - 4,
-        duration: 0.1,
-      })
+      pos.x = e.clientX
+      pos.y = e.clientY
+      update()
     }
 
+    // Interaction Handlers
     const onMouseEnterLink = () => {
-      gsap.to(cursor, {
-        scale: 2,
-        opacity: 0.5,
-        duration: 0.3,
-      })
+      scale = 1.5 // Slipped scale slightly
+      setIsHovering(true)
     }
 
     const onMouseLeaveLink = () => {
-      gsap.to(cursor, {
-        scale: 1,
-        opacity: 1,
-        duration: 0.3,
-      })
+      scale = 1
+      setIsHovering(false)
     }
 
     window.addEventListener("mousemove", onMouseMove)
-
+    
+    // Add listeners to interactive elements
     const interactiveElements = document.querySelectorAll("a, button, [data-cursor-hover]")
     interactiveElements.forEach((el) => {
       el.addEventListener("mouseenter", onMouseEnterLink)
       el.addEventListener("mouseleave", onMouseLeaveLink)
     })
-
+    
     return () => {
       window.removeEventListener("mousemove", onMouseMove)
       interactiveElements.forEach((el) => {
@@ -75,17 +96,38 @@ export function CustomCursor() {
   }, [])
 
   return (
-    <>
-      <div
-        ref={cursorRef}
-        className="fixed top-0 left-0 w-10 h-10 border-2 border-primary rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-        style={{ transform: "translate(-50%, -50%)" }}
-      />
-      <div
-        ref={cursorDotRef}
-        className="fixed top-0 left-0 w-2 h-2 bg-primary rounded-full pointer-events-none z-[9999] hidden md:block"
-        style={{ transform: "translate(-50%, -50%)" }}
-      />
-    </>
+    <div
+      ref={cursorRef}
+      className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference hidden md:block will-change-transform"
+    >
+      <svg
+         ref={svgRef}
+         width="40"
+         height="40"
+         viewBox="0 0 50 50"
+         className="overflow-visible"
+      >
+         {/* Organic Blob Shape */}
+         <defs>
+            <filter id="blob-glow">
+               <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+               <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="glow" />
+               <feBlend in="SourceGraphic" in2="glow" />
+            </filter>
+         </defs>
+         
+         {/* The Beast Shape */}
+         <circle 
+            cx="25" 
+            cy="25" 
+            r="12" 
+            fill={isHovering ? "transparent" : "white"}
+            stroke={isHovering ? "white" : "transparent"}
+            strokeWidth={isHovering ? "2" : "0"}
+            filter="url(#blob-glow)"
+            className="opacity-90 transition-[fill,stroke,stroke-width] duration-300 ease-out"
+         />
+      </svg>
+    </div>
   )
 }
