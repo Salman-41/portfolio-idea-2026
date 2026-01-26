@@ -71,14 +71,12 @@ export function ServicesHero() {
         }
       })
 
-      gsap.to(ghostTextRef.current, {
-        y: 150,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
+      // 3. Infinite Marquee for Ghost Text
+      gsap.to(".ghost-marquee", {
+        xPercent: -33.33,
+        duration: 20,
+        ease: "none",
+        repeat: -1
       })
 
       return () => {
@@ -92,7 +90,7 @@ export function ServicesHero() {
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-[110vh] flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
       {/* 1. Organic Blob Background */}
       <div 
@@ -103,25 +101,29 @@ export function ServicesHero() {
         }}
       />
 
-      {/* 2. Layered Ghost Text */}
+      {/* 2. Layered Ghost Text - Infinite Marquee */}
       <div 
         ref={ghostTextRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none z-0 opacity-[0.03]"
+        className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden"
       >
-        <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none whitespace-nowrap">
-          EXPERTISE
-        </h2>
+        <div className="ghost-marquee flex whitespace-nowrap">
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+            EXPERTISE
+          </h2>
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+            EXPERTISE
+          </h2>
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+            EXPERTISE
+          </h2>
+        </div>
       </div>
 
       {/* 3. Main Content Container */}
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-        <div className="hero-tag mb-8 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-[10px] uppercase tracking-[0.4em] font-bold">
-          // Digital Solutions Architecture
-        </div>
-
         <h1 
           ref={titleRef}
-          className="text-[12vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter mb-12 mix-blend-difference"
+          className="text-[12vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter mb-8 mix-blend-difference"
         >
           <div className="hero-title-line overflow-hidden py-1">
             <span className="inline-block">Crafting</span>
@@ -134,36 +136,13 @@ export function ServicesHero() {
           </div>
         </h1>
 
-        <div className="hero-description max-w-2xl mx-auto space-y-6">
+        <div className="hero-description max-w-2xl mx-auto">
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-medium">
             We bridge the gap between imagination and execution, building immersive digital 
             experiences that transcend the ordinary. Every pixel is a calculated move toward 
             perfection.
           </p>
-          
-          <div className="flex items-center justify-center gap-12 pt-8">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-black text-primary">12+</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Capabilities</span>
-            </div>
-            <div className="w-px h-12 bg-white/10 hidden md:block" />
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-black text-primary">A+</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Standard</span>
-            </div>
-            <div className="w-px h-12 bg-white/10 hidden md:block" />
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-black text-primary">2025</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Vision</span>
-            </div>
-          </div>
         </div>
-      </div>
-
-      {/* 4. Decorative Scroll Hint */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30">
-        <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
-        <span className="text-[10px] uppercase tracking-[0.3em] vertical-text">Scroll to explore</span>
       </div>
     </section>
   )

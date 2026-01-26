@@ -76,13 +76,19 @@ export function KineticProcess() {
     <section ref={containerRef} className="py-32 px-4 md:px-12 bg-background relative overflow-hidden">
        <div className="container mx-auto flex flex-col items-center">
           
-          <div className="mb-24 text-center">
-             <span className="text-xs font-mono uppercase tracking-[0.3em] text-primary">
-                // The_Blueprint
-             </span>
-             <h2 className="text-4xl md:text-6xl font-black uppercase mt-4">
-                Process
-             </h2>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-24 max-w-5xl mx-auto">
+             <div>
+               <span className="text-xs font-mono uppercase tracking-[0.3em] text-primary block mb-4">
+                  // The_Blueprint
+               </span>
+               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9]">
+                  Blueprint<br/>
+                  <span className="text-transparent stroke-text-2">Process</span>
+               </h2>
+             </div>
+             <p className="text-lg text-muted-foreground max-w-sm lg:text-right leading-relaxed">
+                A systematic approach to transforming your vision into pixel-perfect reality.
+             </p>
           </div>
 
           <div className="max-w-5xl w-full">

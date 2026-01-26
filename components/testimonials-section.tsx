@@ -3,148 +3,283 @@
 import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Image from "next/image"
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react"
+import { Zap, Code2, Palette, Rocket, LineChart, Shield } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const testimonials = [
+const reasons = [
   {
-    quote: "Alex transformed our vague ideas into a stunning digital reality. The attention to detail is unmatched.",
-    author: "Sarah Jenkins",
-    role: "CTO, FinTech Co",
-    avatar: "/placeholder-user.jpg"
+    icon: Code2,
+    title: "Clean Code",
+    desc: "Maintainable, scalable architecture that your team will love.",
+    number: "01"
   },
   {
-    quote: "The physics-based interactions completely changed how users engage with our platform. Simply brilliant.",
-    author: "Michael Chang",
-    role: "Product Lead, CryptoWise",
-    avatar: "/placeholder-user.jpg"
+    icon: Palette,
+    title: "Premium Design",
+    desc: "Awwwards-level aesthetics with obsessive attention to detail.",
+    number: "02"
   },
   {
-    quote: "Not just a developer, but a true creative partner. The code is clean, the design is art.",
-    author: "Elena Rodriguez",
-    role: "Founder, ArtSpace",
-    avatar: "/placeholder-user.jpg"
+    icon: Zap,
+    title: "Lightning Fast",
+    desc: "Optimized performance with cutting-edge technologies.",
+    number: "03"
+  },
+  {
+    icon: LineChart,
+    title: "Data-Driven",
+    desc: "Insights and analytics that drive real business decisions.",
+    number: "04"
+  },
+  {
+    icon: Rocket,
+    title: "Future-Ready",
+    desc: "Built with modern tools like Next.js, GSAP, and WebGL.",
+    number: "05"
+  },
+  {
+    icon: Shield,
+    title: "Reliable",
+    desc: "Consistent delivery with clear communication throughout.",
+    number: "06"
   }
 ]
 
+const stats = [
+  { value: 50, suffix: "+", label: "Projects" },
+  { value: 3, suffix: "+", label: "Years" },
+  { value: 100, suffix: "%", label: "Satisfaction" },
+  { value: 24, suffix: "h", label: "Response" }
+]
+
+// Custom hook for counting animation
+function useCountUp(end: number, duration: number = 2) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const hasAnimated = useRef(false)
+
+  useEffect(() => {
+    if (!ref.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true
+          
+          const startTime = performance.now()
+          const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime
+            const progress = Math.min(elapsed / (duration * 1000), 1)
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+            setCount(Math.floor(easeOutQuart * end))
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate)
+            } else {
+              setCount(end)
+            }
+          }
+          
+          requestAnimationFrame(animate)
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [end, duration])
+
+  return { count, ref }
+}
+
+function StatItem({ value, suffix, label }: { value: number; suffix: string; label: string }) {
+  const { count, ref } = useCountUp(value, 2)
+
+  return (
+    <div ref={ref} className="stat-item flex flex-col items-center">
+      <div className="flex items-baseline gap-1">
+        <span className="text-6xl md:text-8xl font-black text-white tabular-nums leading-none">
+          {count}
+        </span>
+        <span className="text-4xl md:text-5xl font-black text-primary">{suffix}</span>
+      </div>
+      <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mt-2">{label}</span>
+    </div>
+  )
+}
+
 export function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (prefersReducedMotion) return
 
     const ctx = gsap.context(() => {
+      // Stats horizontal reveal
       gsap.fromTo(
-        contentRef.current,
-        { y: 60, opacity: 0 },
+        ".stat-item",
+        { opacity: 0, y: 30 },
         {
-          y: 0,
           opacity: 1,
+          y: 0,
           duration: 0.8,
+          stagger: 0.2,
           ease: "power3.out",
           scrollTrigger: {
-            trigger: contentRef.current,
+            trigger: ".stats-row",
+            start: "top 85%",
+          },
+        }
+      )
+
+      // Cards staggered reveal with rotation
+      gsap.fromTo(
+        ".capability-card",
+        { 
+          opacity: 0,
+          y: 100,
+          rotateY: -15,
+          transformOrigin: "left center"
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotateY: 0,
+          duration: 1,
+          stagger: 0.12,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: ".cards-grid",
             start: "top 80%",
           },
-        },
+        }
       )
     }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
-  const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-  }
-
-  const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }
-
   return (
-    <section ref={sectionRef} className="py-20 md:py-32">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20">
-        <div ref={contentRef} className="max-w-4xl mx-auto text-center">
-          <span className="block text-sm uppercase tracking-[0.3em] text-primary mb-4">Testimonials</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-16">
-            What Clients <span className="gradient-text">Say</span>
-          </h2>
+    <section ref={sectionRef} className="py-24 md:py-40 bg-background relative overflow-hidden">
+      
+      {/* Massive Background Text */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.02]">
+        <span className="text-[40vw] font-black uppercase tracking-tighter whitespace-nowrap">WHY</span>
+      </div>
 
-          {/* Testimonial Carousel */}
-          <div className="relative">
-            <Quote className="w-16 h-16 text-primary/20 mx-auto mb-8" />
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
+        
+        {/* Header - Asymmetric Layout */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-24">
+          <div>
+            <span className="block text-xs uppercase tracking-[0.4em] text-primary mb-4 font-mono">
+              // Why_Choose_Me
+            </span>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9]">
+              Built<br/>
+              <span className="text-transparent stroke-text-2">Different</span>
+            </h2>
+          </div>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-md lg:text-right leading-relaxed">
+            I don't just build websites — I craft digital experiences that leave lasting impressions.
+          </p>
+        </div>
 
-            <div className="relative overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        {/* Stats Row - Horizontal Strip */}
+        <div className="stats-row flex flex-wrap justify-center lg:justify-between items-center gap-8 lg:gap-4 mb-24 py-12 border-y border-white/10">
+          {stats.map((stat, i) => (
+            <StatItem key={i} {...stat} />
+          ))}
+        </div>
+
+        {/* Cards Grid - Brutalist Style */}
+        <div className="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+          {reasons.map((reason, i) => {
+            const Icon = reason.icon
+            const isHovered = hoveredCard === i
+            
+            return (
+              <div 
+                key={i}
+                className="capability-card group relative"
+                onMouseEnter={() => setHoveredCard(i)}
+                onMouseLeave={() => setHoveredCard(null)}
+                style={{ perspective: "1000px" }}
               >
-                {testimonials.map((testimonial, index) => (
-                  <div key={index} className="w-full flex-shrink-0 px-4">
-                    <blockquote className="text-xl md:text-2xl text-foreground leading-relaxed mb-8">
-                      &ldquo;{testimonial.quote}&rdquo;
-                    </blockquote>
-                    <div className="flex items-center justify-center gap-4">
-                      <div className="w-14 h-14 rounded-full overflow-hidden relative">
-                        <Image
-                          src={testimonial.image || "/placeholder.svg"}
-                          alt={testimonial.author}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="text-left">
-                        <div className="font-bold">{testimonial.author}</div>
-                        <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                {/* Card */}
+                <div className={`
+                  relative p-10 md:p-12 border border-white/10 
+                  transition-all duration-500 cursor-default
+                  ${isHovered ? 'bg-primary text-background border-primary' : 'bg-transparent'}
+                `}>
+                  
+                  {/* Large Number Background */}
+                  <span className={`
+                    absolute top-4 right-4 text-[8rem] font-black leading-none 
+                    transition-all duration-500 select-none pointer-events-none
+                    ${isHovered ? 'text-background/10' : 'text-white/[0.03]'}
+                  `}>
+                    {reason.number}
+                  </span>
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Icon with animated ring */}
+                    <div className="relative w-16 h-16 mb-8">
+                      <div className={`
+                        absolute inset-0 rounded-full border-2 transition-all duration-500
+                        ${isHovered ? 'border-background/30 scale-125' : 'border-white/10 scale-100'}
+                      `} />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Icon className={`w-7 h-7 transition-colors duration-300 ${isHovered ? 'text-background' : 'text-primary'}`} />
                       </div>
                     </div>
+
+                    {/* Title */}
+                    <h3 className={`
+                      text-2xl md:text-3xl font-black uppercase tracking-tight mb-4
+                      transition-colors duration-300
+                      ${isHovered ? 'text-background' : 'text-white'}
+                    `}>
+                      {reason.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className={`
+                      text-base leading-relaxed transition-colors duration-300
+                      ${isHovered ? 'text-background/80' : 'text-muted-foreground'}
+                    `}>
+                      {reason.desc}
+                    </p>
+
+                    {/* Arrow indicator */}
+                    <div className={`
+                      mt-8 flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-medium
+                      transition-all duration-500
+                      ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}
+                    `}>
+                      <span className={isHovered ? 'text-background' : 'text-primary'}>Explore</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
                   </div>
-                ))}
+
+                  {/* Corner accent */}
+                  <div className={`
+                    absolute bottom-0 left-0 w-0 h-1 bg-primary transition-all duration-500
+                    ${isHovered ? 'w-full' : 'w-0'}
+                  `} />
+                </div>
               </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-center gap-4 mt-12">
-              <button
-                onClick={prevTestimonial}
-                className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-                aria-label="Previous testimonial"
-                data-cursor-hover
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              {/* Dots */}
-              <div className="flex items-center gap-2">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentIndex === index ? "w-8 bg-primary" : "bg-border"
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                    data-cursor-hover
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={nextTestimonial}
-                className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-                aria-label="Next testimonial"
-                data-cursor-hover
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+            )
+          })}
         </div>
+
       </div>
     </section>
   )
