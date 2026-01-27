@@ -1,91 +1,138 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ArrowDownLeft, Code2, Database, Brain, Palette } from "lucide-react"
+import { Code2, Database, Brain, Palette, Terminal } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CHARS = "ABCDEFGHIKLMNOPQRSTUVWYZ0123456789!@#$%^&*()_+"
+const expertise = [
+  {
+    id: "01",
+    title: "Creative Dev",
+    icon: Palette,
+    color: "primary",
+    description: "Crafting immersive digital experiences with WebGL, GSAP, and modern frontend frameworks. I focus on interaction, motion, and visual storytelling.",
+    tech: ["React", "Next.js", "Three.js", "GSAP", "Tailwind"],
+  },
+  {
+    id: "02",
+    title: "Data Science",
+    icon: Database,
+    color: "blue-500",
+    description: "Uncovering insights through EDA, building predictive models with ML, and visualizing complex datasets. Turning raw data into actionable intelligence.",
+    tech: ["Python", "TensorFlow", "Pandas", "Scikit-Learn", "EDA"],
+  },
+  {
+    id: "03",
+    title: "AI Integration",
+    icon: Brain,
+    color: "purple-500",
+    description: "Bridging the gap by integrating AI models into web applications for smarter, adaptive user interfaces.",
+    tech: ["LangChain", "OpenAI", "Vector DB", "RAG", "Agents"],
+  },
+]
 
-function ScrambleText({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
-  const [displayText, setDisplayText] = useState("")
-  const [isRevealed, setIsRevealed] = useState(false)
-  
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    const startTimeout = setTimeout(() => {
-      let iteration = 0
-      interval = setInterval(() => {
-        setDisplayText(
-          text
-            .split("")
-            .map((char, index) => {
-              if (index < iteration) {
-                return text[index]
-              }
-              if (char === " ") return " "
-              return CHARS[Math.floor(Math.random() * CHARS.length)]
-            })
-            .join("")
-        )
-
-        if (iteration >= text.length) {
-          clearInterval(interval)
-          setIsRevealed(true)
-        }
-
-        iteration += 1 / 3
-      }, 30)
-    }, delay * 1000)
-
-    return () => {
-      clearTimeout(startTimeout)
-      if (interval) clearInterval(interval)
-    }
-  }, [text, delay])
-
-  return (
-    <span className={`${className} ${isRevealed ? "" : "font-mono opacity-80"}`}>
-      {displayText || "\u00A0".repeat(text.length)}
-    </span>
-  )
-}
+const codeSnippets = [
+  { code: "const magic = () => ✨", x: "10%", y: "20%" },
+  { code: "<Component />", x: "85%", y: "35%" },
+  { code: "gsap.to()", x: "5%", y: "70%" },
+  { code: "async/await", x: "90%", y: "80%" },
+]
 
 export function NarrativeBio() {
   const containerRef = useRef<HTMLElement>(null)
+  const headlineRef = useRef<HTMLHeadingElement>(null)
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Line separators animation
-      gsap.fromTo(".separator-line", 
-        { scaleX: 0, transformOrigin: "left center" },
-        { 
-          scaleX: 1, 
-          duration: 1.5, 
-          ease: "expo.out",
-          stagger: 0.2,
+      // Split headline into words for reveal animation
+      const headline = headlineRef.current
+      if (headline) {
+        const text = headline.textContent || ""
+        headline.innerHTML = text
+          .split(" ")
+          .map(
+            (word, i) =>
+              `<span class="inline-block overflow-hidden"><span class="word inline-block" style="transform: translateY(100%)">${word}</span></span>`
+          )
+          .join(" ")
+
+        // Animate words on scroll
+        gsap.to(".word", {
+          y: 0,
+          stagger: 0.05,
+          duration: 1,
+          ease: "power4.out",
           scrollTrigger: {
-            trigger: containerRef.current,
+            trigger: headline,
+            start: "top 80%",
+            end: "top 40%",
+            scrub: 1,
+          },
+        })
+      }
+
+      // Timeline progress bar
+      gsap.to(progressRef.current, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: timelineRef.current,
+          start: "top 60%",
+          end: "bottom 40%",
+          scrub: true,
+        },
+      })
+
+      // Timeline cards staggered reveal
+      gsap.fromTo(
+        ".timeline-card",
+        { x: (i) => (i % 2 === 0 ? -100 : 100), opacity: 0, scale: 0.9 },
+        {
+          x: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          stagger: 0.3,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: timelineRef.current,
             start: "top 70%",
-          }
+            end: "center 50%",
+            scrub: 1,
+          },
         }
       )
 
-      // Content fade in
-      gsap.fromTo(".bio-content",
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power3.out",
+      // Parallax code snippets
+      gsap.utils.toArray<HTMLElement>(".code-snippet").forEach((el, i) => {
+        gsap.to(el, {
+          y: (i % 2 === 0 ? -80 : 80),
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 60%",
-          }
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
+          },
+        })
+      })
+
+      // Label reveal
+      gsap.fromTo(
+        ".section-label",
+        { clipPath: "inset(0 100% 0 0)" },
+        {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 1.5,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 70%",
+          },
         }
       )
 
@@ -95,105 +142,109 @@ export function NarrativeBio() {
   }, [])
 
   return (
-    <section ref={containerRef} className="py-32 bg-background relative overflow-hidden">
+    <section
+      ref={containerRef}
+      className="relative py-32 md:py-48 bg-background overflow-hidden"
+    >
+      {/* Floating Code Snippets - Parallax Elements */}
+      {codeSnippets.map((snippet, i) => (
+        <div
+          key={i}
+          className="code-snippet absolute hidden md:block text-xs font-mono text-white/10 pointer-events-none select-none"
+          style={{ left: snippet.x, top: snippet.y }}
+        >
+          {snippet.code}
+        </div>
+      ))}
+
       <div className="container mx-auto px-6 md:px-12 max-w-[1400px]">
-        
-        {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-          
-          {/* Left Column - Large Statement */}
-          <div className="md:col-span-12 lg:col-span-7 flex flex-col justify-between mb-16 lg:mb-0">
-            <div>
-              <span className="bio-content block text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">
-                // <ScrambleText text="THE_HYBRID_APPROACH" delay={0.5} />
-              </span>
-              <h2 className="bio-content text-4xl md:text-5xl lg:text-7xl font-sans font-medium leading-[1.1] tracking-tight mb-12">
-                Bridging the gap between <span className="text-transparent stroke-text-2">Data Intelligence</span> & <span className="font-serif italic text-muted-foreground">Creative Expression</span>
-              </h2>
-            </div>
-            
-            <div className="hidden md:block">
-              <ArrowDownLeft className="bio-content w-12 h-12 text-primary opacity-50" />
-            </div>
+        {/* Section Label */}
+        <div className="mb-16 md:mb-24">
+          <span className="section-label inline-block text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">
+            // THE_HYBRID_APPROACH
+          </span>
+        </div>
+
+        {/* Main Headline with Word Reveal */}
+        <div className="mb-24 md:mb-40">
+          <h2
+            ref={headlineRef}
+            className="text-4xl md:text-6xl lg:text-8xl font-medium leading-[1.1] tracking-tight max-w-5xl"
+          >
+            Bridging the gap between Data Intelligence & Creative Expression
+          </h2>
+        </div>
+
+        {/* Timeline Section */}
+        <div ref={timelineRef} className="relative">
+          {/* Progress Line */}
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-white/10 transform md:-translate-x-1/2">
+            <div
+              ref={progressRef}
+              className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary via-blue-500 to-purple-500 origin-top"
+              style={{ transform: "scaleY(0)" }}
+            />
           </div>
 
-          {/* Right Column - Dual Expertise Sections */}
-          <div className="md:col-span-12 lg:col-span-5 flex flex-col gap-12 pt-8 lg:pt-24">
-            
-            {/* Creative Development Section */}
-            <div className="relative group">
-              <div className="separator-line absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary to-transparent opacity-50" />
-              <div className="pt-6">
-                <div className="bio-content flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Palette className="w-5 h-5 text-primary" />
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-white">
-                      <ScrambleText text="CREATIVE DEV" delay={1.0} />
-                    </h3>
-                  </div>
-                  <span className="text-[10px] font-mono text-muted-foreground">01</span>
+          {/* Timeline Cards */}
+          <div className="relative space-y-16 md:space-y-24">
+            {expertise.map((item, index) => (
+              <div
+                key={item.id}
+                className={`timeline-card relative pl-12 md:pl-0 md:w-[45%] ${
+                  index % 2 === 0 ? "md:mr-auto md:pr-16" : "md:ml-auto md:pl-16"
+                }`}
+              >
+                {/* Timeline Dot */}
+                <div
+                  className={`absolute left-0 md:left-auto top-2 w-8 h-8 rounded-full border-2 border-${item.color} bg-background flex items-center justify-center z-10 ${
+                    index % 2 === 0 ? "md:right-0 md:translate-x-1/2 md:-mr-4" : "md:left-0 md:-translate-x-1/2 md:-ml-4"
+                  }`}
+                  style={{
+                    left: index % 2 === 0 ? undefined : "50%",
+                    right: index % 2 === 0 ? "50%" : undefined,
+                  }}
+                >
+                  <item.icon className={`w-4 h-4 text-${item.color}`} />
                 </div>
-                <p className="bio-content text-lg text-muted-foreground leading-relaxed mb-6">
-                  Crafting immersive digital experiences with WebGL, GSAP, and modern frontend frameworks. I focus on interaction, motion, and visual storytelling.
-                </p>
-                <div className="bio-content flex flex-wrap gap-2">
-                  {["React", "Next.js", "Three.js", "GSAP", "Tailwind"].map((tech) => (
-                    <span key={tech} className="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 rounded text-white/60">
-                      {tech}
-                    </span>
-                  ))}
+
+                {/* Card Content */}
+                <div className="group relative p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500">
+                  {/* Background Number */}
+                  <span className="absolute -top-4 -right-4 text-[80px] md:text-[100px] font-black text-white/[0.02] leading-none select-none">
+                    {item.id}
+                  </span>
+
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className={`text-xl md:text-2xl font-bold uppercase tracking-tight text-${item.color}`}>
+                        {item.title}
+                      </h3>
+                      <span className="text-[10px] font-mono text-muted-foreground">
+                        {item.id}
+                      </span>
+                    </div>
+
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      {item.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {item.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 rounded text-white/60 hover:border-white/30 hover:text-white/80 transition-colors"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Data Science Section */}
-            <div className="relative group">
-              <div className="separator-line absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-blue-500 to-transparent opacity-50" />
-              <div className="pt-6">
-                <div className="bio-content flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Database className="w-5 h-5 text-blue-500" />
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-white">
-                      <ScrambleText text="DATA SCIENCE" delay={1.5} />
-                    </h3>
-                  </div>
-                   <span className="text-[10px] font-mono text-muted-foreground">02</span>
-                </div>
-                <p className="bio-content text-lg text-muted-foreground leading-relaxed mb-6">
-                  Uncovering insights through EDA, building predictive models with ML, and visualizing complex datasets. Turning raw data into actionable intelligence.
-                </p>
-                <div className="bio-content flex flex-wrap gap-2">
-                  {["Python", "TensorFlow", "Pandas", "Scikit-Learn", "EDA"].map((tech) => (
-                    <span key={tech} className="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 rounded text-white/60">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* AI Integration Section */}
-             <div className="relative group">
-              <div className="separator-line absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-purple-500 to-transparent opacity-50" />
-              <div className="pt-6">
-                 <div className="bio-content flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Brain className="w-5 h-5 text-purple-500" />
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-white">
-                       <ScrambleText text="AI INTEGRATION" delay={2.0} />
-                    </h3>
-                  </div>
-                   <span className="text-[10px] font-mono text-muted-foreground">03</span>
-                </div>
-                <p className="bio-content text-lg text-muted-foreground leading-relaxed">
-                   Bridging the gap by integrating AI models into web applications for smarter, adaptive user interfaces.
-                </p>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
-        
       </div>
     </section>
   )
