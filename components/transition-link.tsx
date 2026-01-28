@@ -1,7 +1,7 @@
 "use client"
 
 import Link, { LinkProps } from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { ReactNode, MouseEvent } from "react"
 import gsap from "gsap"
 
@@ -12,53 +12,65 @@ interface TransitionLinkProps extends LinkProps {
   onClick?: (e: MouseEvent<HTMLAnchorElement>) => void
 }
 
-export function TransitionLink({ href, children, className, onClick, ...props }: TransitionLinkProps) {
+export function TransitionLink({
+  href,
+  children,
+  className,
+  onClick,
+  ...props
+}: TransitionLinkProps) {
   const router = useRouter()
+  const pathname = usePathname()
 
   const handleTransition = async (e: MouseEvent<HTMLAnchorElement>) => {
-    // Call custom onClick if provided (like closing a menu)
     if (onClick) onClick(e)
-    
-    // Prevent default browser navigation
     e.preventDefault()
-    
-    // 1. Access the global transition overlay
+
+    const targetPath = href.toString()
+
+    // Don't animate if same page
+    if (targetPath === pathname) return
+
     const overlay = document.getElementById("transition-overlay")
+    const bars = document.querySelectorAll(".transition-bar")
+
     if (!overlay) {
-      router.push(href.toString())
+      router.push(targetPath)
       return
     }
 
-    // 2. Trigger OUT animation (The Exit)
-    // We blur the current content and fade it, then bring the overlay in.
+    // Fast EXIT animation
     const tl = gsap.timeline({
       onComplete: () => {
-        router.push(href.toString())
-      }
+        router.push(targetPath)
+      },
     })
 
-    // Fade and blur current page
+    // Show overlay and reset bars
+    tl.set(overlay, { display: "flex" })
+    tl.set(bars, { scaleY: 0, transformOrigin: "bottom" })
+
+    // Fade out current page quickly
     tl.to("main", {
       opacity: 0,
-      filter: "blur(20px)",
-      scale: 0.95,
-      duration: 0.8,
-      ease: "power2.inOut"
+      y: -15,
+      duration: 0.25,
+      ease: "power2.in",
     })
 
-    // Bring in the cinematic overlay
-    tl.set(overlay, { display: "block", opacity: 0 }, "-=0.4")
-    tl.to(overlay, {
-      opacity: 1,
-      duration: 0.6,
-      ease: "power2.inOut"
-    }, "-=0.2")
+    // Bars slide up
+    tl.to(bars, {
+      scaleY: 1,
+      duration: 0.35,
+      stagger: 0.03,
+      ease: "power3.inOut",
+    }, "-=0.15")
   }
 
   return (
-    <Link 
-      href={href} 
-      onClick={handleTransition} 
+    <Link
+      href={href}
+      onClick={handleTransition}
       className={className}
       {...props}
     >
