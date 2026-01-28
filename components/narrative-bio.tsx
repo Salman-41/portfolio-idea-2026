@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Code2, Database, Brain, Palette, Terminal } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +10,6 @@ const expertise = [
   {
     id: "01",
     title: "Creative Dev",
-    icon: Palette,
     color: "primary",
     description:
       "Crafting immersive digital experiences with WebGL, GSAP, and modern frontend frameworks. I focus on interaction, motion, and visual storytelling.",
@@ -20,7 +18,6 @@ const expertise = [
   {
     id: "02",
     title: "Data Science",
-    icon: Database,
     color: "blue-500",
     description:
       "Uncovering insights through EDA, building predictive models with ML, and visualizing complex datasets. Turning raw data into actionable intelligence.",
@@ -29,19 +26,11 @@ const expertise = [
   {
     id: "03",
     title: "AI Integration",
-    icon: Brain,
     color: "purple-500",
     description:
       "Bridging the gap by integrating AI models into web applications for smarter, adaptive user interfaces.",
     tech: ["LangChain", "OpenAI", "Vector DB", "RAG", "Agents"],
   },
-];
-
-const codeSnippets = [
-  { code: "const create = () => {}", x: "10%", y: "20%" },
-  { code: "<Component />", x: "85%", y: "35%" },
-  { code: "gsap.to()", x: "5%", y: "70%" },
-  { code: "async/await", x: "90%", y: "80%" },
 ];
 
 export function NarrativeBio() {
@@ -110,34 +99,6 @@ export function NarrativeBio() {
           },
         },
       );
-
-      // Parallax code snippets
-      gsap.utils.toArray<HTMLElement>(".code-snippet").forEach((el, i) => {
-        gsap.to(el, {
-          y: i % 2 === 0 ? -80 : 80,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1.5,
-          },
-        });
-      });
-
-      // Label reveal
-      gsap.fromTo(
-        ".section-label",
-        { clipPath: "inset(0 100% 0 0)" },
-        {
-          clipPath: "inset(0 0% 0 0)",
-          duration: 1.5,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 70%",
-          },
-        },
-      );
     }, containerRef);
 
     return () => ctx.revert();
@@ -148,25 +109,7 @@ export function NarrativeBio() {
       ref={containerRef}
       className="relative py-32 md:py-48 bg-background overflow-hidden"
     >
-      {/* Floating Code Snippets - Parallax Elements */}
-      {codeSnippets.map((snippet, i) => (
-        <div
-          key={i}
-          className="code-snippet absolute hidden md:block text-xs font-mono text-white/10 pointer-events-none select-none"
-          style={{ left: snippet.x, top: snippet.y }}
-        >
-          {snippet.code}
-        </div>
-      ))}
-
       <div className="container mx-auto px-6 md:px-12 max-w-[1400px]">
-        {/* Section Label */}
-        <div className="mb-16 md:mb-24">
-          <span className="section-label inline-block text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">
-            // THE_HYBRID_APPROACH
-          </span>
-        </div>
-
         {/* Main Headline with Word Reveal */}
         <div className="mb-24 md:mb-40">
           <h2
@@ -199,21 +142,6 @@ export function NarrativeBio() {
                     : "md:ml-auto md:pl-16"
                 }`}
               >
-                {/* Timeline Dot */}
-                <div
-                  className={`absolute left-0 md:left-auto top-2 w-8 h-8 rounded-full border-2 border-${item.color} bg-background flex items-center justify-center z-10 ${
-                    index % 2 === 0
-                      ? "md:right-0 md:translate-x-1/2 md:-mr-4"
-                      : "md:left-0 md:-translate-x-1/2 md:-ml-4"
-                  }`}
-                  style={{
-                    left: index % 2 === 0 ? undefined : "50%",
-                    right: index % 2 === 0 ? "50%" : undefined,
-                  }}
-                >
-                  <item.icon className={`w-4 h-4 text-${item.color}`} />
-                </div>
-
                 {/* Card Content */}
                 <div className="group relative p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500">
                   {/* Background Number */}

@@ -67,13 +67,6 @@ export function GamesArcade() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] opacity-20" />
 
       <div className="container mx-auto relative z-10 max-w-[1400px]">
-        {/* Section Label */}
-        <div className="mb-8">
-          <span className="sub-reveal inline-block text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">
-            // INTERACTIVE_TRAINING
-          </span>
-        </div>
-
         {/* Typography Title */}
         <div className="relative mb-8 leading-none">
           <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white overflow-hidden">
