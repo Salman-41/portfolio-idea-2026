@@ -29,7 +29,8 @@ export const Case001: Case = {
     title: "Case 404: The Missing Key Saga",
     difficulty: "Novice",
     desc: "A newbie-friendly investigation that spirals into corporate conspiracy. Learn the basics of SQL interrogation while tracking down a stolen crypto-key.",
-    db: DB as any, // Cast to generic DB for the engine
+    db: DB as any,
+    concepts: ["SELECT", "WHERE", "ORDER BY", "LIMIT", "Multiple Conditions"],
     stages: [
         {
             id: "stage-1",

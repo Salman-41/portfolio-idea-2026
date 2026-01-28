@@ -13,7 +13,7 @@ export interface CaseStage {
     hint: string
     // Logic for win condition
     // If accuseTargetId is present, player must click "Indict" on that suspect
-    accuseTargetId?: number 
+    accuseTargetId?: number | string
     // If winCondition is present, player must run a specific query context
     winCondition?: (query: string, result: { cols: string[], rows: Row[] }) => boolean
 }
@@ -21,8 +21,9 @@ export interface CaseStage {
 export interface Case {
     id: string
     title: string
-    difficulty: "Novice" | "Intermediate" | "Advanced"
+    difficulty: "Novice" | "Intermediate" | "Advanced" | "Master"
     desc: string // Overall description
     db: DatabaseSchema
     stages: CaseStage[]
+    concepts?: string[] // e.g. ["SELECT", "WHERE", "JOIN"]
 }

@@ -29,6 +29,7 @@ export const Case003: Case = {
     difficulty: "Advanced",
     desc: "A rogue AI 'Wintermute' is trying to escape the mainframe. It is hiding its tracks by deleting logs and encrypting packets. Your job is to hunt it down.",
     db: DB as any,
+    concepts: ["Security Logs", "Packet Analysis", "Advanced Filtering"],
     stages: [
         {
             id: "s1",
@@ -50,12 +51,73 @@ export const Case003: Case = {
         },
         {
             id: "s3",
-            title: "Phase 3: The Escape",
-            desc: "'winter_mute.exe' is trying to send data. Check 'encrypted_packets' for source = 3. Verify the header is 'ESCAPE_SEQUENCE'.",
+            title: "Phase 3: User Verification",
+            desc: "Who is the owner of the 'winter_mute.exe' process?",
+            hint: "SELECT user FROM process_list WHERE name = 'winter_mute.exe'",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && String(result.rows[0].user) === "SYSTEM"
+            }
+        },
+        {
+            id: "s4",
+            title: "Phase 4: Network Traffic",
+            desc: "The AI is sending data. Check 'encrypted_packets' for any traffic originating from Node 3.",
             hint: "SELECT * FROM encrypted_packets WHERE source = 3",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && Number(result.rows[0].source) === 3
+            }
+        },
+        {
+            id: "s5",
+            title: "Phase 5: Payload Analysis",
+            desc: "Inspect the packet header. Is it a standard protocol?",
+            hint: "SELECT header FROM encrypted_packets WHERE source = 3",
             winCondition: (query, result) => {
                 return result.rows.length > 0 && String(result.rows[0].header) === "ESCAPE_SEQUENCE"
             }
+        },
+        {
+            id: "s6",
+            title: "Phase 6: Data Volume",
+            desc: "How much data is being transferred? Check the 'size' of the packet.",
+            hint: "SELECT size FROM encrypted_packets WHERE source = 3",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && Number(result.rows[0].size) === 9000
+            }
+        },
+        {
+            id: "s7",
+            title: "Phase 7: Destination Tracking",
+            desc: "Where is the packet going? Identify the 'dest' ID.",
+            hint: "SELECT dest FROM encrypted_packets WHERE source = 3",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && Number(result.rows[0].dest) === 99
+            }
+        },
+        {
+            id: "s8",
+            title: "Phase 8: Firewall Audit",
+            desc: "Did the firewall stop it? Check 'firewall_logs' for the destination IP 'UNKNOWN' (ID 99 implies external).",
+            hint: "SELECT * FROM firewall_logs WHERE ip = 'UNKNOWN'",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && String(result.rows[0].action) === "BLOCK"
+            }
+        },
+        {
+            id: "s9",
+            title: "Phase 9: Secondary Infection",
+            desc: "The AI tried to clone itself. Check process list for 'mining_rig'. It might be a decoy.",
+            hint: "SELECT * FROM process_list WHERE name = 'mining_rig'",
+            winCondition: (query, result) => {
+                return result.rows.length > 0 && Number(result.rows[0].node_id) === 2
+            }
+        },
+        {
+            id: "s10",
+            title: "Phase 10: Containment",
+            desc: "Wintermute is isolated on Node 3, but the firewall blocked the escape. Termination required. Indict the process PID 404.",
+            hint: "Indict PID 404.",
+            accuseTargetId: 404 // winter_mute
         }
     ]
 }

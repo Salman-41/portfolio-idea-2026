@@ -14,101 +14,7 @@ interface DataDetectiveGameProps {
   onBack: () => void
 }
 
-// Enhanced Parser
-function executeQuery(query: string, db: DatabaseSchema): { cols: string[], rows: Row[], error?: string } {
-  try {
-    let q = query.trim()
-    let limit = -1
-    const limitMatch = q.match(/limit\s+(\d+)/i)
-    if (limitMatch) {
-       limit = parseInt(limitMatch[1])
-       q = q.replace(/limit\s+(\d+)/i, "").trim()
-    }
-    
-    let orderByCol = ""
-    let orderDesc = false
-    const orderMatch = q.match(/order\s+by\s+([a-zA-Z0-9_]+)(?:\s+(asc|desc))?/i)
-    if (orderMatch) {
-        orderByCol = orderMatch[1]
-        orderDesc = orderMatch[2]?.toLowerCase() === "desc"
-        q = q.replace(/order\s+by\s+([a-zA-Z0-9_]+)(?:\s+(asc|desc))?/i, "").trim()
-    }
-
-    q = q.toLowerCase()
-    if (!q.startsWith("select")) throw new Error("Only SELECT queries are allowed.")
-    
-    const fromParts = q.split("from")
-    if (fromParts.length < 2) throw new Error("Missing FROM clause.")
-    
-    const tablePart = fromParts[1].trim().split(" ")[0]
-    if (!db[tablePart]) throw new Error(`Table '${tablePart}' not found. Available: ${Object.keys(db).join(", ")}`)
-    
-    let results = [...(db[tablePart] || [])]
-    
-    if (q.includes("where")) {
-       const whereClause = q.split("where")[1].trim()
-       const conditions = whereClause.split("and").map(c => c.trim())
-       
-       results = results.filter(row => {
-           return conditions.every(cond => {
-               if (cond.includes(" like ")) {
-                   const [col, pattern] = cond.split(" like ").map(s => s.trim())
-                   const rowVal = String(row[col] || "").toLowerCase()
-                   const cleanPattern = pattern.replace(/['"]+/g, '').toLowerCase()
-                   
-                   if (cleanPattern.startsWith("%") && cleanPattern.endsWith("%")) {
-                       return rowVal.includes(cleanPattern.slice(1, -1))
-                   } else if (cleanPattern.endsWith("%")) {
-                       return rowVal.startsWith(cleanPattern.slice(0, -1))
-                   } else if (cleanPattern.startsWith("%")) {
-                       return rowVal.endsWith(cleanPattern.slice(1))
-                   }
-                   return rowVal === cleanPattern
-               }
-
-               if (cond.includes(">")) {
-                   const [col, val] = cond.split(">").map(s => s.trim())
-                   if (typeof row[col] === 'undefined') return false
-                   return Number(row[col]) > Number(val)
-               }
-               if (cond.includes("<")) {
-                   const [col, val] = cond.split("<").map(s => s.trim())
-                   if (typeof row[col] === 'undefined') return false
-                   return Number(row[col]) < Number(val)
-               }
-               if (cond.includes("=")) {
-                   const [col, val] = cond.split("=").map(s => s.trim())
-                   const cleanVal = val.replace(/['"]+/g, '')
-                   if (typeof row[col] === 'undefined') return false
-                   return String(row[col]).toLowerCase() == cleanVal.toLowerCase()
-               }
-               return true
-           })
-       })
-    }
-
-    if (orderByCol) {
-        results.sort((a, b) => {
-            const valA = a[orderByCol]
-            const valB = b[orderByCol]
-            if (valA === undefined || valB === undefined) return 0
-            if (valA < valB) return orderDesc ? 1 : -1
-            if (valA > valB) return orderDesc ? -1 : 1
-            return 0
-        })
-    }
-    
-    if (limit > 0) {
-        results = results.slice(0, limit)
-    }
-    
-    if (results.length === 0) return { cols: [], rows: [] }
-    return { cols: Object.keys(results[0]), rows: results }
-
-  } catch (err: any) {
-    return { cols: [], rows: [], error: err.message || "Syntax Error" }
-  }
-}
+import { executeQuery } from "./detective-cases/sql-engine"
 
 export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
   const [activeCase, setActiveCase] = useState<Case | null>(null)
@@ -296,6 +202,46 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
                                  <span className="text-pink-500 font-bold">{">"}</span>
                                  <span className="text-lg">{entry.query}</span>
                              </div>
+                             
+                             {entry.result.rows.length > 0 && 
+                              Object.values(entry.result.rows[0]).some(v => typeof v === 'number') && 
+                              (
+                                 <div className="mt-4 p-4 border border-white/10 rounded bg-black/40">
+                                     <div className="text-[10px] font-mono text-cyan-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                          <BarChart3 className="w-3 h-3" />
+                                          Data Visualization Detected
+                                     </div>
+                                     <div className="flex items-end gap-2 h-32 w-full pb-2 border-b border-white/10">
+                                         {entry.result.rows.slice(0, 10).map((row: Row, rIdx: number) => {
+                                             // Heuristic: Find first number col for height, first string col for label
+                                             const numKey = Object.keys(row).find(k => typeof row[k] === 'number')
+                                             const strKey = Object.keys(row).find(k => typeof row[k] === 'string')
+                                             
+                                             const val = numKey ? Number(row[numKey]) : 0
+                                             // Normalize height relative to max in set
+                                             const maxVal = Math.max(...entry.result.rows.map((r: Row) => Number(r[numKey!] || 0)))
+                                             const heightPct = maxVal > 0 ? (val / maxVal) * 100 : 0
+                                             
+                                             return (
+                                                 <div key={rIdx} className="flex-1 flex flex-col justify-end group relative">
+                                                      <div 
+                                                        className="w-full bg-cyan-500/20 border-t border-cyan-400 group-hover:bg-cyan-400/40 transition-all relative"
+                                                        style={{ height: `${heightPct}%` }}
+                                                      >
+                                                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black px-1 rounded border border-white/10">
+                                                              {val} ({(numKey || "").toUpperCase()})
+                                                          </div>
+                                                      </div>
+                                                      <div className="mt-2 text-[10px] text-center text-muted-foreground truncate w-full">
+                                                          {strKey ? String(row[strKey]).substring(0, 4) : `#${rIdx}`}
+                                                      </div>
+                                                 </div>
+                                             )
+                                         })}
+                                     </div>
+                                 </div>
+                              )
+                             }
                              
                              {entry.result.error ? (
                                  <div className="inline-block px-4 py-2 bg-red-950/30 border-l-2 border-red-500 text-red-400 font-bold text-xs">
