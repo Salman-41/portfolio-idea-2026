@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Code2, Database, Brain, Palette, Terminal } from "lucide-react"
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Code2, Database, Brain, Palette, Terminal } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const expertise = [
   {
@@ -13,7 +13,8 @@ const expertise = [
     title: "Creative Dev",
     icon: Palette,
     color: "primary",
-    description: "Crafting immersive digital experiences with WebGL, GSAP, and modern frontend frameworks. I focus on interaction, motion, and visual storytelling.",
+    description:
+      "Crafting immersive digital experiences with WebGL, GSAP, and modern frontend frameworks. I focus on interaction, motion, and visual storytelling.",
     tech: ["React", "Next.js", "Three.js", "GSAP", "Tailwind"],
   },
   {
@@ -21,7 +22,8 @@ const expertise = [
     title: "Data Science",
     icon: Database,
     color: "blue-500",
-    description: "Uncovering insights through EDA, building predictive models with ML, and visualizing complex datasets. Turning raw data into actionable intelligence.",
+    description:
+      "Uncovering insights through EDA, building predictive models with ML, and visualizing complex datasets. Turning raw data into actionable intelligence.",
     tech: ["Python", "TensorFlow", "Pandas", "Scikit-Learn", "EDA"],
   },
   {
@@ -29,37 +31,38 @@ const expertise = [
     title: "AI Integration",
     icon: Brain,
     color: "purple-500",
-    description: "Bridging the gap by integrating AI models into web applications for smarter, adaptive user interfaces.",
+    description:
+      "Bridging the gap by integrating AI models into web applications for smarter, adaptive user interfaces.",
     tech: ["LangChain", "OpenAI", "Vector DB", "RAG", "Agents"],
   },
-]
+];
 
 const codeSnippets = [
-  { code: "const magic = () => ✨", x: "10%", y: "20%" },
+  { code: "const create = () => {}", x: "10%", y: "20%" },
   { code: "<Component />", x: "85%", y: "35%" },
   { code: "gsap.to()", x: "5%", y: "70%" },
   { code: "async/await", x: "90%", y: "80%" },
-]
+];
 
 export function NarrativeBio() {
-  const containerRef = useRef<HTMLElement>(null)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
-  const timelineRef = useRef<HTMLDivElement>(null)
-  const progressRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Split headline into words for reveal animation
-      const headline = headlineRef.current
+      const headline = headlineRef.current;
       if (headline) {
-        const text = headline.textContent || ""
+        const text = headline.textContent || "";
         headline.innerHTML = text
           .split(" ")
           .map(
             (word, i) =>
-              `<span class="inline-block overflow-hidden"><span class="word inline-block" style="transform: translateY(100%)">${word}</span></span>`
+              `<span class="inline-block overflow-hidden"><span class="word inline-block" style="transform: translateY(100%)">${word}</span></span>`,
           )
-          .join(" ")
+          .join(" ");
 
         // Animate words on scroll
         gsap.to(".word", {
@@ -73,7 +76,7 @@ export function NarrativeBio() {
             end: "top 40%",
             scrub: 1,
           },
-        })
+        });
       }
 
       // Timeline progress bar
@@ -86,7 +89,7 @@ export function NarrativeBio() {
           end: "bottom 40%",
           scrub: true,
         },
-      })
+      });
 
       // Timeline cards staggered reveal
       gsap.fromTo(
@@ -105,21 +108,21 @@ export function NarrativeBio() {
             end: "center 50%",
             scrub: 1,
           },
-        }
-      )
+        },
+      );
 
       // Parallax code snippets
       gsap.utils.toArray<HTMLElement>(".code-snippet").forEach((el, i) => {
         gsap.to(el, {
-          y: (i % 2 === 0 ? -80 : 80),
+          y: i % 2 === 0 ? -80 : 80,
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top bottom",
             end: "bottom top",
             scrub: 1.5,
           },
-        })
-      })
+        });
+      });
 
       // Label reveal
       gsap.fromTo(
@@ -133,13 +136,12 @@ export function NarrativeBio() {
             trigger: containerRef.current,
             start: "top 70%",
           },
-        }
-      )
+        },
+      );
+    }, containerRef);
 
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [])
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
@@ -192,13 +194,17 @@ export function NarrativeBio() {
               <div
                 key={item.id}
                 className={`timeline-card relative pl-12 md:pl-0 md:w-[45%] ${
-                  index % 2 === 0 ? "md:mr-auto md:pr-16" : "md:ml-auto md:pl-16"
+                  index % 2 === 0
+                    ? "md:mr-auto md:pr-16"
+                    : "md:ml-auto md:pl-16"
                 }`}
               >
                 {/* Timeline Dot */}
                 <div
                   className={`absolute left-0 md:left-auto top-2 w-8 h-8 rounded-full border-2 border-${item.color} bg-background flex items-center justify-center z-10 ${
-                    index % 2 === 0 ? "md:right-0 md:translate-x-1/2 md:-mr-4" : "md:left-0 md:-translate-x-1/2 md:-ml-4"
+                    index % 2 === 0
+                      ? "md:right-0 md:translate-x-1/2 md:-mr-4"
+                      : "md:left-0 md:-translate-x-1/2 md:-ml-4"
                   }`}
                   style={{
                     left: index % 2 === 0 ? undefined : "50%",
@@ -217,7 +223,9 @@ export function NarrativeBio() {
 
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className={`text-xl md:text-2xl font-bold uppercase tracking-tight text-${item.color}`}>
+                      <h3
+                        className={`text-xl md:text-2xl font-bold uppercase tracking-tight text-${item.color}`}
+                      >
                         {item.title}
                       </h3>
                       <span className="text-[10px] font-mono text-muted-foreground">
@@ -247,5 +255,5 @@ export function NarrativeBio() {
         </div>
       </div>
     </section>
-  )
+  );
 }
