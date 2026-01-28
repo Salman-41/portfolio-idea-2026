@@ -1,16 +1,9 @@
 export type Row = Record<string, string | number | boolean>
 export type Table = Row[]
 
+// Generic Database Schema - Key is table name, Value is array of rows
 export interface DatabaseSchema {
-    suspects?: Table
-    access_logs?: Table
-    transactions?: Table
-    emails?: Table
-    phone_logs?: Table
-    medical_records?: Table
-    server_nodes?: Table
-    encrypted_packets?: Table
-    [key: string]: Table | undefined
+    [tableName: string]: Table | undefined
 }
 
 export interface CaseStage {

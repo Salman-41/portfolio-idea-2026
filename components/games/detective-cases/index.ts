@@ -1,7 +1,7 @@
 import { Case } from "./types"
-import { Case001 } from "./case-001"
-import { Case002 } from "./case-002"
-import { Case003 } from "./case-003"
+import { Case001 } from "./cases/001-missing-key/case"
+import { Case002 } from "./cases/002-sector-7/case"
+import { Case003 } from "./cases/003-ghost-protocol/case"
 
 export const ALL_CASES: Case[] = [
     Case001,
