@@ -224,13 +224,13 @@ export function HeroSection() {
 
         {/* Mobile Role Badge - Visible only on small screens */}
         <div className="flex md:hidden flex-col items-center gap-1 mt-6 pointer-events-auto">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/80 font-medium">Creative Developer</span>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/80 font-medium">Developer & Data Scientist</span>
           <span className="text-[9px] uppercase tracking-[0.2em] text-white/50">Swat, Pakistan</span>
         </div>
 
         {/* Floating Metadata - Desktop Only */}
         <div className="absolute right-4 md:right-[5vw] top-[55%] md:top-[50%] -translate-y-full hidden md:flex flex-col gap-1 items-end text-right pointer-events-auto mix-blend-difference text-white">
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">Creative Developer</span>
+            <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">Developer & Data Scientist</span>
             <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] opacity-70">Swat, Pakistan</span>
         </div>
       </div>
