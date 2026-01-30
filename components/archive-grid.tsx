@@ -9,6 +9,9 @@ import { ArrowUpRight } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * Interface definition for a project item.
+ */
 interface Project {
   id: number
   title: string
@@ -18,16 +21,26 @@ interface Project {
   image: string
 }
 
+/**
+ * Props for the ArchiveGrid component.
+ */
 interface ArchiveGridProps {
   projects: Project[]
 }
 
-// Helper to generate a consistent dark palette color based on ID
+/**
+ * Generates a consistent dark distinctive background color based on the project ID.
+ * @param id - The project ID used to select the color.
+ */
 const getCardColor = (id: number) => {
     const colors = ["#0f172a", "#1e1b4b", "#2e1065", "#020617", "#172554", "#052e16"]
     return colors[id % colors.length]
 }
 
+/**
+ * A detailed grid layout for displaying archived projects.
+ * Features sticky cards with scroll-triggered blur and scale exit animations.
+ */
 export function ArchiveGrid({ projects }: ArchiveGridProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -39,7 +52,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             const nextCard = cards[index + 1]
             if (!nextCard) return
 
-            // "Ghostly Blur" Exit Transition
             gsap.to(card, {
                 opacity: 0,
                 scale: 0.9,
@@ -71,15 +83,12 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
                 style={{ backgroundColor: getCardColor(project.id) }}
             >
                 <div className="flex flex-col md:flex-row h-full">
-                    {/* Content Side */}
                     <div className="w-full md:w-2/5 p-8 md:p-16 flex flex-col justify-between z-10 relative">
-                        {/* Top Meta */}
                         <div className="flex justify-between items-center text-xs uppercase tracking-[0.2em] text-white/50">
                             <span>No. {(index + 1).toString().padStart(2, '0')}</span>
                             <span>{project.year}</span>
                         </div>
 
-                        {/* Main Text */}
                         <div className="relative">
                             <h3 className="text-5xl md:text-8xl font-black tracking-tighter mb-4 leading-[0.85] text-white mix-blend-difference">
                                 {project.title}
@@ -89,7 +98,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
                             </span>
                         </div>
 
-                        {/* Footer */}
                         <div className="flex items-center gap-4 group-hover:gap-6 transition-all duration-500">
                              <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-black transition-colors duration-300">
                                 <ArrowUpRight className="w-5 h-5" />
@@ -98,7 +106,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
                         </div>
                     </div>
 
-                    {/* Image Side */}
                     <div className="w-full md:w-3/5 relative h-1/2 md:h-full overflow-hidden">
                          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40 z-10" />
                         <Image
@@ -113,24 +120,20 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
           </div>
         ))}
         
-        {/* Creative End Section - "Let's Work Together" CTA */}
         <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
           
-          {/* Large Background Text - Left */}
           <div className="absolute left-8 top-1/2 -translate-y-1/2 hidden lg:block">
             <span className="text-[15vw] font-black uppercase tracking-tighter text-white/[0.02] leading-none [writing-mode:vertical-lr] rotate-180">
               NEXT?
             </span>
           </div>
 
-          {/* Large Background Text - Right */}
           <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:block">
             <span className="text-[15vw] font-black uppercase tracking-tighter text-white/[0.02] leading-none [writing-mode:vertical-lr]">
               LET'S TALK
             </span>
           </div>
 
-          {/* Floating Tags - Top Left - Hidden on Mobile */}
           <div className="absolute top-20 left-8 md:left-16 hidden md:flex flex-col gap-3">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Available for</span>
             <div className="flex flex-wrap gap-2 max-w-[200px]">
@@ -142,7 +145,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </div>
           </div>
 
-          {/* Floating Tags - Top Right - Hidden on Mobile */}
           <div className="absolute top-20 right-8 md:right-16 hidden md:flex flex-col gap-3 items-end">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Expertise in</span>
             <div className="flex flex-wrap gap-2 max-w-[400px] justify-end">
@@ -154,7 +156,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </div>
           </div>
 
-          {/* Corner Accents - Hidden on Mobile */}
           <div className="absolute bottom-20 left-8 md:left-16 hidden md:block">
             <div className="flex flex-col gap-2">
               <div className="w-12 h-[1px] bg-gradient-to-r from-white/20 to-transparent" />
@@ -171,10 +172,8 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </div>
           </div>
 
-          {/* Rotating Text Circle - Center */}
           <div className="relative w-[320px] h-[320px] md:w-[500px] md:h-[500px]">
             
-            {/* Ring 1 - Outer Text (Slow, Clockwise) */}
             <svg 
               className="absolute inset-0 w-full h-full" 
               viewBox="0 0 200 200"
@@ -193,7 +192,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
               </text>
             </svg>
 
-            {/* Ring 2 - Middle Text (Fast, Counter-Clockwise) - LARGER TEXT */}
             <svg 
               className="absolute inset-[30px] md:inset-[50px] w-[calc(100%-60px)] h-[calc(100%-60px)] md:w-[calc(100%-100px)] md:h-[calc(100%-100px)]" 
               viewBox="0 0 200 200"
@@ -212,7 +210,6 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
               </text>
             </svg>
 
-            {/* Ring 3 - Inner Text (Slow, Clockwise) */}
             <svg 
               className="absolute inset-[60px] md:inset-[100px] w-[calc(100%-120px)] h-[calc(100%-120px)] md:w-[calc(100%-200px)] md:h-[calc(100%-200px)]" 
               viewBox="0 0 200 200"
@@ -231,17 +228,14 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
               </text>
             </svg>
 
-            {/* Center Button - Stylish Fill on Hover */}
             <a
               href="https://wa.me/923456556686?text=Hi!%20I%20have%20a%20project%20in%20mind."
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 m-auto w-[120px] h-[120px] md:w-[180px] md:h-[180px] rounded-full border border-white/30 flex items-center justify-center group cursor-pointer overflow-hidden hover:border-primary transition-colors duration-300"
             >
-              {/* Fill Background - Scales from center on hover */}
               <div className="absolute inset-0 bg-primary rounded-full scale-0 group-hover:scale-100 transition-transform duration-500 ease-out origin-center" />
               
-              {/* Text Content */}
               <div className="text-center relative z-10">
                 <span className="block text-white/70 group-hover:text-background text-[10px] md:text-xs font-medium uppercase tracking-[0.3em] transition-colors duration-300 mb-1">
                   Start a

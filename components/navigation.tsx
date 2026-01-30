@@ -1,20 +1,27 @@
 "use client"
 
-import React, { useState, useEffect, useRef, memo, type ReactNode } from "react"
-import Link from "next/link"
+import React, { useState, useEffect, useRef, memo } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
 import { useTextScramble } from "@/hooks/use-text-scramble"
+import { Magnetic } from "./magnetic"
+import { TransitionLink } from "./transition-link"
 
-// Desktop navigation - minimal links
+/**
+ * Navigation links for the desktop header.
+ * Minimal set to keep the header clean.
+ */
 const navLinks = [
   { href: "/projects", label: "Projects" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
 ]
 
-// Full menu links for burger menu - includes Home and Contact
+/**
+ * Full navigation links for the full-screen menu (burger menu).
+ * Includes Home and Contact for complete navigation access.
+ */
 const menuLinks = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
@@ -23,12 +30,19 @@ const menuLinks = [
   { href: "/contact", label: "Contact" },
 ]
 
-// --- Helper Components ---
+/**
+ * Props for the ScrambleLink component.
+ */
+interface ScrambleLinkProps {
+  href: string
+  label: string
+  active: boolean
+}
 
-import { Magnetic } from "./magnetic"
-import { TransitionLink } from "./transition-link"
-
-const ScrambleLink = memo(({ href, label, active }: { href: string; label: string; active: boolean }) => {
+/**
+ * A navigation link that scrambles its text on hover.
+ */
+const ScrambleLink = memo(({ href, label, active }: ScrambleLinkProps) => {
   const { displayText, scramble } = useTextScramble(label, { duration: 800, speed: 40 })
 
   return (
@@ -47,6 +61,10 @@ const ScrambleLink = memo(({ href, label, active }: { href: string; label: strin
 })
 ScrambleLink.displayName = "ScrambleLink"
 
+/**
+ * Main Navigation component.
+ * Handles the fixed header, scroll interactions, and the full-screen burger menu.
+ */
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -65,7 +83,6 @@ export function Navigation() {
   }, [])
 
   useEffect(() => {
-    // Coordinate for the burger button visual center
     const circleOrigin = "calc(100% - 4rem) 4rem"
 
     if (isMenuOpen) {
@@ -93,17 +110,14 @@ export function Navigation() {
       <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 lg:px-20 transition-all duration-500">
         <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-14">
           
-          {/* Logo - Fixed Left */}
           <TransitionLink href="/" className="absolute left-0 z-50 group shrink-0 mix-blend-difference" data-cursor-hover>
             <span className="text-2xl md:text-2xl font-bold tracking-tight text-white">
               s<span className="text-primary">y</span><span className="text-primary">.</span>
             </span>
           </TransitionLink>
 
-          {/* Right-Aligned Navigation Engine */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-end h-12 gap-10">
             
-            {/* Desktop Links - Now on the Right */}
             <div className={cn(
                "hidden md:flex items-center gap-10 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
                isScrolled 
@@ -120,10 +134,8 @@ export function Navigation() {
               ))}
             </div>
 
-            {/* Spatial Swap Action Slot - Button <-> Burger */}
             <div className="relative flex items-center justify-end min-w-[140px] h-12">
                
-               {/* "Let's Talk" Button - Visible at Top (Desktop Only) */}
                <div className={cn(
                   "hidden md:block transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
                   isScrolled ? "opacity-0 translate-x-12 pointer-events-none scale-90" : "opacity-100 translate-x-0 scale-100"
@@ -139,10 +151,8 @@ export function Navigation() {
                  </Magnetic>
                </div>
 
-               {/* Burger Container - Always visible on mobile, visible on scroll for desktop */}
                <div className={cn(
                   "absolute inset-0 flex items-center justify-end transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                  // Always visible on mobile (< md), scroll-dependent on desktop (>= md)
                   "opacity-100 scale-100 translate-x-0",
                   "md:opacity-0 md:scale-75 md:translate-x-12 md:pointer-events-none",
                   isScrolled && "md:opacity-100 md:scale-100 md:translate-x-0 md:pointer-events-auto"
@@ -181,7 +191,6 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Cinematic Full Screen Menu Overlay */}
       <div
         ref={menuRef}
         className={cn(
@@ -190,13 +199,10 @@ export function Navigation() {
         )}
         style={{ clipPath: "circle(0% at calc(100% - 3rem) 3rem)" }}
       >
-        {/* Gradient Background Accent */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-primary/5 to-transparent pointer-events-none" />
         
-        {/* Main Content Grid */}
         <div className="relative h-full flex flex-col md:flex-row">
           
-          {/* Left Side - Navigation */}
           <div className="flex-1 flex flex-col justify-center px-6 md:px-16 lg:px-24 py-20 md:py-12">
             <div ref={menuLinksRef} className="space-y-1 md:space-y-2">
               {menuLinks.map((link, index) => (
@@ -225,9 +231,7 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Right Side - Info Panel (Desktop) */}
           <div className="hidden md:flex w-80 lg:w-96 flex-col justify-between p-12 border-l border-white/5">
-            {/* Top - Title */}
             <div>
               <h3 className="text-xs font-mono uppercase tracking-[0.3em] text-primary mb-2">Menu</h3>
               <p className="text-sm text-white/40 leading-relaxed">
@@ -235,7 +239,6 @@ export function Navigation() {
               </p>
             </div>
 
-            {/* Middle - Status */}
             <div className="space-y-6">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-white/30 block mb-2">Status</span>
@@ -262,7 +265,6 @@ export function Navigation() {
               </div>
             </div>
 
-            {/* Bottom - Social */}
             <div className="flex gap-4">
               {["GitHub", "LinkedIn", "Twitter"].map((social) => (
                 <a
@@ -279,7 +281,6 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-6 flex md:hidden justify-between items-center border-t border-white/5">
           <div className="flex gap-4">
             {["Gh", "Li", "Tw"].map((social, i) => (

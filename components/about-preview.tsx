@@ -11,6 +11,11 @@ import { cn } from "@/lib/utils"
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * About Preview section component.
+ * Features complex kinetic parallax animations, floating elements, 
+ * and a narrative introduction to the about page.
+ */
 export function AboutPreview() {
   const containerRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
@@ -19,7 +24,7 @@ export function AboutPreview() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 2. Kinetic Parallax for Floating Background Text
+      // Kinetic Parallax for Floating Background Text
       gsap.to(".bg-token", {
         yPercent: -40,
         rotation: 15,
@@ -32,7 +37,7 @@ export function AboutPreview() {
         }
       })
 
-      // 3. Narrative Layer Parallax (Moves Slower)
+      // Narrative Layer Parallax
       gsap.to(textRef.current, {
         y: -100,
         ease: "none",
@@ -44,7 +49,7 @@ export function AboutPreview() {
         }
       })
 
-      // 4. Image Layer Parallax & Mask Reveal (Moves Faster)
+      // Image Layer Parallax & Mask Reveal
       if (imageRef.current) {
         gsap.to(imageRef.current, {
           y: -250,
@@ -72,7 +77,7 @@ export function AboutPreview() {
         )
       }
 
-      // 5. Floating Stats (Rapid Movement)
+      // Floating Stats
       gsap.to(".stat-bubble", {
         y: -300,
         stagger: 0.1,
@@ -85,7 +90,7 @@ export function AboutPreview() {
         }
       })
 
-      // 6. Atmospheric Glow Animation
+      // Atmospheric Glow Animation
       gsap.to(".bg-glow-blob", {
         x: "random(-100, 100)",
         y: "random(-100, 100)",
@@ -106,13 +111,10 @@ export function AboutPreview() {
       ref={containerRef} 
       className="relative min-h-screen md:min-h-[140vh] py-20 md:py-40 bg-background border-t border-white/5 overflow-hidden"
     >
-      {/* Background Kinetic Layer - Spectral Tokens & Atmospheric Glows */}
       <div className="absolute inset-0 pointer-events-none z-0">
-         {/* Atmospheric Color Blobs - Reduced on Mobile */}
          <div className="bg-glow-blob absolute top-[20%] left-[15%] w-[60vw] md:w-[40vw] h-[60vw] md:h-[40vw] bg-primary/10 rounded-full blur-[80px] md:blur-[120px] mix-blend-screen opacity-30 md:opacity-50" />
          <div className="bg-glow-blob absolute bottom-[20%] right-[10%] w-[40vw] md:w-[30vw] h-[40vw] md:h-[30vw] bg-blue-500/10 rounded-full blur-[60px] md:blur-[100px] mix-blend-screen opacity-20 md:opacity-40" />
 
-         {/* Background Tokens - Hidden on Mobile */}
          <div className="bg-token absolute top-1/4 left-[10%] text-[25vw] font-black text-primary/[0.04] select-none leading-none blur-sm hidden md:block">
             SY
          </div>
@@ -123,15 +125,12 @@ export function AboutPreview() {
 
       <div className="container mx-auto px-4 md:px-12 relative h-full">
         
-        {/* Mobile Layout: Stacked, Centered */}
         <div className="flex flex-col md:hidden relative z-20">
-          {/* Section Label */}
           <div className="flex items-center gap-4 mb-8">
              <span className="w-12 h-[2px] bg-primary" />
              <span className="text-[10px] uppercase tracking-[0.5em] text-primary font-bold">About</span>
           </div>
           
-          {/* Image - Full Width on Mobile */}
           <div className="relative w-full aspect-[4/5] mb-8 rounded-lg overflow-hidden">
              <Image 
                 src="/images/11.jpeg" 
@@ -143,19 +142,16 @@ export function AboutPreview() {
              <div className="absolute inset-0 bg-primary/10 mix-blend-color z-10" />
           </div>
           
-          {/* Headline */}
           <h2 className="text-4xl font-black tracking-tighter leading-[0.9] uppercase mb-6">
             WEAVING <span className="text-primary italic">DIGITAL</span><br />
             FABRICS FROM<br />
             PURE <span className="gradient-text">LOGIC</span>.
           </h2>
 
-          {/* Description */}
           <p className="text-lg text-white/60 leading-relaxed mb-8">
             I don&apos;t just build websites. I engineer digital ecosystems that pulse with aesthetic intent and technical precision.
           </p>
 
-          {/* CTA */}
           <Magnetic strength={0.25}>
             <Link
               href="/about"
@@ -170,9 +166,7 @@ export function AboutPreview() {
           </Magnetic>
         </div>
 
-        {/* Desktop Layout: Original Parallax Design */}
         <div className="hidden md:block">
-          {/* Layer 1: Narrative Block (Middle-Ground) */}
           <div 
             ref={textRef}
             className="relative z-20 max-w-3xl ml-auto lg:mr-20 mt-20"
@@ -213,7 +207,6 @@ export function AboutPreview() {
             </div>
           </div>
 
-          {/* Layer 2: Visual Collage (Foreground) */}
           <div 
             ref={imageRef}
             className="absolute top-[10%] left-[5%] w-full max-w-sm lg:max-w-md z-30"
@@ -234,7 +227,6 @@ export function AboutPreview() {
                </div>
             </div>
 
-            {/* Floating Micro-UI Component */}
             <div className="absolute -right-12 -bottom-12 w-48 p-6 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-2xl z-40">
                <div className="space-y-4">
                   <div className="flex justify-between items-center">
@@ -249,7 +241,6 @@ export function AboutPreview() {
             </div>
           </div>
 
-          {/* Layer 3: Kinetic Stats Bubbles (Fast-Moving Foreground) */}
           <div className="absolute right-[5%] top-[20%] space-y-24 z-40">
              <div className="stat-bubble flex flex-col items-end">
                 <span className="text-8xl font-black tracking-tighter text-white/90 leading-none">08</span>
@@ -269,7 +260,6 @@ export function AboutPreview() {
 
       </div>
 
-      {/* Aesthetic Film Grain Overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.05] contrast-150 brightness-150 mix-blend-overlay z-[100]" style={{ backgroundImage: "url('/noise.png')" }} />
     </section>
   )

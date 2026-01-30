@@ -7,6 +7,10 @@ import { Mail, MapPin, Send, Check } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * Cinematic Contact section component.
+ * Features a magnetic submit button, staggered entrance animations, and a contact form.
+ */
 export function CinematicContact() {
   const sectionRef = useRef<HTMLElement>(null)
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
@@ -43,7 +47,7 @@ export function CinematicContact() {
       buttonRef.current?.addEventListener("mousemove", handleMouseMove)
       buttonRef.current?.addEventListener("mouseleave", handleMouseLeave)
 
-      // Staggered entrance animations for contact info
+      // Staggered entrance animations
       gsap.fromTo(".contact-info-item", {
         x: -60,
         opacity: 0
@@ -59,7 +63,6 @@ export function CinematicContact() {
         }
       })
 
-      // Staggered entrance for form fields
       gsap.fromTo(".contact-field", {
         y: 40,
         opacity: 0
@@ -75,7 +78,7 @@ export function CinematicContact() {
         }
       })
 
-      // Parallax effect on decorative elements
+      // Parallax effect
       gsap.to(".contact-deco-line", {
         scaleX: 1,
         scrollTrigger: {
@@ -94,7 +97,6 @@ export function CinematicContact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate delay
     setTimeout(() => {
       setIsSubmitting(false)
       setIsSubmitted(true)
@@ -105,21 +107,17 @@ export function CinematicContact() {
 
   return (
     <section ref={sectionRef} className="py-16 md:py-32 px-4 md:px-12 bg-background relative overflow-hidden">
-      {/* Decorative Lines */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/50 to-transparent hidden md:block" />
       
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 relative z-10">
         
-        {/* Contact Info */}
         <div className="space-y-10 md:space-y-16">
-          {/* Section Label - Mobile */}
           <div className="contact-info-item flex items-center gap-3">
             <span className="w-8 h-[1px] bg-primary contact-deco-line origin-left scale-x-0" />
             <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-primary font-medium">Contact Details</span>
           </div>
 
           <div className="space-y-6 md:space-y-8">
-            {/* Email */}
             <div className="contact-info-item group flex items-start gap-4 md:gap-6 cursor-pointer">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:border-primary shrink-0">
                 <Mail className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-black transition-colors" />
@@ -130,7 +128,6 @@ export function CinematicContact() {
               </div>
             </div>
             
-            {/* Location */}
             <div className="contact-info-item group flex items-start gap-4 md:gap-6 cursor-pointer">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:border-primary shrink-0">
                 <MapPin className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-black transition-colors" />
@@ -142,7 +139,6 @@ export function CinematicContact() {
             </div>
           </div>
 
-          {/* Availability */}
           <div className="contact-info-item pt-8 md:pt-12 border-t border-white/10 space-y-4 md:space-y-6">
             <h3 className="text-xl md:text-3xl font-bold uppercase tracking-tighter">Availability</h3>
             <div className="flex items-center gap-3">
@@ -152,16 +148,13 @@ export function CinematicContact() {
           </div>
         </div>
 
-        {/* Form */}
         <div className="contact-form-container">
-          {/* Section Label */}
           <div className="contact-field flex items-center gap-3 mb-8">
             <span className="w-8 h-[1px] bg-primary contact-deco-line origin-left scale-x-0" />
             <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-primary font-medium">Send Message</span>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8 md:space-y-12">
-            {/* Name Input */}
             <div className="contact-field relative group">
               <input 
                 type="text" 
@@ -174,11 +167,9 @@ export function CinematicContact() {
               <label className="absolute left-0 top-4 md:top-6 text-lg md:text-2xl text-muted-foreground pointer-events-none transition-all duration-500 peer-focus:-top-2 peer-focus:text-[10px] md:peer-focus:text-xs peer-focus:text-primary peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-[10px] md:peer-[:not(:placeholder-shown)]:text-xs">
                 Your Name
               </label>
-              {/* Underline Animation */}
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 peer-focus:w-full" />
             </div>
 
-            {/* Email Input */}
             <div className="contact-field relative group">
               <input 
                 type="email" 
@@ -194,7 +185,6 @@ export function CinematicContact() {
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 peer-focus:w-full" />
             </div>
 
-            {/* Message Textarea */}
             <div className="contact-field relative group">
               <textarea 
                 rows={3}
@@ -210,7 +200,6 @@ export function CinematicContact() {
               <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-500 peer-focus:w-full" />
             </div>
 
-            {/* Submit Button - Responsive Sizing */}
             <div className="contact-field flex justify-center md:justify-end pt-4 md:pt-8">
               <button 
                 ref={buttonRef}
@@ -238,7 +227,6 @@ export function CinematicContact() {
 
       </div>
 
-      {/* Abstract Grid background */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <div className="grid-bg h-full w-full" />
       </div>

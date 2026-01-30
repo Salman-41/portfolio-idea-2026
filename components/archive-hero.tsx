@@ -6,6 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * Props for the ArchiveHero component.
+ */
 interface ArchiveHeroProps {
   activeFilter: string
   onFilterChange: (filter: string) => void
@@ -14,6 +17,10 @@ interface ArchiveHeroProps {
 
 const filters = ["All", "Web App", "E-commerce", "Creative", "3D/WebGL"]
 
+/**
+ * Archive Hero section component.
+ * Features an interactive mouse-following blob, reveal animations, and a filter bar for projects.
+ */
 export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: ArchiveHeroProps) {
   const containerRef = useRef<HTMLElement>(null)
   const blobRef = useRef<HTMLDivElement>(null)
@@ -21,7 +28,7 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Mouse Follower (Organic Blob)
+      // Mouse Follower (Organic Blob)
       const xTo = gsap.quickTo(blobRef.current, "x", { duration: 1, ease: "power3" })
       const yTo = gsap.quickTo(blobRef.current, "y", { duration: 1, ease: "power3" })
 
@@ -33,7 +40,7 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
 
       window.addEventListener("mousemove", handleMouseMove)
 
-      // 2. Entrance Animation
+      // Entrance Animation
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
 
       tl.fromTo(".archive-hero-title-line span", {
@@ -65,7 +72,7 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         duration: 1
       }, "-=0.5")
 
-      // 3. Scroll Parallax
+      // Scroll Parallax
       gsap.to(titleRef.current, {
         y: -100,
         scale: 1.05,
@@ -77,7 +84,7 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         }
       })
 
-      // 4. Infinite Marquee for Ghost Text - seamless loop
+      // Infinite Marquee for Ghost Text - seamless loop
       gsap.fromTo(".archive-ghost-marquee", 
         { xPercent: 0 },
         {
@@ -101,7 +108,6 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
       ref={containerRef} 
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
-      {/* 1. Organic Blob Background */}
       <div 
         ref={blobRef}
         className="fixed top-0 left-0 w-[600px] h-[600px] -ml-[300px] -mt-[300px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
@@ -110,7 +116,6 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         }}
       />
 
-      {/* 2. Layered Ghost Text - Infinite Marquee */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden">
         <div className="archive-ghost-marquee flex whitespace-nowrap" style={{ width: "fit-content" }}>
           <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
@@ -122,7 +127,6 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         </div>
       </div>
 
-      {/* 3. Main Content Container */}
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
         <h1 
           ref={titleRef}
@@ -143,7 +147,6 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
           </p>
         </div>
 
-        {/* Filter Bar */}
         <div className="filter-bar flex flex-wrap justify-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md rounded-full border border-white/10">
           {filters.map((filter) => (
             <button

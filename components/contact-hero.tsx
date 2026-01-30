@@ -6,6 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * Contact Hero section component.
+ * Features an interactive mouse-following blob, reveal animations, 
+ * scroll parallax, and an infinite marquee background.
+ */
 export function ContactHero() {
   const containerRef = useRef<HTMLElement>(null)
   const blobRef = useRef<HTMLDivElement>(null)
@@ -13,11 +18,10 @@ export function ContactHero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Mouse Follower (Organic Blob) - Constrained to viewport
+      // Mouse follower logic
       const handleMouseMove = (e: MouseEvent) => {
         if (!blobRef.current) return
-        // Use transform instead of x/y to prevent scroll issues
-        const x = e.clientX - 200 // half of blob width
+        const x = e.clientX - 200
         const y = e.clientY - 200
         
         gsap.to(blobRef.current, {
@@ -30,7 +34,6 @@ export function ContactHero() {
 
       window.addEventListener("mousemove", handleMouseMove)
 
-      // 2. Entrance Animation
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
 
       tl.fromTo(".contact-hero-tag", {
@@ -62,7 +65,6 @@ export function ContactHero() {
         duration: 1
       }, "-=1")
 
-      // 3. Scroll Parallax
       gsap.to(titleRef.current, {
         y: -100,
         scale: 1.05,
@@ -74,7 +76,6 @@ export function ContactHero() {
         }
       })
 
-      // 4. Infinite Seamless Marquee for Ghost Text
       const marquee = document.querySelector(".contact-ghost-marquee")
       if (marquee) {
         gsap.set(marquee, { xPercent: 0 })
@@ -99,7 +100,6 @@ export function ContactHero() {
       ref={containerRef} 
       className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center bg-background pt-20 overflow-hidden"
     >
-      {/* 1. Organic Blob Background - Contained */}
       <div 
         ref={blobRef}
         className="fixed w-[400px] h-[400px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
@@ -111,7 +111,6 @@ export function ContactHero() {
         }}
       />
 
-      {/* 2. Layered Ghost Text - Seamless Infinite Marquee */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden hidden md:block">
         <div className="contact-ghost-marquee flex whitespace-nowrap will-change-transform" style={{ width: "fit-content" }}>
           <span className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
@@ -123,16 +122,13 @@ export function ContactHero() {
         </div>
       </div>
 
-      {/* 3. Main Content Container */}
       <div className="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-center text-center">
-        {/* Section Tag */}
         <span className="contact-hero-tag text-primary text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 md:mb-8 inline-flex items-center gap-3">
           <span className="w-6 md:w-8 h-[1px] bg-primary" />
           Get in Touch
           <span className="w-6 md:w-8 h-[1px] bg-primary" />
         </span>
 
-        {/* Title with Reveal Animation - BIGGER */}
         <h1 
           ref={titleRef}
           className="text-[20vw] md:text-[14vw] lg:text-[12vw] leading-[0.9] font-black uppercase tracking-tighter mb-6 md:mb-8 mix-blend-difference"
@@ -145,7 +141,6 @@ export function ContactHero() {
           </div>
         </h1>
 
-        {/* Description */}
         <div className="contact-hero-description max-w-sm md:max-w-2xl mx-auto">
           <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-medium">
             I'm always open to new challenges and creative collaborations. 

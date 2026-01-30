@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Link from "next/link"
 import { TransitionLink } from "./transition-link"
 import { ArrowDown } from "lucide-react"
 import { ThreeScene } from "./three-scene"
@@ -12,6 +11,11 @@ gsap.registerPlugin(ScrollTrigger)
 
 const CHARS = "ABCDEFGHIKLMNOPQRSTUVWYZ0123456789!@#$%^&*()_+"
 
+/**
+ * Renders text with a scrambling effect on reveal.
+ * @param text - The text to display.
+ * @param delay - Delay in seconds before the scramble effect starts.
+ */
 function ScrambleText({ text, delay = 0 }: { text: string; delay?: number }) {
   const [displayText, setDisplayText] = useState("")
   const [isRevealed, setIsRevealed] = useState(false)
@@ -56,7 +60,10 @@ function ScrambleText({ text, delay = 0 }: { text: string; delay?: number }) {
   )
 }
 
-// Magnetic Button Component
+/**
+ * A wrapper component that applies a magnetic effect to its children.
+ * The child element moves towards the cursor when hovered.
+ */
 function MagneticButton({ children }: { children: React.ReactNode }) {
   const buttonRef = useRef<HTMLDivElement>(null)
   
@@ -102,6 +109,10 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
   )
 }
 
+/**
+ * The main Hero Section component.
+ * Features a 3D background, scrambled text animations, magnetic buttons, and responsive layout.
+ */
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -117,7 +128,6 @@ export function HeroSection() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
 
-      // Initial Bottom Bar Reveal
       if (bottomBarRef.current) {
         tl.fromTo(
           bottomBarRef.current,
@@ -126,7 +136,6 @@ export function HeroSection() {
         )
       }
       
-      // Subtitle Reveal
       if (subtitleRef.current) {
         tl.fromTo(
           subtitleRef.current,
@@ -136,7 +145,6 @@ export function HeroSection() {
         )
       }
 
-      // CTA Reveal
       if (ctaRef.current) {
         tl.fromTo(
           ctaRef.current,
@@ -146,7 +154,6 @@ export function HeroSection() {
         )
       }
 
-      // Scroll Indicator Reveal
       if (scrollIndicatorRef.current) {
         gsap.fromTo(
           scrollIndicatorRef.current,
@@ -163,7 +170,6 @@ export function HeroSection() {
         })
       }
 
-      // Parallax Effects
       gsap.to(".hero-title-line", {
         x: (i) => (i % 2 === 0 ? -100 : 100),
         scrollTrigger: {
@@ -190,27 +196,22 @@ export function HeroSection() {
 
   return (
     <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex flex-col justify-between p-4 md:p-12 lg:p-16 grid-bg">
-      {/* 3D Background */}
       <div className="absolute inset-0 z-0 hero-bg-container pointer-events-none">
         <ThreeScene />
       </div>
 
-      {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-background/90 z-0 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background-rgb),0.8)_100%)] z-0 pointer-events-none" />
 
-      {/* Main Content - Mobile-First Centered Layout */}
       <div className="relative z-20 flex-1 flex flex-col justify-center items-center w-full pointer-events-none">
         <h1
           ref={titleRef}
           className="flex flex-col w-full text-[17vw] sm:text-[14vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.9] tracking-tighter uppercase mix-blend-difference text-white text-center md:text-left"
         >
-          {/* Handle - Centered on Mobile */}
           <span className="self-center md:self-start md:pl-[5vw] mb-4 text-[10px] sm:text-xs md:text-base font-mono text-primary/80 tracking-widest uppercase pointer-events-auto">
             Salman Yousufzai
           </span>
           
-          {/* Typography - Stacked Vertically, Centered on Mobile */}
           <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-start md:pl-[5vw]">
             <ScrambleText text="CRAFTING" delay={0.5} />
           </span>
@@ -222,20 +223,17 @@ export function HeroSection() {
           </span>
         </h1>
 
-        {/* Mobile Role Badge - Visible only on small screens */}
         <div className="flex md:hidden flex-col items-center gap-1 mt-6 pointer-events-auto">
           <span className="text-[10px] uppercase tracking-[0.25em] text-primary/80 font-medium">Developer & Data Scientist</span>
           <span className="text-[9px] uppercase tracking-[0.2em] text-white/50">Swat, Pakistan</span>
         </div>
 
-        {/* Floating Metadata - Desktop Only */}
         <div className="absolute right-4 md:right-[5vw] top-[55%] md:top-[50%] -translate-y-full hidden md:flex flex-col gap-1 items-end text-right pointer-events-auto mix-blend-difference text-white">
             <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">Developer & Data Scientist</span>
             <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] opacity-70">Swat, Pakistan</span>
         </div>
       </div>
 
-      {/* Side Decorations - Desktop Only */}
       <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 pointer-events-auto mix-blend-difference text-white">
         {["GitHub", "LinkedIn", "Twitter"].map((label) => (
           <a
@@ -252,7 +250,6 @@ export function HeroSection() {
         <div className="w-[1px] h-24 bg-gradient-to-b from-white/50 via-white to-transparent mx-auto" />
       </div>
 
-      {/* Side Decorations - Desktop Only */}
       <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 text-right pointer-events-auto mix-blend-difference text-white">
         <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] [writing-mode:vertical-lr]">
           EST. 2026
@@ -266,10 +263,8 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom Bar - Mobile Optimized */}
       <div ref={bottomBarRef} className="relative z-30 flex flex-col md:flex-row justify-between items-center md:items-end w-full pointer-events-none gap-4 pb-2 md:pb-0">
          
-         {/* Description - Desktop Only */}
          <div className="hidden md:flex flex-col gap-2 items-start text-left pointer-events-auto mix-blend-difference text-white">
             <div ref={subtitleRef} className="max-w-md">
                <p className="text-sm opacity-80 leading-relaxed font-light tracking-wide border-l border-primary/20 pl-4">
@@ -280,9 +275,6 @@ export function HeroSection() {
             </div>
          </div>
 
-
-
-         {/* CTAs - Centered on Mobile, Right on Desktop */}
          <div className="flex flex-col gap-4 items-center md:items-end pointer-events-auto md:ml-auto">
             <div ref={ctaRef} className="flex flex-row gap-4 items-center justify-center md:justify-end">
                <MagneticButton>
