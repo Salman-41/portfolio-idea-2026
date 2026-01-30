@@ -1,12 +1,6 @@
 "use client"
 
-import { useEffect, useLayoutEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
-
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect
+import { useRef } from "react"
 
 interface MarqueeRowProps {
   items: string[]
@@ -16,68 +10,35 @@ interface MarqueeRowProps {
 }
 
 function MarqueeRow({ items, direction = "left", speed = 100, className }: MarqueeRowProps) {
-  const rowRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  useIsomorphicLayoutEffect(() => {
-    const content = contentRef.current
-    if (!content) return
-
-    let ctx = gsap.context(() => {
-      // Use a ticker or small delay to ensure styles are applied and measured correctly
-      gsap.delayedCall(0.1, () => {
-        const scrollWidth = content.scrollWidth
-        const contentWidth = scrollWidth / 3
-        if (contentWidth <= 0) return
-
-        const xStart = direction === "left" ? 0 : -contentWidth
-        gsap.set(content, { x: xStart })
-
-        const loop = gsap.to(content, {
-          x: direction === "left" ? -contentWidth : 0,
-          duration: Math.max(10, contentWidth / speed), // Clamp duration to avoid infinite speed
-          ease: "none",
-          repeat: -1,
-          modifiers: {
-            x: gsap.utils.unitize((x) => parseFloat(x) % contentWidth)
-          }
-        })
-
-        const timeScaleSetter = gsap.quickTo(loop, "timeScale", {
-          duration: 0.5,
-          ease: "power2.out"
-        })
-
-        ScrollTrigger.create({
-          onUpdate: (self) => {
-            const velocity = Math.abs(self.getVelocity() / 120)
-            timeScaleSetter(1 + velocity)
-          }
-        })
-
-        const onScrollEnd = () => {
-          gsap.to(loop, { timeScale: 1, duration: 1.5, ease: "power2.inOut" })
-        }
-        ScrollTrigger.addEventListener("scrollEnd", onScrollEnd)
-      })
-    }, content)
-
-    return () => ctx.revert()
-  }, [items, direction, speed])
+  // Determine animation class based on direction and speed
+  const getAnimationClass = () => {
+    if (direction === "right") return "marquee-track marquee-track-right"
+    if (speed > 120) return "marquee-track marquee-track-left-slow"
+    return "marquee-track marquee-track-left"
+  }
+  
+  // Render items for one copy
+  const renderItems = () => (
+    <div className="flex items-center gap-12 md:gap-20 shrink-0">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-center gap-12 md:gap-20 shrink-0">
+          <span className={`text-5xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-700 hover:text-primary ${
+            i % 2 === 0 ? "text-foreground" : "text-transparent stroke-text opacity-40"
+          }`}>
+            {item}
+          </span>
+          <span className="text-primary text-3xl md:text-5xl opacity-40">✦</span>
+        </div>
+      ))}
+    </div>
+  )
 
   return (
-    <div ref={rowRef} className={`whitespace-nowrap flex overflow-hidden ${className}`}>
-      <div ref={contentRef} className="flex items-center gap-12 md:gap-20 will-change-transform">
-        {[...items, ...items, ...items].map((item, i) => (
-          <div key={i} className="flex items-center gap-12 md:gap-20">
-            <span className={`text-5xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-700 hover:text-primary ${
-              i % 2 === 0 ? "text-foreground" : "text-transparent stroke-text opacity-40"
-            }`}>
-              {item}
-            </span>
-            <span className="text-primary text-3xl md:text-5xl opacity-40">✦</span>
-          </div>
-        ))}
+    <div className={`whitespace-nowrap flex overflow-hidden ${className}`}>
+      <div className={getAnimationClass()}>
+        {/* Two identical copies for seamless infinite scroll */}
+        {renderItems()}
+        {renderItems()}
       </div>
     </div>
   )
