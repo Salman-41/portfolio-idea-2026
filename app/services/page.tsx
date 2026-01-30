@@ -5,7 +5,6 @@ import { SmoothScrollProvider } from "@/components/smooth-scroll-provider"
 import { ServicesHero } from "@/components/services-hero"
 import { GraphicServices } from "@/components/graphic-services"
 import { KineticProcess } from "@/components/kinetic-process"
-import { Marquee } from "@/components/marquee"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import type { Metadata } from "next"
 
@@ -26,7 +25,6 @@ export default function ServicesPage() {
         <ServicesHero />
         <GraphicServices />
         <KineticProcess />
-        <Marquee items={marqueeItems} direction="right" speed={0.5} />
         <TestimonialsSection />
       </main>
 

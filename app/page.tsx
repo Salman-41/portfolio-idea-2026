@@ -45,7 +45,6 @@ export default function HomePage() {
         <Marquee items={marqueeItems} />
         <FeaturedProjects />
         <AboutPreview />
-        <Marquee items={marqueeItems} />
       </main>
       <Footer />
     </SmoothScrollProvider>

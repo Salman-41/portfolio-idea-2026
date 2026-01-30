@@ -8,7 +8,6 @@ import { IdentityHero } from "@/components/identity-hero"
 import { NarrativeBio } from "@/components/narrative-bio"
 import { PhilosophyGrid } from "@/components/philosophy-grid"
 import { GamesArcade } from "@/components/games-arcade"
-import { Marquee } from "@/components/marquee"
 
 const marqueeItems = ["Creative Developer", "UI/UX Designer", "Motion Enthusiast", "System Architect", "Available for Work"]
 
@@ -23,9 +22,6 @@ export default function AboutPage() {
         <NarrativeBio />
         <PhilosophyGrid />
         <GamesArcade />
-        <div className="py-20">
-           <Marquee items={marqueeItems} />
-        </div>
       </main>
 
       <Footer />
