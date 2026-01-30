@@ -83,15 +83,19 @@ export function Preloader() {
   const [complete, setComplete] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = "hidden"
+    // Add class to html element to prevent layout shift
+    document.documentElement.classList.add("preloader-active")
 
     const ctx = gsap.context(() => {
       // MASTER TIMELINE CONFIG
       // Target Total Duration: ~6.3s - 6.5s
       const tl = gsap.timeline({
         onComplete: () => {
-          setComplete(true)
-          document.body.style.overflow = "auto"
+          // Smooth transition - remove class after a tiny delay
+          setTimeout(() => {
+            document.documentElement.classList.remove("preloader-active")
+            setComplete(true)
+          }, 100)
         }
       })
 
