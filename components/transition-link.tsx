@@ -10,6 +10,7 @@ interface TransitionLinkProps extends LinkProps {
   className?: string
   "data-cursor-hover"?: boolean
   onClick?: (e: MouseEvent<HTMLAnchorElement>) => void
+  style?: React.CSSProperties
 }
 
 export function TransitionLink({
@@ -17,6 +18,7 @@ export function TransitionLink({
   children,
   className,
   onClick,
+  style,
   ...props
 }: TransitionLinkProps) {
   const router = useRouter()
@@ -72,6 +74,7 @@ export function TransitionLink({
       href={href}
       onClick={handleTransition}
       className={className}
+      style={style}
       {...props}
     >
       {children}

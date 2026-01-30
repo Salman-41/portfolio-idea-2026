@@ -18,6 +18,10 @@ const floatingElements = [
   { type: "cross", size: 16, x: "20%", y: "85%", speed: 0.4 },
 ]
 
+/**
+ * Identity Hero section component.
+ * Features a large name reveal, portrait image, and floating decorative elements.
+ */
 export function IdentityHero() {
   const containerRef = useRef<HTMLElement>(null)
   const firstNameRef = useRef<HTMLHeadingElement>(null)
@@ -133,10 +137,8 @@ export function IdentityHero() {
       ref={containerRef}
       className="relative pt-32 pb-0 md:pt-48 md:pb-0 px-4 md:px-12 min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
     >
-      {/* Background Grid & Noise */}
       <div className="absolute inset-0 grid-bg opacity-50" />
 
-      {/* Floating Decorative Elements */}
       {floatingElements.map((el, i) => (
         <div
           key={i}
@@ -180,7 +182,6 @@ export function IdentityHero() {
       ))}
 
       <div className="container mx-auto relative z-10 flex flex-col items-center px-4">
-        {/* FIRST NAME */}
         <h1
           ref={firstNameRef}
           className="relative z-10 text-[22vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase mix-blend-difference text-white"
@@ -188,7 +189,6 @@ export function IdentityHero() {
           SALMAN
         </h1>
 
-        {/* PORTRAIT CONTAINER */}
         <div className="relative z-0 -my-8 md:-my-24 w-[80vw] md:w-[35vw] aspect-[3/4]">
           <div
             ref={imageWrapperRef}
@@ -204,7 +204,6 @@ export function IdentityHero() {
             <div className="absolute inset-0 bg-primary/20 mix-blend-overlay" />
           </div>
 
-          {/* Rotating Badge - Smaller on Mobile */}
           <div
             ref={badgeRef}
             className="absolute -top-6 -right-4 md:-top-12 md:-right-24 w-20 h-20 md:w-48 md:h-48 z-20"
@@ -228,7 +227,6 @@ export function IdentityHero() {
           </div>
         </div>
 
-        {/* LAST NAME */}
         <h1
           ref={lastNameRef}
           className="relative z-20 text-[16vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent stroke-text-2"

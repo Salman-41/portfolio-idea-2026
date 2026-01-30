@@ -62,6 +62,10 @@ const projects = [
   }
 ]
 
+/**
+ * Featured Projects section component.
+ * Displays a gallery of selected works with sticky cards and scroll-triggered animations.
+ */
 export function FeaturedProjects() {
   const containerRef = useRef<HTMLDivElement>(null)
   
@@ -73,16 +77,14 @@ export function FeaturedProjects() {
             const nextCard = cards[index + 1]
             if (!nextCard) return
 
-            // "Ghostly Blur" Exit Transition
-            // As the next card scrolls up, the current one blurs, fades, and drifts
             gsap.to(card, {
                 opacity: 0.3,
                 filter: "blur(12px)",
                 y: -30,
                 scrollTrigger: {
                     trigger: nextCard,
-                    start: "top bottom", // Starts when next card peaks at bottom
-                    end: "top top",      // Ends when next card hits the top
+                    start: "top bottom",
+                    end: "top top",
                     scrub: true,
                 }
             })
@@ -97,8 +99,6 @@ export function FeaturedProjects() {
       ref={containerRef} 
       className="relative bg-background pt-20 pb-40 border-t border-white/5"
     >
-        
-        {/* Header (Non-sticky, scrolls away) */}
         <div className="container mx-auto px-6 md:px-12 mb-20 text-center">
              <span className="text-primary text-sm uppercase tracking-[0.4em] mb-4 block">Selected Works</span>
              <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
@@ -112,24 +112,19 @@ export function FeaturedProjects() {
                     key={project.id} 
                     className="project-card sticky top-0 h-screen flex items-center justify-center p-4 md:p-8"
                 >
-                    {/* Card Container */}
                     <TransitionLink 
                         href={project.href}
                         className="relative w-full max-w-6xl h-[80vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group"
                         style={{ backgroundColor: project.color }}
                     >
-                        {/* Two Column Layout inside Card */}
                         <div className="flex flex-col md:flex-row h-full">
                             
-                            {/* Content Side */}
                             <div className="w-full md:w-2/5 p-8 md:p-12 flex flex-col justify-between z-10 relative">
-                                {/* Top Meta */}
                                 <div className="flex justify-between items-center text-sm uppercase tracking-widest text-muted-foreground/60">
                                     <span>{project.id_display} / {project.year}</span>
                                     <span>{project.category}</span>
                                 </div>
 
-                                {/* Main Text */}
                                 <div>
                                     <h3 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 leading-[0.9]">
                                         {project.title}
@@ -139,7 +134,6 @@ export function FeaturedProjects() {
                                     </p>
                                 </div>
 
-                                {/* Footer & Tags */}
                                 <div>
                                     <div className="flex gap-2 flex-wrap mb-8">
                                         {project.tags.map(tag => (
@@ -154,7 +148,6 @@ export function FeaturedProjects() {
                                 </div>
                             </div>
 
-                            {/* Image Side */}
                             <div className="w-full md:w-3/5 relative h-1/2 md:h-full overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/20 md:to-background z-10" />
                                 <Image
@@ -170,11 +163,9 @@ export function FeaturedProjects() {
                 </div>
             ))}
 
-            {/* Final "Explore All" Card - Creative CTA */}
             <div className="project-card sticky top-0 h-screen flex items-center justify-center p-4 md:p-8 lg:p-12">
                 <div className="relative w-full max-w-7xl h-[85vh] rounded-[2rem] md:rounded-[4rem] border border-primary/20 bg-primary/5 flex flex-col items-center justify-center text-center p-8 md:p-24 group backdrop-blur-3xl">
                     
-                    {/* Background Decorative Elements */}
                     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-[inherit]">
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] border-2 border-primary/5 rounded-full scale-50 group-hover:scale-100 transition-transform duration-1000" />
@@ -196,7 +187,6 @@ export function FeaturedProjects() {
                                 className="relative w-44 h-44 md:w-64 md:h-64 flex items-center justify-center rounded-full bg-primary text-primary-foreground group/btn transition-all duration-700 active:scale-95 overflow-hidden shadow-[0_0_60px_rgba(var(--primary-rgb),0.3)]"
                                 data-cursor-hover
                             >
-                                {/* Liquid Hover Effect */}
                                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]" />
                                 
                                 <div className="relative z-10 flex flex-col items-center gap-3 md:gap-4 transition-transform duration-500 group-hover/btn:scale-110">
@@ -207,7 +197,6 @@ export function FeaturedProjects() {
                         </Magnetic>
                     </div>
 
-                    {/* Bottom Metadata */}
                     <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end text-[10px] uppercase tracking-[0.4em] opacity-30 select-none">
                         <span className="hidden md:block">Ready to Collaborate?</span>
                         <div className="flex flex-col items-center gap-1">

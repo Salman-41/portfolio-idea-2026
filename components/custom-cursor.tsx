@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 
+/**
+ * Custom Cursor component.
+ * Renders a custom SVG cursor with jelly/distortion effects based on velocity.
+ * Handles hover states for interactive elements.
+ */
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
@@ -13,25 +18,21 @@ export function CustomCursor() {
     const cursor = cursorRef.current
     if (!cursor) return
 
-    // Check pre-requisites
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || "ontouchstart" in window) {
       cursor.style.display = "none"
       return
     }
 
-    // Default cursor params
     const pos = { x: 0, y: 0 }
     const vel = { x: 0, y: 0 }
     let scale = 1
     let rotation = 0
 
-    // Set initial position
     gsap.set(cursor, { xPercent: -50, yPercent: -50 })
 
     const update = () => {
-      // Calculate velocity for distortion effects
-      const dx = pos.x - gsap.getProperty(cursor, "x") as number
-      const dy = pos.y - gsap.getProperty(cursor, "y") as number
+      const dx = pos.x - (gsap.getProperty(cursor, "x") as number)
+      const dy = pos.y - (gsap.getProperty(cursor, "y") as number)
       
       vel.x += (dx - vel.x) * 0.2
       vel.y += (dy - vel.y) * 0.2
@@ -39,12 +40,10 @@ export function CustomCursor() {
       const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y)
       const maxSpeed = 50
       
-      // Dynamic stretching based on velocity (Jelly Effect)
       const stretchAmount = Math.min(speed / maxSpeed, 0.5)
       const scaleX = 1 + stretchAmount
       const scaleY = 1 - stretchAmount * 0.5
       
-      // Rotate based on movement direction
       if (speed > 1) {
          rotation = Math.atan2(vel.y, vel.x) * (180 / Math.PI)
       }
@@ -55,7 +54,7 @@ export function CustomCursor() {
         rotation: rotation,
         scaleX: scaleX * scale,
         scaleY: scaleY * scale,
-        duration: 0.1, // super responsive
+        duration: 0.1,
         ease: "power2.out"
       })
     }
@@ -66,9 +65,8 @@ export function CustomCursor() {
       update()
     }
 
-    // Interaction Handlers
     const onMouseEnterLink = () => {
-      scale = 1.5 // Slipped scale slightly
+      scale = 1.5
       setIsHovering(true)
     }
 
@@ -107,7 +105,6 @@ export function CustomCursor() {
          viewBox="0 0 50 50"
          className="overflow-visible"
       >
-         {/* Organic Blob Shape */}
          <defs>
             <filter id="blob-glow">
                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
@@ -116,7 +113,6 @@ export function CustomCursor() {
             </filter>
          </defs>
          
-         {/* The Beast Shape */}
          <circle 
             cx="25" 
             cy="25" 

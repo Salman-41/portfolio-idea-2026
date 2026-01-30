@@ -35,8 +35,12 @@ const services = [
   }
 ]
 
-const WHATSAPP_NUMBER = "923456556686" // Pakistan format without leading 0
+const WHATSAPP_NUMBER = "923456556686"
 
+/**
+ * Graphic Services section component.
+ * Displays a list of services with marquee scroll animations.
+ */
 export function GraphicServices() {
   const containerRef = useRef<HTMLElement>(null)
 
@@ -100,7 +104,7 @@ export function GraphicServices() {
                 onClick={() => handleWhatsAppClick(item.title)}
              >
                 <div className="service-track flex items-center justify-center w-full whitespace-nowrap will-change-transform">
-                   {/* Centered Content that moves */}
+                   
                    <div className="flex items-center gap-8 md:gap-16 px-8">
                        <span className="text-xs font-mono text-muted-foreground opacity-50">
                           ({item.id})
