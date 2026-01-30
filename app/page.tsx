@@ -33,6 +33,16 @@ const marqueeItems = [
   "GSAP Animations",
   "Motion Design",
   "Framer Motion",
+  "Vue.js",
+  "Nuxt",
+  "Svelte",
+  "Node.js",
+  "Python",
+  "WebGL",
+  "Supabase",
+  "PostgreSQL",
+  "GraphQL",
+  "REST APIs",
 ]
 
 export default function HomePage() {
