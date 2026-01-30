@@ -97,7 +97,7 @@ export function ContactHero() {
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center bg-background pt-20 overflow-x-clip"
+      className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center bg-background pt-20 overflow-hidden"
     >
       {/* 1. Organic Blob Background - Contained */}
       <div 
@@ -137,10 +137,10 @@ export function ContactHero() {
           ref={titleRef}
           className="text-[20vw] md:text-[14vw] lg:text-[12vw] leading-[0.9] font-black uppercase tracking-tighter mb-6 md:mb-8 mix-blend-difference"
         >
-          <div className="contact-hero-title-line overflow-hidden py-2 md:py-3">
+          <div className="contact-hero-title-line overflow-visible py-2 md:py-3">
             <span className="inline-block text-white">Let's</span>
           </div>
-          <div className="contact-hero-title-line overflow-hidden py-2 md:py-3">
+          <div className="contact-hero-title-line overflow-visible py-2 md:py-3 px-1">
             <span className="inline-block text-transparent stroke-text-2">Connect</span>
           </div>
         </h1>
