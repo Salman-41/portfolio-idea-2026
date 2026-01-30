@@ -3,26 +3,78 @@
 import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 
+// Subtle animated grain overlay using canvas
+function GrainOverlay() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    
+    let animationId: number
+    
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener("resize", resize)
+    
+    const animate = () => {
+      const imageData = ctx.createImageData(canvas.width, canvas.height)
+      const data = imageData.data
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const value = Math.random() * 255
+        data[i] = value     // R
+        data[i + 1] = value // G
+        data[i + 2] = value // B
+        data[i + 3] = 12    // Very subtle alpha (0-255)
+      }
+      
+      ctx.putImageData(imageData, 0, 0)
+      animationId = requestAnimationFrame(animate)
+    }
+    
+    animate()
+    
+    return () => {
+      cancelAnimationFrame(animationId)
+      window.removeEventListener("resize", resize)
+    }
+  }, [])
+  
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="grain-layer absolute inset-0 pointer-events-none z-30 opacity-60"
+    />
+  )
+}
+
 const phrases = [
   { 
     text: "Hello.", 
     style: "top-left", 
-    font: "font-mono uppercase tracking-[0.5em] text-[2vw] md:text-[0.9vw] font-medium" 
+    font: "font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] text-[3.5vw] md:text-[0.9vw] font-medium" 
   },
   { 
     text: "I am Salmān Yousufzai.", 
     style: "center", 
-    font: "font-sans text-[10vw] md:text-[7vw] leading-[0.85] tracking-tighter font-black" 
+    font: "font-sans text-[8vw] md:text-[7vw] leading-[0.9] md:leading-[0.85] tracking-tighter font-black" 
   },
   { 
     text: "Imagination Engineered.", 
     style: "bottom-right", 
-    font: "font-sans text-[4vw] md:text-[2.2vw] tracking-tight font-light italic" 
+    font: "font-sans text-[5vw] md:text-[2.2vw] tracking-tight font-light italic" 
   },
   { 
     text: "Let's explore.", 
     style: "center", 
-    font: "font-sans font-black uppercase tracking-[-0.04em] text-[12vw] md:text-[8vw] leading-none" 
+    font: "font-sans font-black uppercase tracking-[-0.04em] text-[11vw] md:text-[8vw] leading-none" 
   }
 ]
 
@@ -117,9 +169,9 @@ export function Preloader() {
 
   const getPositionClass = (style: string) => {
     switch (style) {
-      case "top-left": return "top-[15%] left-[10%] text-left"
-      case "bottom-right": return "bottom-[15%] right-[10%] text-right"
-      default: return "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
+      case "top-left": return "top-[20%] md:top-[15%] left-6 md:left-[10%] text-left"
+      case "bottom-right": return "bottom-[20%] md:bottom-[15%] right-6 md:right-[10%] text-right"
+      default: return "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center px-4"
     }
   }
 
@@ -138,7 +190,7 @@ export function Preloader() {
       </div>
 
       {/* Editorial Typographic Canvas (Space Grotesk Core) */}
-      <div className="relative w-full h-full px-12 md:px-32 z-20">
+      <div className="relative w-full h-full px-4 md:px-32 z-20">
         {phrases.map((item, i) => (
             <div 
                 key={`phrase-slot-${i}`}
@@ -158,19 +210,8 @@ export function Preloader() {
         ))}
       </div>
 
-      {/* Site Identity Tag */}
-      <div className="absolute bottom-12 left-12 opacity-30 hidden md:flex items-center gap-4 z-20 text-[#1a1a1a]">
-           <span className="text-[9px] uppercase tracking-[0.6em] font-mono">
-             Identity / Sync
-           </span>
-           <div className="w-8 h-px bg-black/20" />
-           <span className="text-[9px] uppercase tracking-[0.6em] font-mono">
-             Core 1.0
-           </span>
-      </div>
-
-      {/* High-End Film Grain Overlay (Sync-Clear Stage) */}
-      <div className="grain-layer absolute inset-0 opacity-[0.45] pointer-events-none mix-blend-multiply bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-30" />
+      {/* Subtle Animated Grain - Canvas Based */}
+      <GrainOverlay />
     </div>
   )
 }
