@@ -56,6 +56,52 @@ function ScrambleText({ text, delay = 0 }: { text: string; delay?: number }) {
   )
 }
 
+// Magnetic Button Component
+function MagneticButton({ children }: { children: React.ReactNode }) {
+  const buttonRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+    const button = buttonRef.current
+    if (!button) return
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = button.getBoundingClientRect()
+      const x = e.clientX - rect.left - rect.width / 2
+      const y = e.clientY - rect.top - rect.height / 2
+      
+      gsap.to(button, {
+        x: x * 0.3,
+        y: y * 0.3,
+        duration: 0.3,
+        ease: "power2.out"
+      })
+    }
+    
+    const handleMouseLeave = () => {
+      gsap.to(button, {
+        x: 0,
+        y: 0,
+        duration: 0.5,
+        ease: "elastic.out(1, 0.4)"
+      })
+    }
+    
+    button.addEventListener("mousemove", handleMouseMove)
+    button.addEventListener("mouseleave", handleMouseLeave)
+    
+    return () => {
+      button.removeEventListener("mousemove", handleMouseMove)
+      button.removeEventListener("mouseleave", handleMouseLeave)
+    }
+  }, [])
+  
+  return (
+    <div ref={buttonRef} className="inline-block">
+      {children}
+    </div>
+  )
+}
+
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -161,7 +207,7 @@ export function HeroSection() {
         >
           {/* Handle - Centered on Mobile */}
           <span className="self-center md:self-start md:pl-[5vw] mb-4 text-[10px] sm:text-xs md:text-base font-mono text-primary/80 tracking-widest uppercase pointer-events-auto">
-            @devousufzai
+            Salman Yousufzai
           </span>
           
           {/* Typography - Stacked Vertically, Centered on Mobile */}
@@ -234,30 +280,30 @@ export function HeroSection() {
             </div>
          </div>
 
-         {/* Scroll Indicator - Desktop Only */}
-         <div ref={scrollIndicatorRef} className="hidden lg:flex flex-col items-center gap-2 text-white/30 absolute left-1/2 bottom-12 -translate-x-1/2 pointer-events-none mix-blend-difference">
-            <span className="text-[10px] uppercase tracking-[0.3em] mb-2">Scroll</span>
-            <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
-         </div>
+
 
          {/* CTAs - Centered on Mobile, Right on Desktop */}
          <div className="flex flex-col gap-4 items-center md:items-end pointer-events-auto md:ml-auto">
-            <div ref={ctaRef} className="flex flex-row gap-3 items-center justify-center md:justify-end">
-               <TransitionLink
-                 href="/projects"
-                 className="group relative px-5 py-2.5 bg-white/5 backdrop-blur-sm border border-white/20 text-white font-medium rounded-full overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary"
-                 data-cursor-hover
-               >
-                 <span className="relative z-10 text-[11px] uppercase tracking-wider transition-colors">View Projects</span>
-               </TransitionLink>
+            <div ref={ctaRef} className="flex flex-row gap-4 items-center justify-center md:justify-end">
+               <MagneticButton>
+                 <TransitionLink
+                   href="/projects"
+                   className="flex items-center h-12 px-6 text-xs uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all duration-500 rounded-full whitespace-nowrap"
+                   data-cursor-hover
+                 >
+                   View Projects
+                 </TransitionLink>
+               </MagneticButton>
                
-               <TransitionLink
-                 href="/contact"
-                 className="group relative w-11 h-11 flex items-center justify-center rounded-full bg-primary text-primary-foreground overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]"
-                 data-cursor-hover
-               >
-                  <ArrowDown className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-               </TransitionLink>
+               <MagneticButton>
+                 <TransitionLink
+                   href="/contact"
+                   className="group relative w-12 h-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.4)]"
+                   data-cursor-hover
+                 >
+                    <ArrowDown className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                 </TransitionLink>
+               </MagneticButton>
              </div>
          </div>
       </div>
