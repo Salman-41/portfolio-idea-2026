@@ -3,16 +3,23 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Link from "next/link"
 import { TransitionLink } from "./transition-link"
-import { ArrowUp, Github, Linkedin, Twitter } from "lucide-react"
+import { ArrowUp, Github, Linkedin, Twitter, Mail } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "Gh" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "Li" },
+  { icon: Github, href: "https://github.com", label: "GitHub" },
+  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   { icon: Twitter, href: "https://twitter.com", label: "X" },
+]
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Contact" },
 ]
 
 export function Footer() {
@@ -48,50 +55,117 @@ export function Footer() {
   }
 
   return (
-    <footer ref={footerRef} className="py-12 md:py-16 bg-background border-t border-white/5">
-      <div className="w-full px-6 md:px-12 lg:px-20">
+    <footer ref={footerRef} className="relative py-16 md:py-24 bg-background border-t border-white/5 overflow-hidden">
+      {/* Background Ghost Text - Desktop: Centered Horizontal */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none opacity-[0.02] hidden md:block">
+        <span className="text-[20vw] font-black uppercase tracking-tighter leading-none whitespace-nowrap">
+          SALMAN
+        </span>
+      </div>
+      
+      {/* Background Ghost Text - Mobile: Vertical */}
+      <div className="absolute top-1/2 right-4 -translate-y-1/2 pointer-events-none select-none opacity-[0.03] md:hidden">
+        <span className="text-[25vw] font-black uppercase tracking-tighter leading-none [writing-mode:vertical-rl] rotate-180">
+          SALMAN
+        </span>
+      </div>
+
+      <div className="w-full px-4 md:px-12 lg:px-20 relative z-10">
         
-        {/* Main Footer Row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        {/* Top Section - Logo & CTA */}
+        <div className="animate-item flex flex-col md:flex-row items-center md:items-start justify-between gap-8 md:gap-12 mb-16 md:mb-20">
+          {/* Logo */}
+          <TransitionLink href="/" className="text-4xl md:text-6xl font-black tracking-tight group">
+            s<span className="text-primary group-hover:text-white transition-colors">y</span><span className="text-primary">.</span>
+          </TransitionLink>
           
-          {/* Left: Socials */}
-          <div className="animate-item flex items-center gap-6">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors duration-300 text-sm uppercase tracking-widest"
-              >
-                <link.icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
-
-          {/* Center: Copyright & Handle */}
-          <div className="animate-item text-center">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} <span className="text-foreground font-medium">@devousufzai</span>
+          {/* CTA */}
+          <div className="text-center md:text-right max-w-md">
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-4">
+              Have a project in mind? Let's create something extraordinary together.
             </p>
-            <p className="text-xs text-muted-foreground/50 mt-1">
-              Designed & Developed in Pakistan
-            </p>
-          </div>
-
-          {/* Right: Logo + Back to Top */}
-          <div className="animate-item flex items-center gap-6">
-            <TransitionLink href="/" className="text-xl font-bold tracking-tight">
-              Salman<span className="text-primary">.</span>yz
-            </TransitionLink>
-            <button 
-              onClick={scrollToTop}
-              className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors group"
+            <TransitionLink 
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-widest font-bold border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-full"
             >
-              Top <ArrowUp className="w-4 h-4 transition-transform group-hover:-translate-y-1" />
-            </button>
+              <Mail className="w-4 h-4" />
+              Get in Touch
+            </TransitionLink>
+          </div>
+        </div>
+
+        {/* Middle Section - Navigation & Socials */}
+        <div className="animate-item grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 pb-12 md:pb-16 border-b border-white/5">
+          
+          {/* Navigation */}
+          <div className="text-center md:text-left">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-primary mb-4 block">Navigation</span>
+            <nav className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
+              {navLinks.map((link) => (
+                <TransitionLink
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-white transition-colors duration-300"
+                >
+                  {link.label}
+                </TransitionLink>
+              ))}
+            </nav>
           </div>
 
+          {/* Socials */}
+          <div className="text-center">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-primary mb-4 block">Connect</span>
+            <div className="flex justify-center gap-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300"
+                  aria-label={link.label}
+                >
+                  <link.icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="text-center md:text-right">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-primary mb-4 block">Contact</span>
+            <a 
+              href="mailto:salmanyousufzai@gmail.com" 
+              className="text-sm text-muted-foreground hover:text-white transition-colors duration-300 block"
+            >
+              salmanyousufzai@gmail.com
+            </a>
+            <span className="text-sm text-muted-foreground/50 block mt-1">Swat, Pakistan</span>
+          </div>
+        </div>
+
+        {/* Bottom Section - Copyright & Back to Top */}
+        <div className="animate-item flex flex-col md:flex-row items-center justify-between gap-4 pt-8 md:pt-10">
+          
+          {/* Copyright */}
+          <div className="text-center md:text-left">
+            <p className="text-xs text-muted-foreground/60">
+              © {new Date().getFullYear()} Salman Yousufzai. All rights reserved.
+            </p>
+            <p className="text-[10px] text-muted-foreground/40 mt-1">
+              Designed & Developed with ♥ in Pakistan
+            </p>
+          </div>
+
+          {/* Back to Top */}
+          <button 
+            onClick={scrollToTop}
+            className="flex items-center gap-3 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-primary border border-white/10 hover:border-primary rounded-full transition-all duration-300 group"
+          >
+            Back to Top 
+            <ArrowUp className="w-3 h-3 transition-transform group-hover:-translate-y-1" />
+          </button>
         </div>
         
       </div>

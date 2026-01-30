@@ -143,7 +143,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex flex-col justify-between p-6 md:p-12 lg:p-16 grid-bg">
+    <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex flex-col justify-between p-4 md:p-12 lg:p-16 grid-bg">
       {/* 3D Background */}
       <div className="absolute inset-0 z-0 hero-bg-container pointer-events-none">
         <ThreeScene />
@@ -153,34 +153,43 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-background/90 z-0 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background-rgb),0.8)_100%)] z-0 pointer-events-none" />
 
-      {/* Main Content - Diagonal Layout - Centered */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center w-full pointer-events-none mt-12 mb-16 md:mb-24">
+      {/* Main Content - Mobile-First Centered Layout */}
+      <div className="relative z-20 flex-1 flex flex-col justify-center items-center w-full pointer-events-none">
         <h1
           ref={titleRef}
-          className="flex flex-col w-full text-[13vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.85] tracking-tighter uppercase mix-blend-difference text-white"
+          className="flex flex-col w-full text-[17vw] sm:text-[14vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.9] tracking-tighter uppercase mix-blend-difference text-white text-center md:text-left"
         >
-          <span className="self-start pl-[5vw] mb-2 text-sm md:text-base font-mono text-primary/80 tracking-widest uppercase pointer-events-auto">
+          {/* Handle - Centered on Mobile */}
+          <span className="self-center md:self-start md:pl-[5vw] mb-4 text-[10px] sm:text-xs md:text-base font-mono text-primary/80 tracking-widest uppercase pointer-events-auto">
             @devousufzai
           </span>
-          <span className="hero-title-line self-start block pointer-events-auto hover:text-primary transition-colors duration-500 pl-[5vw]">
+          
+          {/* Typography - Stacked Vertically, Centered on Mobile */}
+          <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-start md:pl-[5vw]">
             <ScrambleText text="CRAFTING" delay={0.5} />
           </span>
-          <span className="hero-title-line self-center block gradient-text pointer-events-auto">
+          <span className="hero-title-line block gradient-text pointer-events-auto self-center">
             <ScrambleText text="DIGITAL" delay={0.8} />
           </span>
-          <span className="hero-title-line self-end block text-right pointer-events-auto hover:text-primary transition-colors duration-500 pr-[5vw]">
+          <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-end md:pr-[5vw]">
             <ScrambleText text="ARTISTRY" delay={1.1} />
           </span>
         </h1>
 
-        {/* Floating Metadata - Right Side above ARTISTRY */}
-        <div className="absolute right-[5vw] top-[55%] md:top-[50%] -translate-y-full flex flex-col gap-1 items-end text-right pointer-events-auto mix-blend-difference text-white">
+        {/* Mobile Role Badge - Visible only on small screens */}
+        <div className="flex md:hidden flex-col items-center gap-1 mt-6 pointer-events-auto">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-primary/80 font-medium">Creative Developer</span>
+          <span className="text-[9px] uppercase tracking-[0.2em] text-white/50">Swat, Pakistan</span>
+        </div>
+
+        {/* Floating Metadata - Desktop Only */}
+        <div className="absolute right-4 md:right-[5vw] top-[55%] md:top-[50%] -translate-y-full hidden md:flex flex-col gap-1 items-end text-right pointer-events-auto mix-blend-difference text-white">
             <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">Creative Developer</span>
             <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] opacity-70">Swat, Pakistan</span>
         </div>
       </div>
 
-      {/* Side Decorations - Vertical Socials (Left) */}
+      {/* Side Decorations - Desktop Only */}
       <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 pointer-events-auto mix-blend-difference text-white">
         {["GitHub", "LinkedIn", "Twitter"].map((label) => (
           <a
@@ -197,7 +206,7 @@ export function HeroSection() {
         <div className="w-[1px] h-24 bg-gradient-to-b from-white/50 via-white to-transparent mx-auto" />
       </div>
 
-      {/* Side Decorations - Vertical Info (Right) */}
+      {/* Side Decorations - Desktop Only */}
       <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 text-right pointer-events-auto mix-blend-difference text-white">
         <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] [writing-mode:vertical-lr]">
           EST. 2026
@@ -211,12 +220,12 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom Bar - Frame Bottom */}
-      <div ref={bottomBarRef} className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16 z-30 flex justify-between items-end w-full pointer-events-none">
+      {/* Bottom Bar - Mobile Optimized */}
+      <div ref={bottomBarRef} className="relative z-30 flex flex-col md:flex-row justify-between items-center md:items-end w-full pointer-events-none gap-4 pb-2 md:pb-0">
          
-         {/* Bottom Left Group: Role & Location */}
-         <div className="flex flex-col gap-2 items-start text-left pointer-events-auto mix-blend-difference text-white">
-            <div ref={subtitleRef} className="max-w-md hidden md:block">
+         {/* Description - Desktop Only */}
+         <div className="hidden md:flex flex-col gap-2 items-start text-left pointer-events-auto mix-blend-difference text-white">
+            <div ref={subtitleRef} className="max-w-md">
                <p className="text-sm opacity-80 leading-relaxed font-light tracking-wide border-l border-primary/20 pl-4">
                  Merging architectural precision with fluid motion design. 
                  Engineering high-performance interfaces that transform 
@@ -225,26 +234,26 @@ export function HeroSection() {
             </div>
          </div>
 
-         {/* Scroll Indicator - Center */}
+         {/* Scroll Indicator - Desktop Only */}
          <div ref={scrollIndicatorRef} className="hidden lg:flex flex-col items-center gap-2 text-white/30 absolute left-1/2 bottom-12 -translate-x-1/2 pointer-events-none mix-blend-difference">
             <span className="text-[10px] uppercase tracking-[0.3em] mb-2">Scroll</span>
             <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
          </div>
 
-         {/* Bottom Right Group: CTAs */}
-         <div className="flex flex-col gap-6 items-end text-right pointer-events-auto">
-            <div ref={ctaRef} className="flex flex-row gap-4 items-center justify-end">
+         {/* CTAs - Centered on Mobile, Right on Desktop */}
+         <div className="flex flex-col gap-4 items-center md:items-end pointer-events-auto md:ml-auto">
+            <div ref={ctaRef} className="flex flex-row gap-3 items-center justify-center md:justify-end">
                <TransitionLink
                  href="/projects"
-                 className="group relative px-6 py-3 bg-background/5 backdrop-blur-sm border border-white/10 text-white font-medium rounded-full overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary mix-blend-difference"
+                 className="group relative px-5 py-2.5 bg-white/5 backdrop-blur-sm border border-white/20 text-white font-medium rounded-full overflow-hidden transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary"
                  data-cursor-hover
                >
-                 <span className="relative z-10 text-xs uppercase tracking-widest transition-colors">View Projects</span>
+                 <span className="relative z-10 text-[11px] uppercase tracking-wider transition-colors">View Projects</span>
                </TransitionLink>
                
                <TransitionLink
                  href="/contact"
-                 className="group relative w-12 h-12 flex items-center justify-center rounded-full bg-primary text-primary-foreground overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]"
+                 className="group relative w-11 h-11 flex items-center justify-center rounded-full bg-primary text-primary-foreground overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]"
                  data-cursor-hover
                >
                   <ArrowDown className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />

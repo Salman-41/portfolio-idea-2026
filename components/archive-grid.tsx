@@ -130,8 +130,8 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </span>
           </div>
 
-          {/* Floating Tags - Top Left */}
-          <div className="absolute top-20 left-8 md:left-16 flex flex-col gap-3">
+          {/* Floating Tags - Top Left - Hidden on Mobile */}
+          <div className="absolute top-20 left-8 md:left-16 hidden md:flex flex-col gap-3">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Available for</span>
             <div className="flex flex-wrap gap-2 max-w-[200px]">
               {["Freelance", "Full-time", "Collaboration"].map((tag) => (
@@ -142,8 +142,8 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </div>
           </div>
 
-          {/* Floating Tags - Top Right */}
-          <div className="absolute top-20 right-8 md:right-16 flex flex-col gap-3 items-end">
+          {/* Floating Tags - Top Right - Hidden on Mobile */}
+          <div className="absolute top-20 right-8 md:right-16 hidden md:flex flex-col gap-3 items-end">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">Expertise in</span>
             <div className="flex flex-wrap gap-2 max-w-[400px] justify-end">
               {["Next.js", "React", "Vue", "Nuxt", "Svelte", "Tailwind", "HTML/CSS", "JavaScript", "Python", "GSAP", "Lenis", "WebGL", "Three.js", "Plotly", "P5.js", "Machine Learning", "Deep Learning", "TensorFlow", "Data Science", "EDA", "Data Cleaning", "Dashboards", "Analytics", "Pandas", "NumPy", "Visualization"].map((tag) => (
@@ -154,15 +154,15 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
             </div>
           </div>
 
-          {/* Corner Accents */}
-          <div className="absolute bottom-20 left-8 md:left-16">
+          {/* Corner Accents - Hidden on Mobile */}
+          <div className="absolute bottom-20 left-8 md:left-16 hidden md:block">
             <div className="flex flex-col gap-2">
               <div className="w-12 h-[1px] bg-gradient-to-r from-white/20 to-transparent" />
               <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">Based in Pakistan</span>
             </div>
           </div>
 
-          <div className="absolute bottom-20 right-8 md:right-16 text-right">
+          <div className="absolute bottom-20 right-8 md:right-16 text-right hidden md:block">
             <div className="flex flex-col gap-2 items-end">
               <a href="mailto:hello@example.com" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-primary transition-colors">
                 salmanyousufzai@gmail.com

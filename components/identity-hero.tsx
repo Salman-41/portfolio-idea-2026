@@ -179,17 +179,17 @@ export function IdentityHero() {
         </div>
       ))}
 
-      <div className="container mx-auto relative z-10 flex flex-col items-center">
+      <div className="container mx-auto relative z-10 flex flex-col items-center px-4">
         {/* FIRST NAME */}
         <h1
           ref={firstNameRef}
-          className="relative z-10 text-[18vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase mix-blend-difference text-white"
+          className="relative z-10 text-[22vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase mix-blend-difference text-white"
         >
           SALMAN
         </h1>
 
         {/* PORTRAIT CONTAINER */}
-        <div className="relative z-0 -my-12 md:-my-24 w-[70vw] md:w-[35vw] aspect-[3/4]">
+        <div className="relative z-0 -my-8 md:-my-24 w-[80vw] md:w-[35vw] aspect-[3/4]">
           <div
             ref={imageWrapperRef}
             className="relative w-full h-full overflow-hidden rounded-sm"
@@ -204,10 +204,10 @@ export function IdentityHero() {
             <div className="absolute inset-0 bg-primary/20 mix-blend-overlay" />
           </div>
 
-          {/* Rotating Badge */}
+          {/* Rotating Badge - Smaller on Mobile */}
           <div
             ref={badgeRef}
-            className="absolute -top-12 -right-12 md:-right-24 w-32 h-32 md:w-48 md:h-48 z-20"
+            className="absolute -top-6 -right-4 md:-top-12 md:-right-24 w-20 h-20 md:w-48 md:h-48 z-20"
           >
             <svg
               className="w-full h-full animate-[spin_10s_linear_infinite]"
@@ -231,7 +231,7 @@ export function IdentityHero() {
         {/* LAST NAME */}
         <h1
           ref={lastNameRef}
-          className="relative z-20 text-[18vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent stroke-text-2"
+          className="relative z-20 text-[16vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent stroke-text-2"
         >
           YOUSUFZAI
         </h1>

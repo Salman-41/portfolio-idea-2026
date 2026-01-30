@@ -15,14 +15,18 @@ export function ServicesHero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Mouse Follower (Organic Blob)
-      const xTo = gsap.quickTo(blobRef.current, "x", { duration: 1, ease: "power3" })
-      const yTo = gsap.quickTo(blobRef.current, "y", { duration: 1, ease: "power3" })
-
+      // 1. Mouse Follower (Organic Blob) - Constrained to viewport
       const handleMouseMove = (e: MouseEvent) => {
-        const { clientX, clientY } = e
-        xTo(clientX)
-        yTo(clientY)
+        if (!blobRef.current) return
+        const x = e.clientX - 300
+        const y = e.clientY - 300
+        
+        gsap.to(blobRef.current, {
+          left: Math.max(-200, Math.min(x, window.innerWidth - 400)),
+          top: Math.max(-200, Math.min(y, window.innerHeight - 400)),
+          duration: 1,
+          ease: "power3.out"
+        })
       }
 
       window.addEventListener("mousemove", handleMouseMove)
@@ -71,13 +75,16 @@ export function ServicesHero() {
         }
       })
 
-      // 3. Infinite Marquee for Ghost Text
-      gsap.to(".ghost-marquee", {
-        xPercent: -33.33,
-        duration: 20,
-        ease: "none",
-        repeat: -1
-      })
+      // 3. Infinite Marquee for Ghost Text - seamless loop
+      gsap.fromTo(".ghost-marquee", 
+        { xPercent: 0 },
+        {
+          xPercent: -50,
+          duration: 20,
+          ease: "none",
+          repeat: -1
+        }
+      )
 
       return () => {
         window.removeEventListener("mousemove", handleMouseMove)
@@ -90,14 +97,17 @@ export function ServicesHero() {
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-background pt-20"
     >
-      {/* 1. Organic Blob Background */}
+      {/* 1. Organic Blob Background - Constrained */}
       <div 
         ref={blobRef}
-        className="fixed top-0 left-0 w-[600px] h-[600px] -ml-[300px] -mt-[300px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
+        className="fixed w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)"
+          background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)"
         }}
       />
 
@@ -106,14 +116,11 @@ export function ServicesHero() {
         ref={ghostTextRef}
         className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden"
       >
-        <div className="ghost-marquee flex whitespace-nowrap">
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+        <div className="ghost-marquee flex whitespace-nowrap" style={{ width: "fit-content" }}>
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
             EXPERTISE
           </h2>
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
-            EXPERTISE
-          </h2>
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
             EXPERTISE
           </h2>
         </div>

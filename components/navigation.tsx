@@ -85,8 +85,8 @@ export function Navigation() {
           
           {/* Logo - Fixed Left */}
           <TransitionLink href="/" className="absolute left-0 z-50 group shrink-0 mix-blend-difference" data-cursor-hover>
-            <span className="text-xl md:text-2xl font-bold tracking-tight text-white">
-              Salman<span className="text-primary">.</span>yz
+            <span className="text-2xl md:text-2xl font-bold tracking-tight text-white">
+              s<span className="text-primary">y</span><span className="text-primary">.</span>
             </span>
           </TransitionLink>
 
@@ -113,15 +113,15 @@ export function Navigation() {
             {/* Spatial Swap Action Slot - Button <-> Burger */}
             <div className="relative flex items-center justify-end min-w-[140px] h-12">
                
-               {/* "Let's Talk" Button - Visible at Top */}
+               {/* "Let's Talk" Button - Visible at Top (Desktop Only) */}
                <div className={cn(
-                  "transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
+                  "hidden md:block transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
                   isScrolled ? "opacity-0 translate-x-12 pointer-events-none scale-90" : "opacity-100 translate-x-0 scale-100"
                )}>
                  <Magnetic strength={0.2}>
                    <TransitionLink
                     href="/contact"
-                    className="hidden md:flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-500 rounded-full whitespace-nowrap"
+                    className="flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-500 rounded-full whitespace-nowrap"
                     data-cursor-hover
                   >
                     Let's Talk
@@ -129,10 +129,13 @@ export function Navigation() {
                  </Magnetic>
                </div>
 
-               {/* Burger Container - Visible on Scroll */}
+               {/* Burger Container - Always visible on mobile, visible on scroll for desktop */}
                <div className={cn(
                   "absolute inset-0 flex items-center justify-end transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                  isScrolled ? "opacity-100 scale-100 translate-x-0" : "opacity-0 scale-75 translate-x-12 pointer-events-none"
+                  // Always visible on mobile (< md), scroll-dependent on desktop (>= md)
+                  "opacity-100 scale-100 translate-x-0",
+                  "md:opacity-0 md:scale-75 md:translate-x-12 md:pointer-events-none",
+                  isScrolled && "md:opacity-100 md:scale-100 md:translate-x-0 md:pointer-events-auto"
                )}>
 
                  <Magnetic strength={0.4}>

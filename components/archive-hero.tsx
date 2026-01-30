@@ -77,13 +77,16 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
         }
       })
 
-      // 4. Infinite Marquee for Ghost Text
-      gsap.to(".archive-ghost-marquee", {
-        xPercent: -33.33,
-        duration: 20,
-        ease: "none",
-        repeat: -1
-      })
+      // 4. Infinite Marquee for Ghost Text - seamless loop
+      gsap.fromTo(".archive-ghost-marquee", 
+        { xPercent: 0 },
+        {
+          xPercent: -50,
+          duration: 20,
+          ease: "none",
+          repeat: -1
+        }
+      )
 
       return () => {
         window.removeEventListener("mousemove", handleMouseMove)
@@ -109,14 +112,11 @@ export function ArchiveHero({ activeFilter, onFilterChange, totalProjects }: Arc
 
       {/* 2. Layered Ghost Text - Infinite Marquee */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden">
-        <div className="archive-ghost-marquee flex whitespace-nowrap">
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+        <div className="archive-ghost-marquee flex whitespace-nowrap" style={{ width: "fit-content" }}>
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
             ARCHIVE
           </h2>
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
-            ARCHIVE
-          </h2>
-          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8">
+          <h2 className="text-[35vw] font-black uppercase tracking-tighter leading-none px-8 shrink-0">
             ARCHIVE
           </h2>
         </div>
