@@ -17,9 +17,11 @@ export function ThreeScene() {
     if (prefersReducedMotion) return;
 
     // Theme-aware colors
+    // Dark: Golden amber tones on dark bg
+    // Light: Coral and ocean blue on soft mint bg (Summer Ocean Breeze)
     const isDark = resolvedTheme === "dark";
-    const color1 = isDark ? "#38bdf8" : "#0891b2"; // Cyan variants
-    const color2 = isDark ? "#818cf8" : "#6366f1"; // Indigo variants
+    const color1 = isDark ? "#FCA311" : "#E63946"; // Golden amber / Vibrant coral
+    const color2 = isDark ? "#F4A261" : "#457B9D"; // Warm orange / Ocean blue
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -44,7 +46,7 @@ export function ThreeScene() {
           value: new THREE.Vector2(window.innerWidth, window.innerHeight),
         },
         uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-        uAlphaMultiplier: { value: isDark ? 0.3 : 0.15 },
+        uAlphaMultiplier: { value: isDark ? 0.25 : 0.15 }, // Light mode needs subtler effect on light bg
       },
       vertexShader: `
         varying vec2 vUv;

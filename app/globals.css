@@ -7,44 +7,49 @@
 /**
  * =================================================================
  * AWWWARDS-LEVEL COLOR SYSTEM
- * Inspired by Coolors palettes: Black & Gold Elegance + Sunny Beach
+ * Dual-theme palette with beautiful, carefully selected colors
  * 
- * Light: Warm cream (#F1FAEE) with deep navy (#1D3557) text
- * Dark: Rich charcoal (#14213D) with golden amber (#FCA311) accents
+ * Light: "Summer Ocean Breeze" - Soft mint (#F1FAEE) + Deep navy (#1D3557) + Coral (#E63946)
+ * Dark: "Black & Gold Elegance" - Rich charcoal (#0D1117) + Warm ivory (#E6EDF3) + Golden amber (#FCA311)
  * =================================================================
  */
 
 /**
- * LIGHT THEME
- * Elegant cream canvas with navy typography and coral/gold accents
- * Palette inspiration: Summer Ocean Breeze + Sunny Beach Day
+ * LIGHT THEME - "Summer Ocean Breeze"
+ * Awwwards-winning palette: Soft mint cream with navy text and coral accents
+ * F1FAEE (soft mint) + 1D3557 (deep navy) + E63946 (vibrant coral) + A8DADC (soft cyan) + 457B9D (ocean blue)
  */
 :root {
-  /* Core: Warm cream background, deep navy text */
-  --background: #F8F9FA;
+  /* Core: Soft mint cream background - elegant and calming */
+  --background: #F1FAEE;
   --foreground: #1D3557;
   
-  /* Cards: Slightly elevated surfaces */
+  /* Hero section - matches main theme for cohesive light feel */
+  --hero-bg: #F1FAEE;
+  --hero-text: #1D3557;
+  --hero-accent: #E63946;
+  
+  /* Cards: Pure white for elevated surfaces */
   --card: #FFFFFF;
   --card-foreground: #1D3557;
   --popover: #FFFFFF;
   --popover-foreground: #1D3557;
   
-  /* Primary: Vibrant coral-red for CTAs and highlights */
+  /* Primary: Vibrant coral red - bold and energetic */
   --primary: #E63946;
   --primary-rgb: 230, 57, 70;
-  --background-rgb: 248, 249, 250;
+  --background-rgb: 241, 250, 238;
   --primary-foreground: #FFFFFF;
   
-  /* Secondary: Soft blue-gray for subtle elements */
+  /* Secondary: Soft cyan - calming complement */
   --secondary: #A8DADC;
   --secondary-foreground: #1D3557;
   
-  /* Muted: Gentle gray for disabled states */
-  --muted: #E9ECEF;
+  /* Muted: Subtle cyan tints */
+  --muted: #D4ECED;
   --muted-foreground: #457B9D;
   
-  /* Accent: Ocean blue for interactive elements */
+  /* Accent: Ocean blue for elegant highlights */
   --accent: #457B9D;
   --accent-foreground: #FFFFFF;
   
@@ -52,44 +57,44 @@
   --destructive: #E63946;
   --destructive-foreground: #FFFFFF;
   
-  /* Borders & inputs */
-  --border: #DEE2E6;
-  --input: #F1F3F4;
+  /* Borders & inputs - soft cyan tints */
+  --border: #C1DFE1;
+  --input: #E8F4F5;
   --ring: #E63946;
   
-  /* Chart palette - harmonious spectrum */
+  /* Chart palette - ocean inspired */
   --chart-1: #E63946;
   --chart-2: #457B9D;
-  --chart-3: #2A9D8F;
-  --chart-4: #E9C46A;
+  --chart-3: #1D3557;
+  --chart-4: #A8DADC;
   --chart-5: #F4A261;
   
   --radius: 0.75rem;
   
   /* Sidebar */
-  --sidebar: #F1FAEE;
+  --sidebar: #E8F4F5;
   --sidebar-foreground: #1D3557;
   --sidebar-primary: #E63946;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #A8DADC;
-  --sidebar-accent-foreground: #1D3557;
-  --sidebar-border: #DEE2E6;
+  --sidebar-accent: #457B9D;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #C1DFE1;
   --sidebar-ring: #E63946;
   
   /* Theme-specific UI colors */
   --nav-text: #1D3557;
   --menu-bg: #FFFFFF;
-  --overlay-bg: rgba(248, 249, 250, 0.98);
-  --noise-opacity: 0.04;
-  --scrollbar-thumb: rgba(29, 53, 87, 0.2);
-  --scrollbar-thumb-hover: rgba(29, 53, 87, 0.4);
-  --grid-line: rgba(29, 53, 87, 0.06);
-  --stroke-color: rgba(29, 53, 87, 0.2);
+  --overlay-bg: rgba(241, 250, 238, 0.98);
+  --noise-opacity: 0.02;
+  --scrollbar-thumb: rgba(29, 53, 87, 0.12);
+  --scrollbar-thumb-hover: rgba(29, 53, 87, 0.25);
+  --grid-line: rgba(29, 53, 87, 0.04);
+  --stroke-color: rgba(29, 53, 87, 0.12);
   
-  /* Premium gradient stops */
+  /* Premium gradient stops - coral to ocean blue to navy */
   --gradient-start: #E63946;
-  --gradient-mid: #F4A261;
-  --gradient-end: #E9C46A;
+  --gradient-mid: #457B9D;
+  --gradient-end: #1D3557;
 }
 
 /**
@@ -465,6 +470,142 @@ html.lenis body {
 }
 
 /**
+ * =================================================================
+ * Hero Section - Premium Cinematic Design
+ * Light Mode: Sophisticated dark panel with warm accents
+ * Dark Mode: Deep space with golden highlights
+ * =================================================================
+ */
+.hero-section {
+  position: relative;
+}
+
+/**
+ * LIGHT MODE HERO - "Warm Gallery"
+ * Elegant warm cream with subtle coral accents
+ * Beautiful gradient that flows into the page background
+ */
+.light .hero-section {
+  background: 
+    radial-gradient(
+      ellipse 150% 100% at 50% 0%,
+      #FFFFFF 0%,
+      #FDF9F3 30%,
+      #F5F0E8 100%
+    );
+}
+
+/* Subtle warm accent glow at top */
+.light .hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(
+      ellipse 100% 80% at 50% 0%,
+      rgba(255, 90, 95, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 80% 20%,
+      rgba(13, 148, 136, 0.04) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle warm grain texture */
+.light .hero-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: soft-light;
+}
+
+/* Accent glow in light mode hero */
+.light .hero-section .hero-bg-container::after {
+  content: "";
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 90, 95, 0.03) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/**
+ * DARK MODE HERO - Original cinematic design
+ * Deep space atmosphere
+ */
+.dark .hero-section {
+  background: 
+    radial-gradient(
+      ellipse 100% 80% at 50% 20%,
+      #161B22 0%,
+      #0D1117 60%,
+      #070A0D 100%
+    );
+}
+
+/* Subtle vignette for dark mode */
+.dark .hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hero gradient overlays - theme aware */
+.hero-gradient-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 85%,
+    rgba(var(--background-rgb), 1) 100%
+  );
+}
+
+.light .hero-gradient-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 85%,
+    rgba(241, 250, 238, 1) 100%
+  );
+}
+
+.hero-radial-overlay {
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(var(--background-rgb), 0.4) 100%
+  );
+}
+
+.light .hero-radial-overlay {
+  background: none;
+}
+
+/**
  * Fade in animation utility.
  */
 @keyframes fadeIn {
@@ -544,4 +685,73 @@ html.lenis body {
 
 .marquee-track-left-slow {
   animation: marquee-scroll-left 60s linear infinite;
+}
+
+/**
+ * =================================================================
+ * Light Theme Enhancements
+ * Beautiful subtle effects for the warm studio aesthetic
+ * =================================================================
+ */
+
+/* Warm paper texture overlay for light theme */
+.light body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(
+      ellipse 100% 50% at 50% 0%,
+      rgba(255, 90, 95, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 20% 100%,
+      rgba(13, 148, 136, 0.02) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Softer shadows for light theme cards */
+.light .shadow-2xl {
+  box-shadow: 
+    0 25px 50px -12px rgba(28, 28, 28, 0.08),
+    0 12px 24px -8px rgba(28, 28, 28, 0.04);
+}
+
+/* Enhanced borders for light theme */
+.light .border-border {
+  border-color: rgba(28, 28, 28, 0.06);
+}
+
+.light .border-border\/30 {
+  border-color: rgba(28, 28, 28, 0.04);
+}
+
+/* Glowing primary accents in light mode */
+.light .text-primary {
+  text-shadow: 0 0 30px rgba(255, 90, 95, 0.2);
+}
+
+/* Light mode glow blobs - use multiply instead of screen */
+.light .mix-blend-screen {
+  mix-blend-mode: multiply;
+}
+
+/* Refined card backgrounds for light mode */
+.light .bg-card {
+  background: linear-gradient(
+    180deg,
+    #FDFBF7 0%,
+    #FAF7F2 100%
+  );
+}
+
+/* Light theme project cards get subtle shadows */
+.light .project-card .rounded-3xl {
+  box-shadow: 
+    0 50px 100px -20px rgba(29, 53, 87, 0.08),
+    0 30px 60px -15px rgba(29, 53, 87, 0.06);
 }

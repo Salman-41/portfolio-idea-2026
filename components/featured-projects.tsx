@@ -185,7 +185,7 @@ export function FeaturedProjects() {
                 The Complete Portfolio
               </span>
 
-              <h3 className="text-[14vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase mb-16 md:mb-24 mix-blend-difference dark:text-white text-foreground select-none">
+              <h3 className="text-[14vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase mb-16 md:mb-24 text-foreground select-none">
                 FULL
                 <br />
                 <span className="gradient-text italic">ARCHIVE</span>

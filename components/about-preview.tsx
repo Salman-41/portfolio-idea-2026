@@ -182,7 +182,7 @@ export function AboutPreview() {
               </span>
             </div>
 
-            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase mb-12 mix-blend-difference">
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase mb-12 text-foreground">
               WEAVING <span className="text-primary italic">DIGITAL</span>
               <br />
               FABRICS FROM
