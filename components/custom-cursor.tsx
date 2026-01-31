@@ -1,129 +1,136 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import gsap from "gsap"
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 
 /**
- * Custom Cursor component.
- * Renders a custom SVG cursor with jelly/distortion effects based on velocity.
- * Handles hover states for interactive elements.
+ * Awwwards-Inspired Premium Cursor
+ * Balanced sophistication - clean, smooth, refined
  */
 export function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null)
-  const svgRef = useRef<SVGSVGElement>(null)
-  
-  const [isHovering, setIsHovering] = useState(false)
-  
+  const dotRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<HTMLDivElement>(null);
+
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
+
   useEffect(() => {
-    const cursor = cursorRef.current
-    if (!cursor) return
+    const dot = dotRef.current;
+    const circle = circleRef.current;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || "ontouchstart" in window) {
-      cursor.style.display = "none"
-      return
+    if (!dot || !circle) return;
+
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      "ontouchstart" in window
+    ) {
+      dot.style.display = "none";
+      circle.style.display = "none";
+      return;
     }
 
-    const pos = { x: 0, y: 0 }
-    const vel = { x: 0, y: 0 }
-    let scale = 1
-    let rotation = 0
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let dotX = mouse.x;
+    let dotY = mouse.y;
+    let circleX = mouse.x;
+    let circleY = mouse.y;
 
-    gsap.set(cursor, { xPercent: -50, yPercent: -50 })
-
-    const update = () => {
-      const dx = pos.x - (gsap.getProperty(cursor, "x") as number)
-      const dy = pos.y - (gsap.getProperty(cursor, "y") as number)
-      
-      vel.x += (dx - vel.x) * 0.2
-      vel.y += (dy - vel.y) * 0.2
-      
-      const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y)
-      const maxSpeed = 50
-      
-      const stretchAmount = Math.min(speed / maxSpeed, 0.5)
-      const scaleX = 1 + stretchAmount
-      const scaleY = 1 - stretchAmount * 0.5
-      
-      if (speed > 1) {
-         rotation = Math.atan2(vel.y, vel.x) * (180 / Math.PI)
-      }
-
-      gsap.to(cursor, {
-        x: pos.x,
-        y: pos.y,
-        rotation: rotation,
-        scaleX: scaleX * scale,
-        scaleY: scaleY * scale,
-        duration: 0.1,
-        ease: "power2.out"
-      })
-    }
+    gsap.set([dot, circle], { xPercent: -50, yPercent: -50 });
 
     const onMouseMove = (e: MouseEvent) => {
-      pos.x = e.clientX
-      pos.y = e.clientY
-      update()
-    }
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
 
-    const onMouseEnterLink = () => {
-      scale = 1.5
-      setIsHovering(true)
-    }
+    // Smooth follow animation
+    const animate = () => {
+      // Dot follows quickly
+      dotX += (mouse.x - dotX) * 0.2;
+      dotY += (mouse.y - dotY) * 0.2;
 
-    const onMouseLeaveLink = () => {
-      scale = 1
-      setIsHovering(false)
-    }
+      // Circle follows with delay for smooth effect
+      circleX += (mouse.x - circleX) * 0.12;
+      circleY += (mouse.y - circleY) * 0.12;
 
-    window.addEventListener("mousemove", onMouseMove)
-    
-    // Add listeners to interactive elements
-    const interactiveElements = document.querySelectorAll("a, button, [data-cursor-hover]")
+      gsap.set(dot, { x: dotX, y: dotY });
+      gsap.set(circle, { x: circleX, y: circleY });
+
+      requestAnimationFrame(animate);
+    };
+
+    const animationId = requestAnimationFrame(animate);
+
+    const onMouseDown = () => setIsClicking(true);
+    const onMouseUp = () => setIsClicking(false);
+
+    const onMouseEnterLink = () => setIsHovering(true);
+    const onMouseLeaveLink = () => setIsHovering(false);
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mouseup", onMouseUp);
+
+    const interactiveElements = document.querySelectorAll(
+      "a, button, [data-cursor-hover]",
+    );
     interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", onMouseEnterLink)
-      el.addEventListener("mouseleave", onMouseLeaveLink)
-    })
-    
+      el.addEventListener("mouseenter", onMouseEnterLink);
+      el.addEventListener("mouseleave", onMouseLeaveLink);
+    });
+
     return () => {
-      window.removeEventListener("mousemove", onMouseMove)
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mouseup", onMouseUp);
       interactiveElements.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnterLink)
-        el.removeEventListener("mouseleave", onMouseLeaveLink)
-      })
-    }
-  }, [])
+        el.removeEventListener("mouseenter", onMouseEnterLink);
+        el.removeEventListener("mouseleave", onMouseLeaveLink);
+      });
+    };
+  }, []);
 
   return (
-    <div
-      ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference hidden md:block will-change-transform"
-    >
-      <svg
-         ref={svgRef}
-         width="40"
-         height="40"
-         viewBox="0 0 50 50"
-         className="overflow-visible"
+    <>
+      {/* Inner Dot */}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block mix-blend-difference"
+        style={{
+          width: isClicking ? "4px" : "6px",
+          height: isClicking ? "4px" : "6px",
+          transition: "width 0.15s ease, height 0.15s ease, opacity 0.3s ease",
+          opacity: isHovering ? 0 : 1,
+        }}
       >
-         <defs>
-            <filter id="blob-glow">
-               <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
-               <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="glow" />
-               <feBlend in="SourceGraphic" in2="glow" />
-            </filter>
-         </defs>
-         
-         <circle 
-            cx="25" 
-            cy="25" 
-            r="12" 
-            fill={isHovering ? "transparent" : "white"}
-            stroke={isHovering ? "white" : "transparent"}
-            strokeWidth={isHovering ? "2" : "0"}
-            filter="url(#blob-glow)"
-            className="opacity-90 transition-[fill,stroke,stroke-width] duration-300 ease-out"
-         />
-      </svg>
-    </div>
-  )
+        <div
+          className="w-full h-full rounded-full bg-white"
+          style={{
+            boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)",
+          }}
+        />
+      </div>
+
+      {/* Outer Circle */}
+      <div
+        ref={circleRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block mix-blend-difference"
+        style={{
+          width: isHovering ? "50px" : isClicking ? "30px" : "36px",
+          height: isHovering ? "50px" : isClicking ? "30px" : "36px",
+          transition:
+            "width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease",
+          opacity: isClicking ? 0.7 : 0.5,
+        }}
+      >
+        <div
+          className="w-full h-full rounded-full border border-white"
+          style={{
+            borderWidth: isHovering ? "1.5px" : "1px",
+            transition: "border-width 0.25s ease",
+          }}
+        />
+      </div>
+    </>
+  );
 }
