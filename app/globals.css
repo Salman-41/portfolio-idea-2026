@@ -471,6 +471,96 @@ html.lenis body {
 
 /**
  * =================================================================
+ * About Hero Section - Elegant Floating Orbs
+ * Light Mode: Soft warm orbs 
+ * Dark Mode: Golden ambient glow
+ * =================================================================
+ */
+.about-hero-section {
+  position: relative;
+}
+
+/* About name text - theme aware with mix-blend-difference */
+.about-name-text {
+  color: white;
+}
+
+.light .about-name-text {
+  color: #1D3557;
+}
+
+/* Floating orbs - elegant ambient background */
+.about-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float-orb 20s ease-in-out infinite;
+}
+
+.about-orb-1 {
+  width: 500px;
+  height: 500px;
+  top: -10%;
+  left: -10%;
+  background: var(--primary);
+  animation-delay: 0s;
+}
+
+.about-orb-2 {
+  width: 400px;
+  height: 400px;
+  bottom: 10%;
+  right: -5%;
+  background: var(--secondary);
+  animation-delay: -7s;
+}
+
+.about-orb-3 {
+  width: 300px;
+  height: 300px;
+  top: 40%;
+  left: 50%;
+  background: var(--primary);
+  opacity: 0.2;
+  animation-delay: -14s;
+}
+
+/* Light mode - softer orbs */
+.light .about-orb {
+  opacity: 0.25;
+  filter: blur(100px);
+}
+
+.light .about-orb-1 {
+  background: #E63946;
+}
+
+.light .about-orb-2 {
+  background: #457B9D;
+}
+
+.light .about-orb-3 {
+  background: #A8DADC;
+}
+
+@keyframes float-orb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  50% {
+    transform: translate(-20px, 30px) scale(0.95);
+  }
+  75% {
+    transform: translate(-30px, -10px) scale(1.02);
+  }
+}
+
+/**
+ * =================================================================
  * Hero Section - Premium Cinematic Design
  * Light Mode: Sophisticated dark panel with warm accents
  * Dark Mode: Deep space with golden highlights

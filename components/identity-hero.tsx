@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Image from "next/image"
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const floatingElements = [
   { type: "dot", size: 8, x: "15%", y: "20%", speed: 0.5 },
@@ -16,36 +16,39 @@ const floatingElements = [
   { type: "ring", size: 20, x: "5%", y: "80%", speed: 0.7 },
   { type: "ring", size: 12, x: "92%", y: "50%", speed: 0.5 },
   { type: "cross", size: 16, x: "20%", y: "85%", speed: 0.4 },
-]
+];
 
 /**
  * Identity Hero section component.
  * Features a large name reveal, portrait image, and floating decorative elements.
  */
 export function IdentityHero() {
-  const containerRef = useRef<HTMLElement>(null)
-  const firstNameRef = useRef<HTMLHeadingElement>(null)
-  const lastNameRef = useRef<HTMLHeadingElement>(null)
-  const imageWrapperRef = useRef<HTMLDivElement>(null)
-  const badgeRef = useRef<HTMLDivElement>(null)
-  const floatingRef = useRef<(HTMLDivElement | null)[]>([])
+  const containerRef = useRef<HTMLElement>(null);
+  const firstNameRef = useRef<HTMLHeadingElement>(null);
+  const lastNameRef = useRef<HTMLHeadingElement>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const floatingRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       // Initial state
-      tl.set([firstNameRef.current, lastNameRef.current], { y: 150, opacity: 0 })
+      tl.set([firstNameRef.current, lastNameRef.current], {
+        y: 150,
+        opacity: 0,
+      });
       tl.set(imageWrapperRef.current, {
         scale: 1.2,
         opacity: 0,
         clipPath: "inset(100% 0% 0% 0%)",
-      })
-      tl.set(".floating-element", { opacity: 0, scale: 0 })
+      });
+      tl.set(".floating-element", { opacity: 0, scale: 0 });
 
       // Name reveal
-      tl.to(firstNameRef.current, { y: 0, opacity: 1, duration: 1.5 })
-      tl.to(lastNameRef.current, { y: 0, opacity: 1, duration: 1.5 }, "-=1.3")
+      tl.to(firstNameRef.current, { y: 0, opacity: 1, duration: 1.5 });
+      tl.to(lastNameRef.current, { y: 0, opacity: 1, duration: 1.5 }, "-=1.3");
 
       // Image reveal
       tl.to(
@@ -57,8 +60,8 @@ export function IdentityHero() {
           duration: 1.8,
           ease: "power4.out",
         },
-        "-=1.0"
-      )
+        "-=1.0",
+      );
 
       // Badge spin entrance
       gsap.from(badgeRef.current, {
@@ -68,7 +71,7 @@ export function IdentityHero() {
         duration: 1,
         ease: "back.out(1.7)",
         delay: 1.2,
-      })
+      });
 
       // Floating elements entrance
       gsap.to(".floating-element", {
@@ -78,7 +81,7 @@ export function IdentityHero() {
         stagger: 0.1,
         ease: "back.out(2)",
         delay: 1.5,
-      })
+      });
 
       // Scroll parallax - Names
       gsap.to(firstNameRef.current, {
@@ -89,7 +92,7 @@ export function IdentityHero() {
           end: "bottom top",
           scrub: 0.8,
         },
-      })
+      });
 
       gsap.to(lastNameRef.current, {
         x: 150,
@@ -99,7 +102,7 @@ export function IdentityHero() {
           end: "bottom top",
           scrub: 0.8,
         },
-      })
+      });
 
       // Scroll parallax - Image
       gsap.to(imageWrapperRef.current, {
@@ -111,12 +114,12 @@ export function IdentityHero() {
           end: "bottom top",
           scrub: 1,
         },
-      })
+      });
 
       // Floating elements parallax with varying speeds
       floatingRef.current.forEach((el, i) => {
-        if (!el) return
-        const speed = floatingElements[i]?.speed || 0.5
+        if (!el) return;
+        const speed = floatingElements[i]?.speed || 0.5;
         gsap.to(el, {
           y: -100 * speed,
           scrollTrigger: {
@@ -125,24 +128,31 @@ export function IdentityHero() {
             end: "bottom top",
             scrub: 1.5,
           },
-        })
-      })
-    }, containerRef)
+        });
+      });
+    }, containerRef);
 
-    return () => ctx.revert()
-  }, [])
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
       ref={containerRef}
-      className="relative pt-32 pb-0 md:pt-48 md:pb-0 px-4 md:px-12 min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
+      className="relative pt-32 pb-0 md:pt-48 md:pb-0 px-4 md:px-12 min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background about-hero-section"
     >
-      <div className="absolute inset-0 grid-bg opacity-50" />
+      {/* Elegant floating orbs background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="about-orb about-orb-1" />
+        <div className="about-orb about-orb-2" />
+        <div className="about-orb about-orb-3" />
+      </div>
 
       {floatingElements.map((el, i) => (
         <div
           key={i}
-          ref={(ref) => { floatingRef.current[i] = ref }}
+          ref={(ref) => {
+            floatingRef.current[i] = ref;
+          }}
           className="floating-element absolute hidden md:block pointer-events-none"
           style={{ left: el.x, top: el.y }}
         >
@@ -169,13 +179,12 @@ export function IdentityHero() {
             />
           )}
           {el.type === "cross" && (
-            <div className="relative" style={{ width: el.size, height: el.size }}>
-              <div
-                className="absolute top-1/2 left-0 w-full h-[1px] bg-primary/30 -translate-y-1/2"
-              />
-              <div
-                className="absolute left-1/2 top-0 h-full w-[1px] bg-primary/30 -translate-x-1/2"
-              />
+            <div
+              className="relative"
+              style={{ width: el.size, height: el.size }}
+            >
+              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-primary/30 -translate-y-1/2" />
+              <div className="absolute left-1/2 top-0 h-full w-[1px] bg-primary/30 -translate-x-1/2" />
             </div>
           )}
         </div>
@@ -184,7 +193,7 @@ export function IdentityHero() {
       <div className="container mx-auto relative z-10 flex flex-col items-center px-4">
         <h1
           ref={firstNameRef}
-          className="relative z-10 text-[22vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase mix-blend-difference text-white"
+          className="relative z-10 text-[22vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase mix-blend-difference about-name-text"
         >
           SALMAN
         </h1>
@@ -235,5 +244,5 @@ export function IdentityHero() {
         </h1>
       </div>
     </section>
-  )
+  );
 }
