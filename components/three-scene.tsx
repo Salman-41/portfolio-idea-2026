@@ -1,38 +1,50 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import * as THREE from "three"
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { useTheme } from "./theme-provider";
 
 export function ThreeScene() {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) return;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReducedMotion) return
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    // Theme-aware colors
+    const isDark = resolvedTheme === "dark";
+    const color1 = isDark ? "#38bdf8" : "#0891b2"; // Cyan variants
+    const color2 = isDark ? "#818cf8" : "#6366f1"; // Indigo variants
 
     // Scene setup
-    const scene = new THREE.Scene()
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1) // 2D Camera
-    
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1); // 2D Camera
+
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: "high-performance"
-    })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    containerRef.current.appendChild(renderer.domElement)
+      powerPreference: "high-performance",
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    containerRef.current.appendChild(renderer.domElement);
 
     // Shader Material
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uColor1: { value: new THREE.Color("#38bdf8") }, // Cyan
-        uColor2: { value: new THREE.Color("#818cf8") }, // Indigo
-        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-        uMouse: { value: new THREE.Vector2(0.5, 0.5) }
+        uColor1: { value: new THREE.Color(color1) },
+        uColor2: { value: new THREE.Color(color2) },
+        uResolution: {
+          value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+        },
+        uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+        uAlphaMultiplier: { value: isDark ? 0.3 : 0.15 },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -47,6 +59,7 @@ export function ThreeScene() {
         uniform vec3 uColor2;
         uniform vec2 uResolution;
         uniform vec2 uMouse;
+        uniform float uAlphaMultiplier;
         varying vec2 vUv;
 
         // Simplex Noise (Simplified)
@@ -108,59 +121,60 @@ export function ThreeScene() {
           
           // Alpha mask - only show where pattern is strong
           // Boost alpha near mouse
-          float alpha = smoothstep(0.2, 0.8, pattern + glow * 0.5) * 0.3; 
+          float alpha = smoothstep(0.2, 0.8, pattern + glow * 0.5) * uAlphaMultiplier; 
           alpha += interaction * 0.1; // Brighten near mouse
           
           gl_FragColor = vec4(finalColor, alpha);
         }
       `,
       transparent: true,
-    })
+    });
 
-    const geometry = new THREE.PlaneGeometry(2, 2)
-    const mesh = new THREE.Mesh(geometry, material)
-    scene.add(mesh)
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
 
     // Interaction State
     const handleMouseMove = (event: MouseEvent) => {
-        // Update shader uniform directly
-        material.uniforms.uMouse.value.x = event.clientX / window.innerWidth
-        material.uniforms.uMouse.value.y = 1.0 - (event.clientY / window.innerHeight) // Invert Y for shader UVs
-    }
-    window.addEventListener("mousemove", handleMouseMove)
+      // Update shader uniform directly
+      material.uniforms.uMouse.value.x = event.clientX / window.innerWidth;
+      material.uniforms.uMouse.value.y =
+        1.0 - event.clientY / window.innerHeight; // Invert Y for shader UVs
+    };
+    window.addEventListener("mousemove", handleMouseMove);
 
     // Animation Loop
-    let animationId: number
+    let animationId: number;
     const animate = () => {
-      animationId = requestAnimationFrame(animate)
-      material.uniforms.uTime.value += 0.005
-      renderer.render(scene, camera)
-    }
-    animate()
+      animationId = requestAnimationFrame(animate);
+      material.uniforms.uTime.value += 0.005;
+      renderer.render(scene, camera);
+    };
+    animate();
 
     // Handle Resize
     const handleResize = () => {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      renderer.setSize(width, height)
-      material.uniforms.uResolution.value.set(width, height)
-    }
-    window.addEventListener("resize", handleResize)
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      renderer.setSize(width, height);
+      material.uniforms.uResolution.value.set(width, height);
+    };
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
-    const currentContainer = containerRef.current
+    const currentContainer = containerRef.current;
     return () => {
-      cancelAnimationFrame(animationId)
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("resize", handleResize)
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
       if (currentContainer) {
-        currentContainer.removeChild(renderer.domElement)
+        currentContainer.removeChild(renderer.domElement);
       }
-      renderer.dispose()
-      geometry.dispose()
-      material.dispose()
-    }
-  }, [])
+      renderer.dispose();
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [resolvedTheme]);
 
-  return <div ref={containerRef} className="absolute inset-0" />
+  return <div ref={containerRef} className="absolute inset-0" />;
 }

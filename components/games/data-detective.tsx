@@ -130,7 +130,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
   // --- RENDER: CASE SELECTION ---
   if (gameStatus === "SELECT" || !activeCase) {
     return (
-      <div className="w-full bg-background/50 backdrop-blur-sm text-cyan-500 font-mono relative rounded-2xl border border-white/10 overflow-hidden">
+      <div className="w-full bg-background/50 backdrop-blur-sm text-cyan-500 font-mono relative rounded-2xl border border-border/50 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-10" />
 
         <div className="p-8 md:p-12 pb-0 z-10 relative">
@@ -140,7 +140,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
           >
             <ChevronLeft className="w-4 h-4" /> Return to About
           </button>
-          <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">
+          <h1 className="text-5xl md:text-7xl font-black text-foreground uppercase tracking-tighter mb-4">
             Case <span className="stroke-text-1 text-transparent">Files</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl">
@@ -154,17 +154,17 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
             <button
               key={c.id}
               onClick={() => selectCase(c)}
-              className="group relative h-80 bg-white/5 border border-white/10 hover:border-cyan-500/50 rounded-2xl p-8 text-left transition-all hover:bg-cyan-500/5 flex flex-col justify-between overflow-hidden"
+              className="group relative h-80 bg-foreground/5 border border-border/50 hover:border-cyan-500/50 rounded-2xl p-8 text-left transition-all hover:bg-cyan-500/5 flex flex-col justify-between overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <FolderOpen className="w-32 h-32 rotate-12" />
               </div>
 
               <div>
-                <div className="inline-flex items-center gap-2 px-2 py-1 rounded bg-black/40 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-4">
+                <div className="inline-flex items-center gap-2 px-2 py-1 rounded bg-background/60 border border-border/50 text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-4">
                   {c.difficulty}
                 </div>
-                <h3 className="text-3xl font-black text-white uppercase leading-none mb-4">
+                <h3 className="text-3xl font-black text-foreground uppercase leading-none mb-4">
                   {c.title}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-4 leading-relaxed">
@@ -187,11 +187,11 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
 
   // --- RENDER: ACTIVE GAME ---
   return (
-    <div className="w-full bg-background/50 backdrop-blur-sm text-cyan-500 font-mono relative rounded-2xl border border-white/10 overflow-hidden">
+    <div className="w-full bg-background/50 backdrop-blur-sm text-cyan-500 font-mono relative rounded-2xl border border-border/50 overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-50 bg-[linear-gradient(rgba(18,18,18,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_2px,3px_100%] opacity-20" />
 
       {/* --- HEADER --- */}
-      <header className="border-b border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between p-6 md:px-8 gap-4 bg-black/50 backdrop-blur-md z-40 relative">
+      <header className="border-b border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between p-6 md:px-8 gap-4 bg-background/70 backdrop-blur-md z-40 relative">
         <div className="flex items-center gap-6">
           <button
             onClick={quitCase}
@@ -199,14 +199,14 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
           >
             <ChevronLeft className="w-4 h-4" /> Abort
           </button>
-          <div className="h-6 w-px bg-white/10 hidden md:block" />
+          <div className="h-6 w-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-3">
             <ShieldAlert className="w-5 h-5 text-cyan-400 animate-pulse" />
             <div>
               <div className="text-xs text-cyan-700 font-bold uppercase tracking-widest">
                 Phase {currentStageIndex + 1} / {activeCase.stages.length}
               </div>
-              <div className="text-white text-sm font-bold uppercase tracking-tighter max-w-[300px] truncate">
+              <div className="text-foreground text-sm font-bold uppercase tracking-tighter max-w-[300px] truncate">
                 {currentStage.title}
               </div>
             </div>
@@ -218,7 +218,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
           {Object.keys(activeCase.db).map((bucket) => (
             <span
               key={bucket}
-              className="px-2 py-1 bg-white/5 border border-white/10 rounded text-cyan-300 font-mono"
+              className="px-2 py-1 bg-foreground/5 border border-border/50 rounded text-cyan-300 font-mono"
             >
               {bucket}
             </span>
@@ -229,7 +229,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
       {/* --- MAIN CONTENT --- */}
       <div className="flex flex-col lg:flex-row">
         {/* LEFT: TERMINAL */}
-        <div className="flex-[2] flex flex-col border-b lg:border-b-0 lg:border-r border-white/10 bg-black/40 relative">
+        <div className="flex-[2] flex flex-col border-b lg:border-b-0 lg:border-r border-border/50 bg-background/60 relative">
           <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay pointer-events-none" />
 
           <div
@@ -256,12 +256,12 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
                   Object.values(entry.result.rows[0]).some(
                     (v) => typeof v === "number",
                   ) && (
-                    <div className="mt-4 p-4 border border-white/10 rounded bg-black/40">
+                    <div className="mt-4 p-4 border border-border/50 rounded bg-background/60">
                       <div className="text-[10px] font-mono text-cyan-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <BarChart3 className="w-3 h-3" />
                         Data Visualization Detected
                       </div>
-                      <div className="flex items-end gap-2 h-32 w-full pb-2 border-b border-white/10">
+                      <div className="flex items-end gap-2 h-32 w-full pb-2 border-b border-border/50">
                         {entry.result.rows
                           .slice(0, 10)
                           .map((row: Row, rIdx: number) => {
@@ -292,7 +292,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
                                   className="w-full bg-cyan-500/20 border-t border-cyan-400 group-hover:bg-cyan-400/40 transition-all relative"
                                   style={{ height: `${heightPct}%` }}
                                 >
-                                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black px-1 rounded border border-white/10">
+                                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-background px-1 rounded border border-border/50">
                                     {val} ({(numKey || "").toUpperCase()})
                                   </div>
                                 </div>
@@ -317,10 +317,10 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
                     -- No records found --
                   </div>
                 ) : (
-                  <div className="overflow-x-auto border border-white/10 rounded bg-white/5">
+                  <div className="overflow-x-auto border border-border/50 rounded bg-foreground/5">
                     <table className="w-full text-xs text-left">
                       <thead>
-                        <tr className="border-b border-white/10 bg-white/5 text-cyan-100">
+                        <tr className="border-b border-border/50 bg-foreground/5 text-cyan-100">
                           {entry.result.cols.map((col: string) => (
                             <th
                               key={col}
@@ -358,7 +358,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
 
           <form
             onSubmit={runQuery}
-            className="border-t border-white/10 bg-black flex items-center px-6 py-4 gap-4"
+            className="border-t border-border/50 bg-background flex items-center px-6 py-4 gap-4"
           >
             <span className="text-pink-500 font-bold animate-pulse">
               {">_"}
@@ -377,17 +377,17 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
         {/* RIGHT: INTEL PANEL */}
         <div className="lg:w-[400px] bg-cyan-950/5 border-t lg:border-t-0 lg:border-l border-white/5 flex flex-col">
           {/* Mission Card */}
-          <div className="p-6 border-b border-white/10 space-y-4 bg-gradient-to-b from-cyan-900/10 to-transparent">
-            <div className="flex items-center gap-2 text-white font-bold uppercase tracking-widest text-xs">
+          <div className="p-6 border-b border-border/50 space-y-4 bg-gradient-to-b from-cyan-900/10 to-transparent">
+            <div className="flex items-center gap-2 text-foreground font-bold uppercase tracking-widest text-xs">
               <Briefcase className="w-4 h-4 text-cyan-400" />
               Current Directive
             </div>
-            <div className="p-4 bg-black/40 border border-cyan-500/20 rounded-lg text-sm leading-relaxed text-cyan-100 shadow-[0_0_30px_rgba(8,145,178,0.1)]">
+            <div className="p-4 bg-background/60 border border-cyan-500/20 rounded-lg text-sm leading-relaxed text-cyan-100 shadow-[0_0_30px_rgba(8,145,178,0.1)]">
               <h3 className="text-cyan-400 font-bold mb-2 uppercase">
                 {currentStage.title}
               </h3>
               <p className="opacity-80">{currentStage.desc}</p>
-              <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="mt-4 pt-4 border-t border-border/50">
                 <span className="text-xs text-yellow-500 font-mono uppercase">
                   Hint:
                 </span>
@@ -401,7 +401,7 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
           {/* Database Tables / Suspects */}
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2 text-white font-bold uppercase tracking-widest text-xs">
+              <div className="flex items-center gap-2 text-foreground font-bold uppercase tracking-widest text-xs">
                 <Database className="w-4 h-4 text-cyan-400" />
                 Global Entities
               </div>
@@ -413,11 +413,11 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
                 (s: any) => (
                   <div
                     key={s.id}
-                    className="group p-4 bg-white/5 border border-white/5 hover:border-cyan-500 transition-all rounded hover:bg-cyan-900/10"
+                    className="group p-4 bg-foreground/5 border border-border/30 hover:border-cyan-500 transition-all rounded hover:bg-cyan-900/10"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <div className="text-white font-bold font-mono">
+                        <div className="text-foreground font-bold font-mono">
                           {s.name}
                         </div>
                         <div className="text-xs text-cyan-600 uppercase tracking-wider">
@@ -445,15 +445,15 @@ export function DataDetectiveGame({ onBack }: DataDetectiveGameProps) {
 
       {/* BRIEFING MODAL */}
       {gameStatus === "BRIEFING" && (
-        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-center justify-center p-8">
+        <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl flex items-center justify-center p-8">
           <div className="max-w-2xl w-full space-y-8 text-center animate-in zoom-in-95 duration-500">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-400 mb-4 animate-pulse">
               <FileText className="w-10 h-10" />
             </div>
-            <h1 className="text-5xl font-black text-white uppercase tracking-tighter">
+            <h1 className="text-5xl font-black text-foreground uppercase tracking-tighter">
               {currentStage.title}
             </h1>
-            <div className="bg-white/5 border border-white/10 p-8 rounded-2xl text-lg leading-relaxed text-cyan-100 max-w-xl mx-auto">
+            <div className="bg-foreground/5 border border-border/50 p-8 rounded-2xl text-lg leading-relaxed text-cyan-100 max-w-xl mx-auto">
               {currentStage.desc}
             </div>
             <div className="flex justify-center gap-4">

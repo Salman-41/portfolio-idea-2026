@@ -147,13 +147,13 @@ export function PhilosophyGrid() {
   return (
     <section
       ref={sectionRef}
-      className="py-32 md:py-48 px-4 md:px-12 bg-background border-t border-white/5 relative overflow-hidden"
+      className="py-32 md:py-48 px-4 md:px-12 bg-background border-t border-border/30 relative overflow-hidden"
       style={{ perspective: "1000px" }}
     >
       {/* Section Header */}
       <div className="philosophy-header container mx-auto mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
         <div>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white leading-[0.9]">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-foreground leading-[0.9]">
             Core
             <br />
             <span className="text-transparent stroke-text-2">Philosophy</span>
@@ -178,11 +178,11 @@ export function PhilosophyGrid() {
               }}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseLeave={() => handleMouseLeave(index)}
-              className={`group relative p-8 md:p-10 rounded-2xl border border-white/10 bg-white/[0.02] ${item.colSpan} overflow-hidden transition-colors duration-500 hover:border-${item.accent}/50 hover:bg-white/[0.04]`}
+              className={`group relative p-8 md:p-10 rounded-2xl border border-border/50 bg-foreground/[0.02] ${item.colSpan} overflow-hidden transition-colors duration-500 hover:border-${item.accent}/50 hover:bg-foreground/[0.04]`}
               style={{ transformStyle: "preserve-3d" }}
             >
               {/* Background Number - Parallax */}
-              <span className="bg-number absolute -top-6 -right-6 text-[100px] md:text-[140px] font-black text-white/[0.02] leading-none select-none pointer-events-none">
+              <span className="bg-number absolute -top-6 -right-6 text-[100px] md:text-[140px] font-black text-foreground/[0.02] leading-none select-none pointer-events-none">
                 {item.id}
               </span>
 
@@ -199,11 +199,11 @@ export function PhilosophyGrid() {
 
                 <div>
                   <h3
-                    className={`text-2xl md:text-3xl font-bold uppercase tracking-tight mb-4 text-white group-hover:text-${item.accent} transition-colors duration-300`}
+                    className={`text-2xl md:text-3xl font-bold uppercase tracking-tight mb-4 text-foreground group-hover:text-${item.accent} transition-colors duration-300`}
                   >
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed text-sm md:text-base max-w-md group-hover:text-white/70 transition-colors duration-300">
+                  <p className="text-muted-foreground leading-relaxed text-sm md:text-base max-w-md group-hover:text-foreground/70 transition-colors duration-300">
                     {item.desc}
                   </p>
                 </div>

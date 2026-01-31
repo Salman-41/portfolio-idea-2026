@@ -143,9 +143,9 @@ export function NarrativeBio() {
                 }`}
               >
                 {/* Card Content */}
-                <div className="group relative p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500">
+                <div className="group relative p-6 md:p-8 rounded-2xl border border-border/50 bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-all duration-500">
                   {/* Background Number */}
-                  <span className="absolute -top-4 -right-4 text-[80px] md:text-[100px] font-black text-white/[0.02] leading-none select-none">
+                  <span className="absolute -top-4 -right-4 text-[80px] md:text-[100px] font-black text-foreground/[0.02] leading-none select-none">
                     {item.id}
                   </span>
 
@@ -169,7 +169,7 @@ export function NarrativeBio() {
                       {item.tech.map((tech) => (
                         <span
                           key={tech}
-                          className="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 rounded text-white/60 hover:border-white/30 hover:text-white/80 transition-colors"
+                          className="px-2 py-1 text-[10px] font-mono uppercase border border-border/50 rounded text-muted-foreground hover:border-border hover:text-foreground/80 transition-colors"
                         >
                           {tech}
                         </span>

@@ -69,7 +69,7 @@ export function GamesArcade() {
       <div className="container mx-auto relative z-10 max-w-[1400px]">
         {/* Typography Title */}
         <div className="relative mb-8 leading-none">
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white overflow-hidden">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-foreground overflow-hidden">
             {Array.from("SQL").map((char, i) => (
               <span key={i} className="char-reveal inline-block">
                 {char}
@@ -88,7 +88,7 @@ export function GamesArcade() {
         {/* Separator Line */}
         <div
           ref={lineRef}
-          className="w-full h-px bg-white/10 mb-12 origin-left"
+          className="w-full h-px bg-border/50 mb-12 origin-left"
         />
 
         {/* Content Grid */}
@@ -101,30 +101,30 @@ export function GamesArcade() {
           </div>
 
           <div className="md:col-span-1 flex flex-col gap-4">
-            <div className="sub-reveal flex items-center gap-4 text-white/50 text-sm font-mono">
+            <div className="sub-reveal flex items-center gap-4 text-muted-foreground text-sm font-mono">
               <span className="text-primary">[01]</span>
               <span>SYNTAX TRAINING</span>
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-border/50" />
             </div>
-            <div className="sub-reveal flex items-center gap-4 text-white/50 text-sm font-mono">
+            <div className="sub-reveal flex items-center gap-4 text-muted-foreground text-sm font-mono">
               <span className="text-primary">[02]</span>
               <span>LOGIC PUZZLES</span>
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-border/50" />
             </div>
-            <div className="sub-reveal flex items-center gap-4 text-white/50 text-sm font-mono">
+            <div className="sub-reveal flex items-center gap-4 text-muted-foreground text-sm font-mono">
               <span className="text-primary">[03]</span>
               <span>DATA FORENSICS</span>
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-border/50" />
             </div>
           </div>
 
           <div className="md:col-span-1 flex justify-end">
             <Link
               href="/detective"
-              className="sub-reveal group relative inline-flex items-center gap-4 text-lg md:text-xl font-bold uppercase text-white hover:text-primary transition-colors"
+              className="sub-reveal group relative inline-flex items-center gap-4 text-lg md:text-xl font-bold uppercase text-foreground hover:text-primary transition-colors"
             >
               <span>Enter Training</span>
-              <div className="relative w-12 h-12 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
+              <div className="relative w-12 h-12 rounded-full border border-foreground/20 flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
                 <ArrowUpRight className="w-5 h-5 transform group-hover:rotate-45 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </div>

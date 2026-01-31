@@ -2,52 +2,176 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
+/**
+ * =================================================================
+ * AWWWARDS-LEVEL COLOR SYSTEM
+ * Inspired by Coolors palettes: Black & Gold Elegance + Sunny Beach
+ * 
+ * Light: Warm cream (#F1FAEE) with deep navy (#1D3557) text
+ * Dark: Rich charcoal (#14213D) with golden amber (#FCA311) accents
+ * =================================================================
+ */
+
+/**
+ * LIGHT THEME
+ * Elegant cream canvas with navy typography and coral/gold accents
+ * Palette inspiration: Summer Ocean Breeze + Sunny Beach Day
+ */
 :root {
-  /**
-   * Dark portfolio theme configuration.
-   * Deep slate background with cyan accents.
-   */
-  --background: oklch(0.13 0.02 250);
-  --foreground: oklch(0.95 0.01 250);
-  --card: oklch(0.16 0.02 250);
-  --card-foreground: oklch(0.95 0.01 250);
-  --popover: oklch(0.16 0.02 250);
-  --popover-foreground: oklch(0.95 0.01 250);
-  --primary: oklch(0.75 0.15 190);
-  --primary-rgb: 94, 211, 222;
-  --background-rgb: 26, 32, 44;
-  --primary-foreground: oklch(0.13 0.02 250);
-  --secondary: oklch(0.22 0.02 250);
-  --secondary-foreground: oklch(0.95 0.01 250);
-  --muted: oklch(0.22 0.02 250);
-  --muted-foreground: oklch(0.65 0.02 250);
-  --accent: oklch(0.75 0.15 190);
-  --accent-foreground: oklch(0.13 0.02 250);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.28 0.02 250);
-  --input: oklch(0.22 0.02 250);
-  --ring: oklch(0.75 0.15 190);
-  --chart-1: oklch(0.75 0.15 190);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.16 0.02 250);
-  --sidebar-foreground: oklch(0.95 0.01 250);
-  --sidebar-primary: oklch(0.75 0.15 190);
-  --sidebar-primary-foreground: oklch(0.13 0.02 250);
-  --sidebar-accent: oklch(0.22 0.02 250);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.28 0.02 250);
-  --sidebar-ring: oklch(0.75 0.15 190);
+  /* Core: Warm cream background, deep navy text */
+  --background: #F8F9FA;
+  --foreground: #1D3557;
+  
+  /* Cards: Slightly elevated surfaces */
+  --card: #FFFFFF;
+  --card-foreground: #1D3557;
+  --popover: #FFFFFF;
+  --popover-foreground: #1D3557;
+  
+  /* Primary: Vibrant coral-red for CTAs and highlights */
+  --primary: #E63946;
+  --primary-rgb: 230, 57, 70;
+  --background-rgb: 248, 249, 250;
+  --primary-foreground: #FFFFFF;
+  
+  /* Secondary: Soft blue-gray for subtle elements */
+  --secondary: #A8DADC;
+  --secondary-foreground: #1D3557;
+  
+  /* Muted: Gentle gray for disabled states */
+  --muted: #E9ECEF;
+  --muted-foreground: #457B9D;
+  
+  /* Accent: Ocean blue for interactive elements */
+  --accent: #457B9D;
+  --accent-foreground: #FFFFFF;
+  
+  /* Status colors */
+  --destructive: #E63946;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Borders & inputs */
+  --border: #DEE2E6;
+  --input: #F1F3F4;
+  --ring: #E63946;
+  
+  /* Chart palette - harmonious spectrum */
+  --chart-1: #E63946;
+  --chart-2: #457B9D;
+  --chart-3: #2A9D8F;
+  --chart-4: #E9C46A;
+  --chart-5: #F4A261;
+  
+  --radius: 0.75rem;
+  
+  /* Sidebar */
+  --sidebar: #F1FAEE;
+  --sidebar-foreground: #1D3557;
+  --sidebar-primary: #E63946;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #A8DADC;
+  --sidebar-accent-foreground: #1D3557;
+  --sidebar-border: #DEE2E6;
+  --sidebar-ring: #E63946;
+  
+  /* Theme-specific UI colors */
+  --nav-text: #1D3557;
+  --menu-bg: #FFFFFF;
+  --overlay-bg: rgba(248, 249, 250, 0.98);
+  --noise-opacity: 0.04;
+  --scrollbar-thumb: rgba(29, 53, 87, 0.2);
+  --scrollbar-thumb-hover: rgba(29, 53, 87, 0.4);
+  --grid-line: rgba(29, 53, 87, 0.06);
+  --stroke-color: rgba(29, 53, 87, 0.2);
+  
+  /* Premium gradient stops */
+  --gradient-start: #E63946;
+  --gradient-mid: #F4A261;
+  --gradient-end: #E9C46A;
+}
+
+/**
+ * DARK THEME
+ * Cinematic deep navy with luxurious golden amber accents
+ * Palette inspiration: Black & Gold Elegance
+ */
+.dark {
+  /* Core: Rich charcoal-navy background */
+  --background: #0D1117;
+  --foreground: #E6EDF3;
+  
+  /* Cards: Elevated dark surfaces with subtle depth */
+  --card: #161B22;
+  --card-foreground: #E6EDF3;
+  --popover: #161B22;
+  --popover-foreground: #E6EDF3;
+  
+  /* Primary: Luxurious golden amber */
+  --primary: #FCA311;
+  --primary-rgb: 252, 163, 17;
+  --background-rgb: 13, 17, 23;
+  --primary-foreground: #0D1117;
+  
+  /* Secondary: Muted slate */
+  --secondary: #21262D;
+  --secondary-foreground: #E6EDF3;
+  
+  /* Muted: Subdued elements */
+  --muted: #21262D;
+  --muted-foreground: #8B949E;
+  
+  /* Accent: Warm amber for highlights */
+  --accent: #FCA311;
+  --accent-foreground: #0D1117;
+  
+  /* Status colors */
+  --destructive: #F85149;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Borders & inputs */
+  --border: #30363D;
+  --input: #21262D;
+  --ring: #FCA311;
+  
+  /* Chart palette - golden spectrum */
+  --chart-1: #FCA311;
+  --chart-2: #F4A261;
+  --chart-3: #E9C46A;
+  --chart-4: #2A9D8F;
+  --chart-5: #E76F51;
+  
+  /* Sidebar */
+  --sidebar: #161B22;
+  --sidebar-foreground: #E6EDF3;
+  --sidebar-primary: #FCA311;
+  --sidebar-primary-foreground: #0D1117;
+  --sidebar-accent: #21262D;
+  --sidebar-accent-foreground: #E6EDF3;
+  --sidebar-border: #30363D;
+  --sidebar-ring: #FCA311;
+  
+  /* Theme-specific UI colors */
+  --nav-text: #E6EDF3;
+  --menu-bg: #0D1117;
+  --overlay-bg: rgba(13, 17, 23, 0.98);
+  --noise-opacity: 0.08;
+  --scrollbar-thumb: rgba(230, 237, 243, 0.15);
+  --scrollbar-thumb-hover: rgba(230, 237, 243, 0.3);
+  --grid-line: rgba(48, 54, 61, 0.5);
+  --stroke-color: rgba(230, 237, 243, 0.25);
+  
+  /* Premium gradient stops */
+  --gradient-start: #FCA311;
+  --gradient-mid: #F4A261;
+  --gradient-end: #E9C46A;
 }
 
 /**
  * Global atmospheric noise texture overlay.
  * Adds a subtle film grain effect to the entire application.
+ * Opacity adjusts based on theme.
  */
 body::after {
   content: "";
@@ -56,10 +180,15 @@ body::after {
   width: 100%;
   height: 100%;
   background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.15;
+  opacity: var(--noise-opacity);
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: overlay;
+}
+
+/* Light theme adjustment for noise */
+.light body::after {
+  mix-blend-mode: multiply;
 }
 
 @theme inline {
@@ -115,6 +244,7 @@ body::after {
 /**
  * Custom Scrollbar Styling.
  * Minimalist design compatible with Webkit browsers.
+ * Theme-aware colors.
  */
 ::-webkit-scrollbar {
   width: 8px;
@@ -125,13 +255,13 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /**
@@ -139,7 +269,7 @@ body::after {
  */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 /**
@@ -209,14 +339,54 @@ html.lenis body {
 }
 
 /**
- * Gradient text utility.
- * Applies the primary theme gradient to text elements.
+ * Premium gradient text utility.
+ * Uses the theme's gradient stops for beautiful text effects.
  */
 .gradient-text {
-  background: linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%);
+  background: linear-gradient(
+    135deg, 
+    var(--gradient-start) 0%, 
+    var(--gradient-mid) 50%,
+    var(--gradient-end) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Alternate gradient direction */
+.gradient-text-reverse {
+  background: linear-gradient(
+    -45deg, 
+    var(--gradient-start) 0%, 
+    var(--gradient-mid) 50%,
+    var(--gradient-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated gradient text */
+.gradient-text-animated {
+  background: linear-gradient(
+    90deg, 
+    var(--gradient-start) 0%, 
+    var(--gradient-mid) 25%,
+    var(--gradient-end) 50%,
+    var(--gradient-mid) 75%,
+    var(--gradient-start) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 /**
@@ -286,10 +456,11 @@ html.lenis body {
 
 /**
  * Grid background pattern.
+ * Theme-aware grid lines.
  */
 .grid-bg {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -312,17 +483,27 @@ html.lenis body {
 /**
  * Stroke Text Utilities.
  * Creates outlined text effects.
+ * Theme-aware stroke colors.
  */
 .stroke-text {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  -webkit-text-stroke: 1px var(--stroke-color);
 }
 
 .stroke-text-2 {
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
+  -webkit-text-stroke: 2px var(--stroke-color);
 }
 
 .stroke-primary {
   -webkit-text-stroke: 1px var(--primary);
+}
+
+/* Light theme overrides */
+.light .stroke-text {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.25);
+}
+
+.light .stroke-text-2 {
+  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.35);
 }
 
 /**
