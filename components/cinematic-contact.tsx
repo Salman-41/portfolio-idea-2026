@@ -226,7 +226,7 @@ export function CinematicContact() {
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
                 }
-                className="w-full bg-transparent border-b border-border/50 py-4 md:py-6 text-lg md:text-2xl focus:outline-none focus:border-primary transition-colors peer resize-none"
+                className="w-full bg-transparent border-b border-border/50 py-4 md:py-6 text-lg md:text-2xl focus:outline-none focus:border-transparent transition-colors peer resize-none"
                 placeholder=" "
               />
               <label className="absolute left-0 top-4 md:top-6 text-lg md:text-2xl text-muted-foreground pointer-events-none transition-all duration-500 peer-focus:-top-2 peer-focus:text-[10px] md:peer-focus:text-xs peer-focus:text-primary peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-[10px] md:peer-[:not(:placeholder-shown)]:text-xs">
