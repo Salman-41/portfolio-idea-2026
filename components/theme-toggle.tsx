@@ -2,210 +2,249 @@
 
 import { useTheme } from "./theme-provider";
 import { cn } from "@/lib/utils";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
 /**
- * Minimalist Theme Toggle - Matches portfolio aesthetic
- * Clean, subtle, and elegant
+ * Premium Sun/Moon Toggle Switch
+ * Features animated clouds, stars, moon craters, and sun glow
+ * With GSAP animations and custom cursor support
  */
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const { resolvedTheme, setTheme, theme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  
+  const sunMoonRef = useRef<HTMLDivElement>(null);
+  const starsRef = useRef<HTMLDivElement>(null);
+  const cloudsRef = useRef<HTMLDivElement>(null);
+  const crater1Ref = useRef<HTMLDivElement>(null);
+  const crater2Ref = useRef<HTMLDivElement>(null);
+  const crater3Ref = useRef<HTMLDivElement>(null);
+  const glow1Ref = useRef<HTMLDivElement>(null);
+  const glow2Ref = useRef<HTMLDivElement>(null);
 
-  const themes = [
-    { value: "light" as const, label: "Light" },
-    { value: "dark" as const, label: "Dark" },
-    { value: "system" as const, label: "System" },
-  ];
+  const handleToggle = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
 
+  // GSAP animations on theme change
   useEffect(() => {
-    if (isOpen && menuRef.current) {
-      gsap.fromTo(
-        menuRef.current,
-        { opacity: 0, y: -10, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "power2.out" },
+    if (!sunMoonRef.current) return;
+
+    if (isDark) {
+      // Animate to moon
+      gsap.to(sunMoonRef.current, {
+        x: 20,
+        backgroundColor: "#f1f5f9", // slate-100
+        duration: 0.5,
+        ease: "power3.out"
+      });
+      
+      // Rotate the moon
+      gsap.fromTo(sunMoonRef.current, 
+        { rotation: 0 },
+        { rotation: 360, duration: 0.6, ease: "power2.inOut" }
       );
+
+      // Show craters
+      gsap.to([crater1Ref.current, crater2Ref.current, crater3Ref.current], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        stagger: 0.1,
+        delay: 0.2,
+        ease: "back.out(1.7)"
+      });
+
+      // Hide sun glow
+      gsap.to([glow1Ref.current, glow2Ref.current], {
+        opacity: 0,
+        scale: 0.5,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+
+      // Show stars
+      gsap.to(starsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        delay: 0.2,
+        ease: "power3.out"
+      });
+
+      // Hide clouds
+      gsap.to(cloudsRef.current, {
+        opacity: 0,
+        x: 20,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+
+    } else {
+      // Animate to sun
+      gsap.to(sunMoonRef.current, {
+        x: 0,
+        backgroundColor: "#fcd34d", // amber-300
+        duration: 0.5,
+        ease: "elastic.out(1, 0.5)"
+      });
+
+      // Hide craters
+      gsap.to([crater1Ref.current, crater2Ref.current, crater3Ref.current], {
+        opacity: 0,
+        scale: 0.5,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+
+      // Show sun glow
+      gsap.to([glow1Ref.current, glow2Ref.current], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        stagger: 0.1,
+        delay: 0.2,
+        ease: "elastic.out(1, 0.5)"
+      });
+
+      // Hide stars
+      gsap.to(starsRef.current, {
+        opacity: 0,
+        y: -32,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+
+      // Show clouds
+      gsap.to(cloudsRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.5,
+        delay: 0.2,
+        ease: "power3.out"
+      });
     }
-  }, [isOpen]);
+  }, [isDark]);
 
+  // Continuous cloud animation
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        menuRef.current &&
-        buttonRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (!cloudsRef.current) return;
+    
+    const clouds = cloudsRef.current.querySelectorAll('.cloud');
+    clouds.forEach((cloud, i) => {
+      gsap.to(cloud, {
+        x: "+=4",
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: i * 0.5
+      });
+    });
   }, []);
 
-  const isDark = resolvedTheme === "dark";
+  // Continuous star twinkle animation
+  useEffect(() => {
+    if (!starsRef.current) return;
+    
+    const stars = starsRef.current.querySelectorAll('.star');
+    stars.forEach((star, i) => {
+      gsap.to(star, {
+        scale: 1.3,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: i * 0.3
+      });
+    });
+  }, []);
 
   return (
-    <div className={cn("relative", className)}>
-      <button
-        ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "relative group w-12 h-12 flex items-center justify-center",
-          "rounded-full border transition-all duration-500",
-          "backdrop-blur-sm",
-          isDark
-            ? "bg-foreground/5 border-foreground/10 hover:border-primary/50 hover:bg-foreground/10"
-            : "bg-background/80 border-foreground/10 hover:border-primary/50 hover:bg-foreground/5",
-          "hover:scale-105 active:scale-95",
-        )}
-        aria-label="Toggle theme"
-        data-cursor-hover
-      >
-        <div className="relative w-5 h-5 flex items-center justify-center">
-          {isDark ? (
-            // Moon - Simple crescent
-            <svg
-              className="w-5 h-5 text-foreground transition-transform duration-500 group-hover:rotate-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-              />
-            </svg>
-          ) : (
-            // Sun - Simple rays
-            <svg
-              className="w-5 h-5 text-foreground transition-transform duration-500 group-hover:rotate-90"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-          )}
-        </div>
-      </button>
-
-      {isOpen && (
-        <div
-          ref={menuRef}
-          className={cn(
-            "absolute top-full right-0 mt-3 py-2 px-1",
-            "bg-card/95 backdrop-blur-xl",
-            "border border-border/50 rounded-xl shadow-2xl",
-            "min-w-[140px]",
-          )}
-        >
-          {themes.map((t) => {
-            const isActive = theme === t.value;
-            return (
-              <button
-                key={t.value}
-                onClick={() => {
-                  setTheme(t.value);
-                  setIsOpen(false);
-                }}
-                className={cn(
-                  "w-full flex items-center justify-between px-4 py-2.5 rounded-lg mx-1",
-                  "text-sm font-medium transition-all duration-300",
-                  "group relative",
-                  isActive
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                )}
-              >
-                <span className="relative z-10 uppercase tracking-wider text-xs">
-                  {t.label}
-                </span>
-                {isActive && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary relative z-10" />
-                )}
-              </button>
-            );
-          })}
-        </div>
+    <label 
+      className={cn(
+        "relative inline-block w-[44px] h-[24px] cursor-pointer",
+        className
       )}
-    </div>
+      data-cursor-hover
+      data-cursor-label="THEME"
+    >
+      <input
+        type="checkbox"
+        checked={isDark}
+        onChange={handleToggle}
+        className="opacity-0 w-0 h-0 absolute"
+        aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      />
+      
+      {/* Slider track */}
+      <div 
+        className={cn(
+          "absolute inset-0 rounded-full overflow-hidden transition-colors duration-500",
+          isDark ? "bg-slate-900" : "bg-sky-400"
+        )}
+      >
+        {/* Sun/Moon circle */}
+        <div
+          ref={sunMoonRef}
+          className="absolute w-[18px] h-[18px] rounded-full bottom-[3px] left-[3px] bg-amber-300"
+        >
+          {/* Moon craters */}
+          <div
+            ref={crater1Ref}
+            className="absolute left-[7px] top-[2px] w-[4px] h-[4px] rounded-full bg-slate-300 opacity-0 scale-50"
+          />
+          <div
+            ref={crater2Ref}
+            className="absolute left-[1px] top-[7px] w-[7px] h-[7px] rounded-full bg-slate-300 opacity-0 scale-50"
+          />
+          <div
+            ref={crater3Ref}
+            className="absolute left-[11px] top-[12px] w-[2px] h-[2px] rounded-full bg-slate-300 opacity-0 scale-50"
+          />
+          
+          {/* Sun glow rays */}
+          <div
+            ref={glow1Ref}
+            className="absolute -left-[5px] -top-[5px] w-[28px] h-[28px] rounded-full bg-white/15 -z-10"
+          />
+          <div
+            ref={glow2Ref}
+            className="absolute -left-[9px] -top-[9px] w-[36px] h-[36px] rounded-full bg-white/10 -z-10"
+          />
+        </div>
+
+        {/* Clouds - Light mode */}
+        <div ref={cloudsRef} className="clouds">
+          <div className="cloud absolute left-[22px] top-[10px] w-[24px] h-[24px] rounded-full bg-slate-200" />
+          <div className="cloud absolute left-[32px] top-[6px] w-[12px] h-[12px] rounded-full bg-slate-300" />
+          <div className="cloud absolute left-[14px] top-[14px] w-[16px] h-[16px] rounded-full bg-white" />
+        </div>
+
+        {/* Stars - Dark mode */}
+        <div ref={starsRef} className="opacity-0 -translate-y-6">
+          <svg className="star absolute w-2.5 h-2.5 top-[1px] left-[2px] fill-white" viewBox="0 0 20 20">
+            <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
+          </svg>
+          <svg className="star absolute w-[3px] h-[3px] top-2.5 left-[3px] fill-white" viewBox="0 0 20 20">
+            <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
+          </svg>
+          <svg className="star absolute w-1.5 h-1.5 top-3 left-[7px] fill-white" viewBox="0 0 20 20">
+            <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
+          </svg>
+          <svg className="star absolute w-[9px] h-[9px] top-[0px] left-[12px] fill-white" viewBox="0 0 20 20">
+            <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z" />
+          </svg>
+        </div>
+      </div>
+    </label>
   );
 }
 
 /**
- * Compact theme toggle - Minimal circle
+ * Compact version - same design
  */
 export function ThemeToggleCompact({ className }: { className?: string }) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  const cycleTheme = () => {
-    const themes = ["light", "dark", "system"] as const;
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
-  const isDark = resolvedTheme === "dark";
-
-  return (
-    <button
-      onClick={cycleTheme}
-      className={cn(
-        "relative w-12 h-12 flex items-center justify-center",
-        "rounded-full border transition-all duration-500",
-        "backdrop-blur-sm",
-        isDark
-          ? "bg-foreground/5 border-foreground/10 hover:border-primary/50"
-          : "bg-background/80 border-foreground/10 hover:border-primary/50",
-        "hover:scale-105 active:scale-95",
-        className,
-      )}
-      aria-label="Toggle theme"
-      data-cursor-hover
-    >
-      <div className="w-4 h-4 flex items-center justify-center">
-        {isDark ? (
-          <svg
-            className="w-4 h-4 text-foreground"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-            />
-          </svg>
-        ) : (
-          <svg
-            className="w-4 h-4 text-foreground"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-          </svg>
-        )}
-      </div>
-    </button>
-  );
+  return <ThemeToggle className={className} />;
 }

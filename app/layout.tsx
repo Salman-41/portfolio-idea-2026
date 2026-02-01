@@ -93,7 +93,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased overflow-x-hidden">
-        <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme">
+        <ThemeProvider defaultTheme="system" storageKey="portfolio-theme">
           <Preloader />
           <PageTransitionOverlay />
           {children}
