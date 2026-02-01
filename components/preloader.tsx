@@ -180,8 +180,8 @@ export function Preloader() {
         ref={containerRef} 
         className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden"
     >
-      <div className="shutter-panel panel-top absolute top-0 left-0 w-full h-1/2 bg-[#fcfbf9] z-10" />
-      <div className="shutter-panel panel-bottom absolute bottom-0 left-0 w-full h-1/2 bg-[#fcfbf9] z-10" />
+      <div className="shutter-panel panel-top absolute top-0 left-0 w-full h-1/2 bg-background z-10" />
+      <div className="shutter-panel panel-bottom absolute bottom-0 left-0 w-full h-1/2 bg-background z-10" />
 
       <div className="ambience-layer absolute inset-0 flex items-center justify-center opacity-30 z-0">
           <div className="w-[80vw] h-[80vw] bg-rose-200/15 rounded-full blur-[180px] animate-pulse duration-[7000ms]" />
@@ -194,7 +194,7 @@ export function Preloader() {
                 className={`absolute ${getPositionClass(item.style)} w-full max-6xl h-fit`}
             >
                 <h2 
-                    className={`phrase-${i} ${item.font} opacity-0 leading-[1.05] text-[#1a1a1a]`}
+                    className={`phrase-${i} ${item.font} opacity-0 leading-[1.05] text-foreground`}
                     style={{ 
                         fontFamily: item.font.includes('font-mono') 
                             ? 'var(--font-jetbrains-mono), monospace' 
