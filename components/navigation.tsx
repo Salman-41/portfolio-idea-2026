@@ -128,8 +128,9 @@ export function Navigation() {
         <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-14">
           <TransitionLink
             href="/"
-            className="absolute left-0 z-50 group shrink-0 mix-blend-difference"
+            className="absolute left-0 z-50 group shrink-0 mix-blend-difference logo"
             data-cursor-hover
+            data-cursor-label="HOME"
           >
             <span className="text-2xl md:text-2xl font-bold tracking-tight text-foreground dark:text-white">
               s<span className="text-primary">y</span>
@@ -182,6 +183,7 @@ export function Navigation() {
                     href="/contact"
                     className="flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-border/50 text-foreground hover:bg-foreground hover:text-background transition-all duration-500 rounded-full whitespace-nowrap"
                     data-cursor-hover
+                    data-cursor-label="CONTACT"
                   >
                     Let's Talk
                   </TransitionLink>
@@ -203,9 +205,10 @@ export function Navigation() {
                 <Magnetic strength={0.4}>
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="relative z-50 w-12 h-12 flex flex-col items-end justify-center gap-1.5 group rounded-full hover:bg-muted/50 transition-all duration-300"
+                    className="menu-toggle relative z-50 w-12 h-12 flex flex-col items-end justify-center gap-1.5 group rounded-full hover:bg-muted/50 transition-all duration-300"
                     aria-label="Toggle menu"
                     data-cursor-hover
+                    data-cursor-label="MENU"
                   >
                     <span
                       className={cn(
