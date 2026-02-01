@@ -236,8 +236,7 @@ export function ArchiveGrid({ projects }: ArchiveGridProps) {
               </defs>
               <text className="fill-foreground/20 text-[7px] uppercase tracking-[0.15em] font-medium">
                 <textPath href="#outerPath">
-                  ✦ FREELANCE ✦ COLLABORATION ✦ FULL-TIME ✦ REMOTE ✦ WORLDWIDE ✦
-                  AVAILABLE NOW ✦ LET'S CONNECT ✦ HIRE ME ✦ OPEN TO WORK
+                  ✦ FREELANCE ✦ COLLABORATION ✦ FULL-TIME ✦ REMOTE ✦ WORLDWIDE ✦ AVAILABLE NOW ✦ LET'S CONNECT ✦ HIRE ME ✦ OPEN TO WORK ✦ R ✦ INNOVATIVE ✦
                 </textPath>
               </text>
             </svg>
