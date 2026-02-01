@@ -7,16 +7,7 @@ import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const floatingElements = [
-  { type: "dot", size: 8, x: "15%", y: "20%", speed: 0.5 },
-  { type: "dot", size: 4, x: "85%", y: "25%", speed: 0.8 },
-  { type: "line", width: 60, x: "10%", y: "60%", speed: 0.3, rotate: 45 },
-  { type: "dot", size: 6, x: "90%", y: "70%", speed: 0.6 },
-  { type: "line", width: 40, x: "80%", y: "15%", speed: 0.4, rotate: -30 },
-  { type: "ring", size: 20, x: "5%", y: "80%", speed: 0.7 },
-  { type: "ring", size: 12, x: "92%", y: "50%", speed: 0.5 },
-  { type: "cross", size: 16, x: "20%", y: "85%", speed: 0.4 },
-];
+
 
 /**
  * Identity Hero section component.
@@ -28,7 +19,11 @@ export function IdentityHero() {
   const lastNameRef = useRef<HTMLHeadingElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
-  const floatingRef = useRef<(HTMLDivElement | null)[]>([]);
+  const decorLeftRef = useRef<HTMLDivElement>(null);
+  const decorRightRef = useRef<HTMLDivElement>(null);
+  const topArcRef = useRef<SVGSVGElement>(null);
+  const cornerTLRef = useRef<HTMLDivElement>(null);
+  const cornerBRRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -44,7 +39,6 @@ export function IdentityHero() {
         opacity: 0,
         clipPath: "inset(100% 0% 0% 0%)",
       });
-      tl.set(".floating-element", { opacity: 0, scale: 0 });
 
       // Name reveal
       tl.to(firstNameRef.current, { y: 0, opacity: 1, duration: 1.5 });
@@ -71,16 +65,6 @@ export function IdentityHero() {
         duration: 1,
         ease: "back.out(1.7)",
         delay: 1.2,
-      });
-
-      // Floating elements entrance
-      gsap.to(".floating-element", {
-        opacity: 1,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(2)",
-        delay: 1.5,
       });
 
       // Scroll parallax - Names
@@ -116,19 +100,63 @@ export function IdentityHero() {
         },
       });
 
-      // Floating elements parallax with varying speeds
-      floatingRef.current.forEach((el, i) => {
-        if (!el) return;
-        const speed = floatingElements[i]?.speed || 0.5;
-        gsap.to(el, {
-          y: -100 * speed,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.5,
-          },
-        });
+      // Scroll parallax - Decorative elements
+      gsap.to(decorLeftRef.current, {
+        y: -80,
+        rotate: 5,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
+
+      gsap.to(decorRightRef.current, {
+        y: -100,
+        rotate: -5,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
+
+      gsap.to(topArcRef.current, {
+        y: -50,
+        scale: 1.05,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+      });
+
+      // Corner brackets move inward on scroll
+      gsap.to(cornerTLRef.current, {
+        x: 30,
+        y: 30,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "50% top",
+          scrub: 1,
+        },
+      });
+
+      gsap.to(cornerBRRef.current, {
+        x: -30,
+        y: -30,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "50% top",
+          scrub: 1,
+        },
       });
     }, containerRef);
 
@@ -138,57 +166,82 @@ export function IdentityHero() {
   return (
     <section
       ref={containerRef}
-      className="relative pt-32 pb-0 md:pt-48 md:pb-0 px-4 md:px-12 min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background about-hero-section"
+      className="relative pt-32 pb-0 md:pt-48 md:pb-0 px-4 md:px-12 min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
     >
-      {/* Elegant floating orbs background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="about-orb about-orb-1" />
-        <div className="about-orb about-orb-2" />
-        <div className="about-orb about-orb-3" />
+      {/* ═══════════════════════════════════════════════════════════════
+          Creative Artistic Background - Scroll-Animated Line Art
+          ═══════════════════════════════════════════════════════════════ */}
+
+      {/* Corner bracket - top left */}
+      <div ref={cornerTLRef} className="absolute top-16 left-8 md:top-24 md:left-16 w-16 h-16 md:w-20 md:h-20 pointer-events-none z-0">
+        <svg width="100%" height="100%" viewBox="0 0 80 80" className="opacity-30">
+          <path d="M 0 40 L 0 0 L 40 0" fill="none" stroke="var(--primary)" strokeWidth="1" />
+          <circle cx="0" cy="0" r="3" fill="var(--primary)" fillOpacity="0.5" />
+        </svg>
       </div>
 
-      {floatingElements.map((el, i) => (
-        <div
-          key={i}
-          ref={(ref) => {
-            floatingRef.current[i] = ref;
-          }}
-          className="floating-element absolute hidden md:block pointer-events-none"
-          style={{ left: el.x, top: el.y }}
-        >
-          {el.type === "dot" && (
-            <div
-              className="rounded-full bg-primary/30"
-              style={{ width: el.size, height: el.size }}
-            />
-          )}
-          {el.type === "line" && (
-            <div
-              className="bg-primary/20"
-              style={{
-                width: el.width,
-                height: 1,
-                transform: `rotate(${el.rotate}deg)`,
-              }}
-            />
-          )}
-          {el.type === "ring" && (
-            <div
-              className="rounded-full border border-primary/30"
-              style={{ width: el.size, height: el.size }}
-            />
-          )}
-          {el.type === "cross" && (
-            <div
-              className="relative"
-              style={{ width: el.size, height: el.size }}
-            >
-              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-primary/30 -translate-y-1/2" />
-              <div className="absolute left-1/2 top-0 h-full w-[1px] bg-primary/30 -translate-x-1/2" />
-            </div>
-          )}
-        </div>
-      ))}
+      {/* Corner bracket - bottom right */}
+      <div ref={cornerBRRef} className="absolute bottom-16 right-8 md:bottom-24 md:right-16 w-16 h-16 md:w-20 md:h-20 pointer-events-none z-0">
+        <svg width="100%" height="100%" viewBox="0 0 80 80" className="opacity-30">
+          <path d="M 80 40 L 80 80 L 40 80" fill="none" stroke="var(--primary)" strokeWidth="1" />
+          <circle cx="80" cy="80" r="3" fill="var(--primary)" fillOpacity="0.5" />
+        </svg>
+      </div>
+
+      {/* Elegant curved arc - top */}
+      <svg ref={topArcRef} className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[80vw] h-[30vh] pointer-events-none z-0 opacity-[0.08]" viewBox="0 0 800 200" fill="none">
+        <path 
+          d="M 0 200 Q 400 -50 800 200" 
+          stroke="url(#arcGradient)" 
+          strokeWidth="1"
+          strokeDasharray="8 12"
+          className="animate-[dash_20s_linear_infinite]"
+        />
+        <defs>
+          <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="50%" stopColor="var(--primary)" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Floating geometric accent - left */}
+      <div ref={decorLeftRef} className="hidden md:block absolute left-[5%] top-1/2 -translate-y-1/2 pointer-events-none z-0">
+        <svg width="80" height="300" viewBox="0 0 80 300" className="opacity-20">
+          <line x1="40" y1="0" x2="40" y2="300" stroke="var(--primary)" strokeWidth="0.5" strokeDasharray="4 8" />
+          <circle cx="40" cy="60" r="4" fill="none" stroke="var(--primary)" strokeWidth="0.5" />
+          <circle cx="40" cy="150" r="8" fill="none" stroke="var(--primary)" strokeWidth="0.5" />
+          <circle cx="40" cy="240" r="4" fill="none" stroke="var(--primary)" strokeWidth="0.5" />
+          {/* Concentric circles */}
+          <circle cx="40" cy="150" r="20" fill="none" stroke="var(--primary)" strokeWidth="0.3" strokeDasharray="2 4" />
+          <circle cx="40" cy="150" r="35" fill="none" stroke="var(--primary)" strokeWidth="0.2" strokeDasharray="1 6" />
+        </svg>
+      </div>
+
+      {/* Floating geometric accent - right */}
+      <div ref={decorRightRef} className="hidden md:block absolute right-[5%] top-1/2 -translate-y-1/2 pointer-events-none z-0">
+        <svg width="80" height="280" viewBox="0 0 80 280" className="opacity-15">
+          <path d="M 40 0 L 40 280" stroke="var(--primary)" strokeWidth="0.5" strokeDasharray="2 6" />
+          <rect x="25" y="80" width="30" height="30" fill="none" stroke="var(--primary)" strokeWidth="0.5" transform="rotate(45 40 95)" />
+          <rect x="30" y="180" width="20" height="20" fill="none" stroke="var(--primary)" strokeWidth="0.5" />
+          {/* Small accent dots */}
+          <circle cx="40" cy="40" r="2" fill="var(--primary)" fillOpacity="0.4" />
+          <circle cx="40" cy="240" r="2" fill="var(--primary)" fillOpacity="0.4" />
+        </svg>
+      </div>
+
+      {/* Horizontal scan lines */}
+      <div className="hidden md:block absolute top-[30%] left-[15%] w-24 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent pointer-events-none z-0" />
+      <div className="hidden md:block absolute top-[70%] right-[15%] w-32 h-px bg-gradient-to-l from-transparent via-primary/15 to-transparent pointer-events-none z-0" />
+
+      {/* Scattered accent dots */}
+      <div className="hidden md:block absolute top-[25%] right-[20%] w-1.5 h-1.5 rounded-full bg-primary/30 pointer-events-none z-0" />
+      <div className="hidden md:block absolute bottom-[35%] left-[18%] w-2 h-2 rounded-full bg-primary/20 pointer-events-none z-0" />
+      <div className="hidden md:block absolute top-[60%] left-[25%] w-1 h-1 rounded-full bg-primary/40 pointer-events-none z-0" />
+
+
+
 
       <div className="container mx-auto relative z-10 flex flex-col items-center px-4">
         <h1

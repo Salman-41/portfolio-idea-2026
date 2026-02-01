@@ -27,28 +27,10 @@ export function ArchiveHero({
   totalProjects,
 }: ArchiveHeroProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const blobRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Mouse Follower (Organic Blob)
-      const xTo = gsap.quickTo(blobRef.current, "x", {
-        duration: 1,
-        ease: "power3",
-      });
-      const yTo = gsap.quickTo(blobRef.current, "y", {
-        duration: 1,
-        ease: "power3",
-      });
-
-      const handleMouseMove = (e: MouseEvent) => {
-        const { clientX, clientY } = e;
-        xTo(clientX);
-        yTo(clientY);
-      };
-
-      window.addEventListener("mousemove", handleMouseMove);
 
       // Entrance Animation
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
@@ -120,9 +102,6 @@ export function ArchiveHero({
         },
       );
 
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-      };
     }, containerRef);
 
     return () => ctx.revert();
@@ -133,14 +112,7 @@ export function ArchiveHero({
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
-      <div
-        ref={blobRef}
-        className="fixed top-0 left-0 w-[600px] h-[600px] -ml-[300px] -mt-[300px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
-        style={{
-          background:
-            "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
-        }}
-      />
+
 
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden">
         <div

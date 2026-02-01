@@ -13,26 +13,10 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export function ContactHero() {
   const containerRef = useRef<HTMLElement>(null)
-  const blobRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Mouse follower logic
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!blobRef.current) return
-        const x = e.clientX - 200
-        const y = e.clientY - 200
-        
-        gsap.to(blobRef.current, {
-          left: Math.max(0, Math.min(x, window.innerWidth - 400)),
-          top: Math.max(0, Math.min(y, window.innerHeight - 400)),
-          duration: 1,
-          ease: "power3.out"
-        })
-      }
-
-      window.addEventListener("mousemove", handleMouseMove)
 
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
 
@@ -87,9 +71,7 @@ export function ContactHero() {
         })
       }
 
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove)
-      }
+
     }, containerRef)
 
     return () => ctx.revert()
@@ -100,16 +82,7 @@ export function ContactHero() {
       ref={containerRef} 
       className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center bg-background pt-20 overflow-hidden"
     >
-      <div 
-        ref={blobRef}
-        className="fixed w-[400px] h-[400px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
-        style={{
-          background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)"
-        }}
-      />
+
 
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0 opacity-[0.03] overflow-hidden hidden md:block">
         <div className="contact-ghost-marquee flex whitespace-nowrap will-change-transform" style={{ width: "fit-content" }}>

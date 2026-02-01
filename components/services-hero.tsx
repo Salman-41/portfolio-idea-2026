@@ -9,27 +9,11 @@ gsap.registerPlugin(ScrollTrigger)
 
 export function ServicesHero() {
   const containerRef = useRef<HTMLElement>(null)
-  const blobRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const ghostTextRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Mouse Follower (Organic Blob) - Constrained to viewport
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!blobRef.current) return
-        const x = e.clientX - 300
-        const y = e.clientY - 300
-        
-        gsap.to(blobRef.current, {
-          left: Math.max(-200, Math.min(x, window.innerWidth - 400)),
-          top: Math.max(-200, Math.min(y, window.innerHeight - 400)),
-          duration: 1,
-          ease: "power3.out"
-        })
-      }
-
-      window.addEventListener("mousemove", handleMouseMove)
 
       // 2. Entrance Animation
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
@@ -86,9 +70,6 @@ export function ServicesHero() {
         }
       )
 
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove)
-      }
     }, containerRef)
 
     return () => ctx.revert()
@@ -99,17 +80,7 @@ export function ServicesHero() {
       ref={containerRef} 
       className="relative min-h-screen flex flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-background pt-20"
     >
-      {/* 1. Organic Blob Background - Constrained */}
-      <div 
-        ref={blobRef}
-        className="fixed w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none z-0"
-        style={{
-          background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)"
-        }}
-      />
+
 
       {/* 2. Layered Ghost Text - Infinite Marquee */}
       <div 
