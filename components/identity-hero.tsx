@@ -291,7 +291,8 @@ export function IdentityHero() {
 
         <h1
           ref={lastNameRef}
-          className="relative z-20 text-[16vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent stroke-text-2"
+          className="relative z-20 text-[16vw] md:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent mix-blend-difference"
+          style={{ WebkitTextStroke: '2px var(--foreground)' }}
         >
           YOUSUFZAI
         </h1>

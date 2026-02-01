@@ -137,7 +137,10 @@ export function ArchiveHero({
             <span className="inline-block">Selected</span>
           </div>
           <div className="archive-hero-title-line overflow-hidden py-1">
-            <span className="inline-block text-transparent stroke-text-2">
+            <span 
+              className="inline-block text-transparent"
+              style={{ WebkitTextStroke: '2px var(--foreground)' }}
+            >
               Work
             </span>
           </div>

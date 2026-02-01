@@ -107,7 +107,10 @@ export function ServicesHero() {
             <span className="inline-block">Crafting</span>
           </div>
           <div className="hero-title-line overflow-hidden py-1">
-            <span className="inline-block text-transparent stroke-text-2">Infinite</span>
+            <span 
+              className="inline-block text-transparent"
+              style={{ WebkitTextStroke: '2px var(--foreground)' }}
+            >Infinite</span>
           </div>
           <div className="hero-title-line overflow-hidden py-1">
             <span className="inline-block">Realities</span>
