@@ -97,8 +97,8 @@ export function KineticProcess() {
                    
                    {/* Massive Number with Liquid Fill */}
                    <div className="relative text-[12rem] md:text-[18rem] font-black leading-none select-none">
-                      <span className="text-white/5 block">{step.id}</span>
-                      <div className="process-number-fill absolute bottom-0 left-0 w-full h-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-b from-white to-primary/50">
+                      <span className="text-foreground/5 block">{step.id}</span>
+                      <div className="process-number-fill absolute bottom-0 left-0 w-full h-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-b from-foreground to-primary">
                          {step.id}
                       </div>
                    </div>
