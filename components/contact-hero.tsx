@@ -18,36 +18,68 @@ export function ContactHero() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } })
-
-      tl.fromTo(".contact-hero-tag", {
-        y: 20,
-        opacity: 0
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        delay: 0.3
+      // Initial cinematic state
+      gsap.set(".contact-hero-tag", { 
+        opacity: 0, 
+        y: 60,
+        filter: "blur(10px)"
+      })
+      gsap.set(".contact-hero-title-line", { 
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        y: 40
+      })
+      gsap.set(".contact-hero-title-line span", { 
+        y: "100%",
+        scaleY: 1.3,
+        transformOrigin: "top"
+      })
+      gsap.set(".contact-hero-description", { 
+        opacity: 0, 
+        y: 80,
+        filter: "blur(8px)"
       })
 
-      tl.fromTo(".contact-hero-title-line span", {
-        y: "100%",
-        rotate: 5
-      }, {
-        y: "0%",
-        rotate: 0,
-        duration: 1.5,
-        stagger: 0.1,
-      }, "-=0.8")
+      // Cinematic master timeline
+      const tl = gsap.timeline({ 
+        defaults: { ease: "power4.out" },
+        delay: 0.1
+      })
 
-      tl.fromTo(".contact-hero-description", {
-        y: 30,
-        opacity: 0
-      }, {
-        y: 0,
+      // Tag reveals with blur fade
+      tl.to(".contact-hero-tag", {
         opacity: 1,
-        duration: 1
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "expo.out"
+      })
+
+      // Title lines unmask with polygon clip
+      tl.to(".contact-hero-title-line", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        y: 0,
+        duration: 1.6,
+        stagger: 0.2,
+        ease: "expo.inOut"
       }, "-=1")
+
+      // Characters slide up and scale
+      tl.to(".contact-hero-title-line span", {
+        y: "0%",
+        scaleY: 1,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "expo.out"
+      }, "-=1.2")
+
+      // Description blur-in
+      tl.to(".contact-hero-description", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "expo.out"
+      }, "-=0.6")
 
       gsap.to(titleRef.current, {
         y: -100,

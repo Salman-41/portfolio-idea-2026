@@ -32,51 +32,72 @@ export function ArchiveHero({
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // Entrance Animation
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      // Initial cinematic state
+      gsap.set(".archive-hero-title-line", { 
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        y: 50
+      })
+      gsap.set(".archive-hero-title-line span", { 
+        y: "100%",
+        scaleY: 1.3,
+        opacity: 0,
+        transformOrigin: "top"
+      })
+      gsap.set(".archive-hero-description", { 
+        opacity: 0, 
+        y: 80,
+        filter: "blur(8px)"
+      })
+      gsap.set(".filter-bar", { 
+        opacity: 0, 
+        y: 50,
+        scale: 0.9,
+        filter: "blur(6px)"
+      })
 
-      tl.fromTo(
-        ".archive-hero-title-line span",
-        {
-          y: "100%",
-          rotate: 5,
-        },
-        {
-          y: "0%",
-          rotate: 0,
-          duration: 1.5,
-          stagger: 0.1,
-          delay: 0.3,
-        },
-      );
+      // Cinematic master timeline
+      const tl = gsap.timeline({ 
+        defaults: { ease: "power4.out" },
+        delay: 0.1
+      })
 
-      tl.fromTo(
-        ".archive-hero-description",
-        {
-          y: 20,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-        },
-        "-=1",
-      );
+      // Title lines unmask with polygon clip
+      tl.to(".archive-hero-title-line", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        y: 0,
+        duration: 1.6,
+        stagger: 0.2,
+        ease: "expo.inOut"
+      })
 
-      tl.fromTo(
-        ".filter-bar",
-        {
-          y: 30,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-        },
-        "-=0.5",
-      );
+      // Characters slide up and scale
+      tl.to(".archive-hero-title-line span", {
+        y: "0%",
+        scaleY: 1,
+        opacity: 1,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "expo.out"
+      }, "-=1.2")
+
+      // Description blur-in
+      tl.to(".archive-hero-description", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "expo.out"
+      }, "-=0.6")
+
+      // Filter bar elastic reveal
+      tl.to(".filter-bar", {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.2,
+        ease: "elastic.out(1, 0.5)"
+      }, "-=0.8")
 
       // Scroll Parallax
       gsap.to(titleRef.current, {
