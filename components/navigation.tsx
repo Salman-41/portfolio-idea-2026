@@ -132,7 +132,7 @@ export function Navigation() {
             data-cursor-hover
             data-cursor-label="HOME"
           >
-            <span className="text-2xl md:text-2xl font-bold tracking-tight text-foreground dark:text-white">
+            <span className="text-2xl md:text-3xl font-bold tracking-tight text-foreground dark:text-white">
               s<span className="text-primary">y</span>
               <span className="text-primary">.</span>
             </span>
