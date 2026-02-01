@@ -128,39 +128,168 @@ export function HeroSection() {
     if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      // Initial cinematic state - with polygon masks and scaleY like Services/Projects
+      gsap.set(".hero-name-tag", { 
+        opacity: 0, 
+        y: 40,
+        filter: "blur(10px)"
+      });
+      gsap.set(".hero-title-digital", { 
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        y: 80,
+        opacity: 0,
+        scaleY: 1.2,
+        transformOrigin: "top",
+        filter: "blur(6px)"
+      });
+      gsap.set(".hero-title-crafting", { 
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
+        x: -100,
+        opacity: 0,
+        scaleX: 1.1,
+        transformOrigin: "right",
+        filter: "blur(6px)"
+      });
+      gsap.set(".hero-title-artistry", { 
+        clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)",
+        x: 100,
+        opacity: 0,
+        scaleX: 1.1,
+        transformOrigin: "left",
+        filter: "blur(6px)"
+      });
+      gsap.set(".hero-role-mobile", {
+        opacity: 0,
+        y: 30,
+        filter: "blur(6px)"
+      });
+      gsap.set(".hero-role-desktop", {
+        opacity: 0,
+        x: 40,
+        filter: "blur(6px)"
+      });
+      gsap.set(".hero-social-links", {
+        opacity: 0,
+        x: -30
+      });
+      gsap.set(".hero-side-info", {
+        opacity: 0,
+        x: 30
+      });
 
+      // Master timeline
+      const tl = gsap.timeline({ 
+        defaults: { ease: "expo.out" },
+        delay: 0.3
+      });
+
+      // Name tag blur-in
+      tl.to(".hero-name-tag", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.2,
+      });
+
+      // Digital comes from below with polygon reveal
+      tl.to(".hero-title-digital", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        y: 0,
+        opacity: 1,
+        scaleY: 1,
+        filter: "blur(0px)",
+        duration: 1.6,
+        ease: "expo.inOut"
+      }, "-=0.6");
+
+      // Crafting from left & Artistry from right - SAME TIME with polygon reveals
+      tl.to(".hero-title-crafting", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        x: 0,
+        opacity: 1,
+        scaleX: 1,
+        filter: "blur(0px)",
+        duration: 1.6,
+        ease: "expo.inOut"
+      }, "-=1.2");
+
+      tl.to(".hero-title-artistry", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        x: 0,
+        opacity: 1,
+        scaleX: 1,
+        filter: "blur(0px)",
+        duration: 1.6,
+        ease: "expo.inOut"
+      }, "<"); // Same time as Crafting
+
+      // Role info blur-in
+      tl.to(".hero-role-mobile", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1,
+      }, "-=0.8");
+
+      tl.to(".hero-role-desktop", {
+        opacity: 1,
+        x: 0,
+        filter: "blur(0px)",
+        duration: 1,
+      }, "<");
+
+      // Social links slide in
+      tl.to(".hero-social-links", {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        stagger: 0.1
+      }, "-=0.6");
+
+      // Side info slide in
+      tl.to(".hero-side-info", {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+      }, "<");
+
+      // Bottom bar
       if (bottomBarRef.current) {
-        tl.fromTo(
-          bottomBarRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 1, delay: 0.5 },
-        );
+        gsap.set(bottomBarRef.current, { opacity: 0, y: 40, filter: "blur(6px)" });
+        tl.to(bottomBarRef.current, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+        }, "-=0.8");
       }
 
       if (subtitleRef.current) {
-        tl.fromTo(
-          subtitleRef.current,
-          { opacity: 0, x: -20 },
-          { opacity: 1, x: 0, duration: 1 },
-          "-=0.5",
-        );
+        gsap.set(subtitleRef.current, { opacity: 0, x: -30, filter: "blur(6px)" });
+        tl.to(subtitleRef.current, {
+          opacity: 1,
+          x: 0,
+          filter: "blur(0px)",
+          duration: 1,
+        }, "-=0.6");
       }
 
       if (ctaRef.current) {
-        tl.fromTo(
-          ctaRef.current,
-          { opacity: 0, x: 20 },
-          { opacity: 1, x: 0, duration: 1 },
-          "<",
-        );
+        gsap.set(ctaRef.current, { opacity: 0, y: 30, scale: 0.9 });
+        tl.to(ctaRef.current, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "back.out(1.4)"
+        }, "-=0.8");
       }
 
       if (scrollIndicatorRef.current) {
         gsap.fromTo(
           scrollIndicatorRef.current,
           { opacity: 0 },
-          { opacity: 1, duration: 1, delay: 2 },
+          { opacity: 1, duration: 1, delay: 2.5 },
         );
 
         gsap.to(scrollIndicatorRef.current, {
@@ -214,22 +343,22 @@ export function HeroSection() {
           ref={titleRef}
           className="flex flex-col w-full text-[17vw] sm:text-[14vw] md:text-[11vw] lg:text-[10vw] font-black leading-[0.9] tracking-tighter uppercase text-foreground text-center md:text-left"
         >
-          <span className="self-center md:self-start md:pl-[5vw] mb-4 text-[10px] sm:text-xs md:text-base font-mono text-primary tracking-widest uppercase pointer-events-auto">
+          <span className="hero-name-tag self-center md:self-start md:pl-[5vw] mb-4 text-[10px] sm:text-xs md:text-base font-mono text-primary tracking-widest uppercase pointer-events-auto">
             Salman Yousufzai
           </span>
 
-          <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-start md:pl-[5vw]">
-            <ScrambleText text="CRAFTING" delay={0.5} />
+          <span className="hero-title-line hero-title-crafting block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-start md:pl-[5vw]">
+            CRAFTING
           </span>
-          <span className="hero-title-line block gradient-text pointer-events-auto self-center">
-            <ScrambleText text="DIGITAL" delay={0.8} />
+          <span className="hero-title-line hero-title-digital block gradient-text pointer-events-auto self-center">
+            DIGITAL
           </span>
-          <span className="hero-title-line block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-end md:pr-[5vw]">
-            <ScrambleText text="ARTISTRY" delay={1.1} />
+          <span className="hero-title-line hero-title-artistry block pointer-events-auto hover:text-primary transition-colors duration-500 self-center md:self-end md:pr-[5vw]">
+            ARTISTRY
           </span>
         </h1>
 
-        <div className="flex md:hidden flex-col items-center gap-1 mt-6 pointer-events-auto">
+        <div className="hero-role-mobile flex md:hidden flex-col items-center gap-1 mt-6 pointer-events-auto">
           <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-medium">
             Developer & Data Scientist
           </span>
@@ -238,7 +367,7 @@ export function HeroSection() {
           </span>
         </div>
 
-        <div className="absolute right-4 md:right-[5vw] top-[55%] md:top-[50%] -translate-y-full hidden md:flex flex-col gap-1 items-end text-right pointer-events-auto text-foreground">
+        <div className="hero-role-desktop absolute right-4 md:right-[5vw] top-[55%] md:top-[50%] -translate-y-full hidden md:flex flex-col gap-1 items-end text-right pointer-events-auto text-foreground">
           <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">
             Developer & Data Scientist
           </span>
@@ -248,7 +377,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 pointer-events-auto text-foreground">
+      <div className="hero-social-links absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 pointer-events-auto text-foreground">
         {["GitHub", "LinkedIn", "Twitter"].map((label) => (
           <a
             key={label}
@@ -264,7 +393,7 @@ export function HeroSection() {
         <div className="w-[1px] h-24 bg-gradient-to-b from-foreground/50 via-foreground to-transparent mx-auto" />
       </div>
 
-      <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 text-right pointer-events-auto text-foreground">
+      <div className="hero-side-info absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-8 text-right pointer-events-auto text-foreground">
         <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] [writing-mode:vertical-lr]">
           EST. 2026
         </span>
