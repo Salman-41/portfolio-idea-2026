@@ -136,25 +136,23 @@ export function HeroSection() {
       });
       gsap.set(".hero-title-digital", { 
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-        y: 80,
+        y: 60,
         opacity: 0,
-        scaleY: 1.2,
+        scaleY: 1.15,
         transformOrigin: "top",
         filter: "blur(6px)"
       });
       gsap.set(".hero-title-crafting", { 
         clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
-        x: -100,
         opacity: 0,
-        scaleX: 1.1,
+        scaleX: 1.05,
         transformOrigin: "right",
         filter: "blur(6px)"
       });
       gsap.set(".hero-title-artistry", { 
         clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)",
-        x: 100,
         opacity: 0,
-        scaleX: 1.1,
+        scaleX: 1.05,
         transformOrigin: "left",
         filter: "blur(6px)"
       });
@@ -165,16 +163,13 @@ export function HeroSection() {
       });
       gsap.set(".hero-role-desktop", {
         opacity: 0,
-        x: 40,
         filter: "blur(6px)"
       });
       gsap.set(".hero-social-links", {
-        opacity: 0,
-        x: -30
+        opacity: 0
       });
       gsap.set(".hero-side-info", {
-        opacity: 0,
-        x: 30
+        opacity: 0
       });
 
       // Master timeline
@@ -202,10 +197,9 @@ export function HeroSection() {
         ease: "expo.inOut"
       }, "-=0.6");
 
-      // Crafting from left & Artistry from right - SAME TIME with polygon reveals
+      // Crafting & Artistry - clip-path reveal only (no x movement)
       tl.to(".hero-title-crafting", {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        x: 0,
         opacity: 1,
         scaleX: 1,
         filter: "blur(0px)",
@@ -215,7 +209,6 @@ export function HeroSection() {
 
       tl.to(".hero-title-artistry", {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        x: 0,
         opacity: 1,
         scaleX: 1,
         filter: "blur(0px)",
@@ -233,23 +226,19 @@ export function HeroSection() {
 
       tl.to(".hero-role-desktop", {
         opacity: 1,
-        x: 0,
         filter: "blur(0px)",
         duration: 1,
       }, "<");
 
-      // Social links slide in
+      // Social links fade in
       tl.to(".hero-social-links", {
         opacity: 1,
-        x: 0,
         duration: 1,
-        stagger: 0.1
       }, "-=0.6");
 
-      // Side info slide in
+      // Side info fade in
       tl.to(".hero-side-info", {
         opacity: 1,
-        x: 0,
         duration: 1,
       }, "<");
 
