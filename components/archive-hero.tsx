@@ -110,7 +110,7 @@ export function ArchiveHero({
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
+      className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
 
 
@@ -128,10 +128,10 @@ export function ArchiveHero({
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
+      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center mt-12 md:mt-0">
         <h1
           ref={titleRef}
-          className="text-[12vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter mb-8 mix-blend-difference"
+          className="text-[14vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter mb-8 mix-blend-difference"
         >
           <div className="archive-hero-title-line overflow-hidden py-1">
             <span className="inline-block">Selected</span>

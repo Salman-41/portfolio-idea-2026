@@ -108,21 +108,22 @@ export function GraphicServices() {
         {services.map((item, i) => (
           <div
             key={i}
-            className="service-row group relative border-t border-border/50 py-16 md:py-20 cursor-pointer hover:bg-foreground/5 transition-colors duration-300 w-full"
+            className="service-row group relative border-t border-border/50 py-8 md:py-20 cursor-pointer hover:bg-foreground/5 transition-colors duration-300 w-full"
             onClick={() => handleWhatsAppClick(item.title)}
           >
             <div className="service-track flex items-center justify-center w-full whitespace-nowrap will-change-transform">
-              <div className="flex items-center gap-8 md:gap-16 px-8">
-                <span className="text-xs font-mono text-muted-foreground opacity-50">
-                  ({item.id})
+              <div className="flex items-center gap-4 md:gap-16 px-4 md:px-8">
+                <span className="text-[10px] md:text-xs font-mono text-primary opacity-70">
+                  {item.id}
                 </span>
-                <h2 className="text-6xl md:text-[8vw] font-black uppercase tracking-tighter text-foreground transition-all duration-300 scale-100 group-hover:scale-110">
+                <h2 className="text-3xl md:text-[8vw] font-black uppercase tracking-tighter text-foreground transition-all duration-300 scale-100 group-hover:scale-110">
                   {item.title}
                 </h2>
+                <span className="text-xs text-muted-foreground md:hidden">→</span>
                 <p className="text-sm md:text-xl font-light text-muted-foreground max-w-xs opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0 hidden md:block">
                   {item.desc}
                 </p>
-                <ArrowRight className="w-8 h-8 md:w-16 md:h-16 text-white/20 group-hover:text-primary -rotate-45 group-hover:rotate-0 transition-all duration-500" />
+                <ArrowRight className="w-6 h-6 md:w-16 md:h-16 text-white/20 group-hover:text-primary -rotate-45 group-hover:rotate-0 transition-all duration-500 hidden md:block" />
               </div>
             </div>
           </div>
