@@ -4,10 +4,9 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
-import { useTextScramble } from "@/hooks/use-text-scramble";
 import { Magnetic } from "./magnetic";
 import { TransitionLink } from "./transition-link";
-import { ThemeToggle, ThemeToggleCompact } from "./theme-toggle";
+import { ThemeToggleCompact } from "./theme-toggle";
 
 /**
  * Navigation links for the desktop header.
@@ -32,40 +31,33 @@ const menuLinks = [
 ];
 
 /**
- * Props for the ScrambleLink component.
+ * Props for the StickyNavLink component.
  */
-interface ScrambleLinkProps {
+interface StickyNavLinkProps {
   href: string;
   label: string;
   active: boolean;
 }
 
 /**
- * A navigation link that scrambles its text on hover.
+ * A navigation link that gently follows the pointer while keeping its label stable.
  */
-const ScrambleLink = memo(({ href, label, active }: ScrambleLinkProps) => {
-  const { displayText, scramble } = useTextScramble(label, {
-    duration: 800,
-    speed: 40,
-  });
-
+const StickyNavLink = memo(({ href, label, active }: StickyNavLinkProps) => {
   return (
-    <TransitionLink
-      href={href}
-      onMouseEnter={scramble}
-      className={cn(
-        "relative text-sm uppercase font-medium tracking-widest transition-all duration-300",
-        active
-          ? "text-primary"
-          : "text-muted-foreground/80 hover:text-foreground",
-      )}
-      data-cursor-hover
-    >
-      {displayText}
-    </TransitionLink>
+    <Magnetic strength={0.24} className="nav-magnetic-wrap">
+      <TransitionLink
+        href={href}
+        className={cn("nav-sticky-link", active && "is-active")}
+        aria-current={active ? "page" : undefined}
+        data-cursor-hover
+      >
+        <span>{label}</span>
+        <span className="nav-link-dot" aria-hidden="true" />
+      </TransitionLink>
+    </Magnetic>
   );
 });
-ScrambleLink.displayName = "ScrambleLink";
+StickyNavLink.displayName = "StickyNavLink";
 
 /**
  * Main Navigation component.
@@ -84,164 +76,62 @@ export function Navigation() {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    const circleOrigin = "calc(100% - 4rem) 4rem";
-
-    if (isMenuOpen) {
-      gsap.to(menuRef.current, {
-        clipPath: `circle(150% at ${circleOrigin})`,
-        duration: 1.2,
-        ease: "power4.inOut",
-      });
-      gsap.fromTo(
-        menuLinksRef.current?.children || [],
-        { y: 120, opacity: 0, scale: 0.9 },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.08,
-          delay: 0.4,
-          ease: "power4.out",
-        },
-      );
-    } else {
-      gsap.to(menuRef.current, {
-        clipPath: `circle(0% at ${circleOrigin})`,
-        duration: 0.9,
-        ease: "power4.inOut",
-      });
-    }
+    const menu = menuRef.current;
+    if (!menu) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ctx = gsap.context(() => {
+      gsap.to(menu, { clipPath: isMenuOpen ? "circle(150% at calc(100% - 3rem) 3rem)" : "circle(0% at calc(100% - 3rem) 3rem)", duration: reduced ? 0 : .45, ease: "power3.inOut", overwrite: true });
+      if (isMenuOpen) gsap.fromTo(menuLinksRef.current?.children || [], { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: reduced ? 0 : .35, stagger: reduced ? 0 : .04, delay: reduced ? 0 : .12, overwrite: true });
+    }, menu);
+    return () => ctx.revert();
   }, [isMenuOpen]);
 
   return (
     <>
       <nav
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 lg:px-20 transition-all duration-500"
+        className={cn("site-navigation fixed top-0 left-0 right-0 z-50 px-6 py-4 md:px-12 lg:px-20", isScrolled && "is-scrolled")}
+        aria-label="Main navigation"
       >
-        <div className="flex items-center justify-between max-w-[1800px] mx-auto relative h-14">
-          <TransitionLink
-            href="/"
-            className="absolute left-0 z-50 group shrink-0 mix-blend-difference logo"
-            data-cursor-hover
-            data-cursor-label="HOME"
-          >
-            <span className="text-2xl md:text-3xl font-bold tracking-tight text-foreground dark:text-white">
-              s<span className="text-primary">y</span>
-              <span className="text-primary">.</span>
-            </span>
+        <div className="flex items-center justify-between max-w-[1800px] mx-auto h-14 gap-4">
+          <TransitionLink href="/" className="group shrink-0 logo" data-cursor-hover data-cursor-label="HOME" aria-label="Salman Yousufzai home">
+            <span className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">s<span className="text-primary">y.</span></span>
           </TransitionLink>
-
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-end h-12 gap-6 md:gap-10">
-            {/* Theme Toggle - visible on desktop when not scrolled */}
-            <div
-              className={cn(
-                "hidden md:block transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                isScrolled
-                  ? "opacity-0 -translate-x-8 blur-md pointer-events-none"
-                  : "opacity-100 translate-y-0 blur-0",
-              )}
+          <div className="hidden md:flex items-center gap-2 lg:gap-5">
+            {navLinks.map(link => <StickyNavLink key={link.href} href={link.href} label={link.label} active={pathname === link.href || pathname.startsWith(link.href + "/")} />)}
+            <Magnetic strength={0.18}>
+              <TransitionLink href="/contact" className="nav-contact-button" data-cursor-hover>Let’s talk <span aria-hidden="true">↗</span></TransitionLink>
+            </Magnetic>
+            <ThemeToggleCompact />
+          </div>
+          <div className="flex md:hidden items-center gap-3">
+            <ThemeToggleCompact />
+            <button
+              onClick={() => setIsMenuOpen(open => !open)}
+              className="menu-toggle relative z-50 w-12 h-12 flex flex-col items-center justify-center gap-1.5 rounded-full hover:bg-muted/50"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="site-menu"
+              data-cursor-hover
             >
-              <ThemeToggle />
-            </div>
-
-            <div
-              className={cn(
-                "hidden md:flex items-center gap-10 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                isScrolled
-                  ? "opacity-0 -translate-x-8 blur-md pointer-events-none"
-                  : "opacity-100 translate-y-0 blur-0",
-              )}
-            >
-              {navLinks.map((link) => (
-                <ScrambleLink
-                  key={link.href}
-                  href={link.href}
-                  label={link.label}
-                  active={pathname === link.href}
-                />
-              ))}
-            </div>
-
-            <div className="relative flex items-center justify-end min-w-[140px] h-12">
-              <div
-                className={cn(
-                  "hidden md:block transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                  isScrolled
-                    ? "opacity-0 translate-x-12 pointer-events-none scale-90"
-                    : "opacity-100 translate-x-0 scale-100",
-                )}
-              >
-                <Magnetic strength={0.2}>
-                  <TransitionLink
-                    href="/contact"
-                    className="flex px-6 py-2 text-xs uppercase tracking-widest font-bold border border-border/50 text-foreground hover:bg-foreground hover:text-background transition-all duration-500 rounded-full whitespace-nowrap"
-                    data-cursor-hover
-                    data-cursor-label="CONTACT"
-                  >
-                    Let's Talk
-                  </TransitionLink>
-                </Magnetic>
-              </div>
-
-              <div
-                className={cn(
-                  "absolute inset-0 flex items-center justify-end gap-3 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] transform-gpu",
-                  "opacity-100 scale-100 translate-x-0",
-                  "md:opacity-0 md:scale-75 md:translate-x-12 md:pointer-events-none",
-                  isScrolled &&
-                    "md:opacity-100 md:scale-100 md:translate-x-0 md:pointer-events-auto",
-                )}
-              >
-                {/* Theme Toggle for mobile or scrolled state */}
-                <ThemeToggleCompact />
-
-                <Magnetic strength={0.4}>
-                  <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="menu-toggle relative z-50 w-12 h-12 flex flex-col items-end justify-center gap-1.5 group rounded-full hover:bg-muted/50 transition-all duration-300"
-                    aria-label="Toggle menu"
-                    data-cursor-hover
-                    data-cursor-label="MENU"
-                  >
-                    <span
-                      className={cn(
-                        "h-[2px] bg-foreground transition-all duration-500 rounded-full",
-                        isMenuOpen
-                          ? "w-7 rotate-45 translate-y-[8px]"
-                          : "w-7 group-hover:w-5",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "h-[2px] bg-foreground transition-all duration-500 rounded-full",
-                        isMenuOpen ? "opacity-0" : "w-4 group-hover:w-7",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "h-[2px] bg-foreground transition-all duration-500 rounded-full",
-                        isMenuOpen
-                          ? "w-7 -rotate-45 -translate-y-[8px]"
-                          : "w-6 group-hover:w-4",
-                      )}
-                    />
-                  </button>
-                </Magnetic>
-              </div>
-            </div>
+              <span className={cn("h-[2px] w-6 bg-foreground transition-transform duration-300", isMenuOpen && "rotate-45 translate-y-[4px]")} />
+              <span className={cn("h-[2px] w-6 bg-foreground transition-transform duration-300", isMenuOpen && "-rotate-45 -translate-y-[4px]")} />
+            </button>
           </div>
         </div>
       </nav>
 
       <div
         ref={menuRef}
+        id="site-menu"
+        aria-hidden={!isMenuOpen}
+        inert={!isMenuOpen}
         className={cn(
           "fixed inset-0 z-40 bg-card overflow-hidden",
           isMenuOpen ? "pointer-events-auto" : "pointer-events-none",

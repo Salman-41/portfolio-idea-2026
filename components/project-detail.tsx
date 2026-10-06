@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import Link from "next/link";
+import { TransitionLink as Link } from "./transition-link";
 import {
   ArrowUpRight,
   ExternalLink,
@@ -88,11 +88,11 @@ const projectData: Record<
     client: "Nebula Labs",
     role: "Lead Developer & Designer",
     description:
-      "A revolutionary crypto trading platform with real-time analytics and immersive 3D data visualization. Built to handle millions of transactions while providing an intuitive user experience.",
+      "A trading dashboard for following market activity and viewing portfolio data. Charts, balances, and key actions share one clear workspace.",
     challenge:
-      "The client needed a trading platform that could visualize complex financial data in real-time while maintaining sub-second response times and handling high-frequency trading operations.",
+      "Financial interfaces get crowded quickly. The challenge was to make changing market data easier to scan while keeping the details close at hand.",
     solution:
-      "Implemented WebSocket connections for real-time data streaming, Three.js for immersive 3D visualizations, and optimized React components with virtualization for smooth performance even with large datasets.",
+      "Used WebSocket updates for live data, React for the interface, and Three.js for the visual layer. Related information sits together so the dashboard is easier to follow.",
     images: [
       "/dark-fintech-dashboard-with-charts-and-crypto.jpg",
       "/crypto-trading-charts-dark-theme.jpg",
@@ -106,8 +106,6 @@ const projectData: Record<
       "WebSocket",
       "PostgreSQL",
     ],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com",
     nextProject: { slug: "artisan-studio", title: "Artisan Studio" },
   },
   "artisan-studio": {
@@ -117,11 +115,11 @@ const projectData: Record<
     client: "Artisan Furniture Co.",
     role: "Full-Stack Developer",
     description:
-      "Luxury furniture e-commerce experience with AR product previews and seamless checkout flow. Designed to elevate the online shopping experience for high-end furniture.",
+      "A furniture shop built around the products. Large images, a simple browsing flow, and AR previews help people take a closer look before choosing.",
     challenge:
-      "Creating an e-commerce platform that conveyed the luxury and craftsmanship of the furniture while allowing customers to visualize products in their own space before purchasing.",
+      "Furniture needs more than a small thumbnail. The challenge was to show the materials and proportions clearly, and help customers picture a piece in their own space.",
     solution:
-      "Developed a custom AR feature using AR.js that lets customers place 3D furniture models in their rooms. Integrated Stripe for seamless payments and Sanity CMS for easy content management.",
+      "Built room previews with AR.js, checkout with Stripe, and product management with Sanity. The interface keeps the browsing steps simple and gives the furniture most of the screen.",
     images: [
       "/modern-furniture-ecommerce-dark-theme.jpg",
       "/luxury-furniture-product-page-dark.jpg",
@@ -135,8 +133,7 @@ const projectData: Record<
       "Tailwind CSS",
       "Framer Motion",
     ],
-    liveUrl: "https://example.com",
-    nextProject: { slug: "synthwave-records", title: "Synthwave Records" },
+    nextProject: { slug: "nebula-finance", title: "Nebula Finance" },
   },
   "synthwave-records": {
     title: "Synthwave Records",
@@ -163,8 +160,6 @@ const projectData: Record<
       "Node.js",
       "Spotify API",
     ],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com",
     nextProject: { slug: "nebula-finance", title: "Nebula Finance" },
   },
 };

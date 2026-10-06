@@ -27,13 +27,14 @@ export function ThreeScene() {
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1); // 2D Camera
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
+    let renderer: THREE.WebGLRenderer;
+    try { renderer = new THREE.WebGLRenderer({
+      antialias: false,
       alpha: true,
-      powerPreference: "high-performance",
-    });
+      powerPreference: "low-power",
+    }); } catch { return; }
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     containerRef.current.appendChild(renderer.domElement);
 
     // Shader Material
@@ -46,7 +47,7 @@ export function ThreeScene() {
           value: new THREE.Vector2(window.innerWidth, window.innerHeight),
         },
         uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-        uAlphaMultiplier: { value: isDark ? 0.25 : 0.15 }, // Light mode needs subtler effect on light bg
+        uAlphaMultiplier: { value: isDark ? 0.16 : 0.08 }, // Light mode needs subtler effect on light bg
       },
       vertexShader: `
         varying vec2 vUv;
@@ -124,7 +125,7 @@ export function ThreeScene() {
           // Alpha mask - only show where pattern is strong
           // Boost alpha near mouse
           float alpha = smoothstep(0.2, 0.8, pattern + glow * 0.5) * uAlphaMultiplier; 
-          alpha += interaction * 0.1; // Brighten near mouse
+          alpha += interaction * 0.035; // Brighten near mouse
           
           gl_FragColor = vec4(finalColor, alpha);
         }
@@ -146,10 +147,16 @@ export function ThreeScene() {
     window.addEventListener("mousemove", handleMouseMove);
 
     // Animation Loop
-    let animationId: number;
-    const animate = () => {
+    let animationId = 0;
+    let visible = true;
+    let lastFrame = 0;
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    observer.observe(containerRef.current);
+    const animate = (time = 0) => {
       animationId = requestAnimationFrame(animate);
-      material.uniforms.uTime.value += 0.005;
+      if (!visible || document.hidden || time - lastFrame < 32) return;
+      lastFrame = time;
+      material.uniforms.uTime.value = time * 0.0003;
       renderer.render(scene, camera);
     };
     animate();
@@ -167,6 +174,7 @@ export function ThreeScene() {
     const currentContainer = containerRef.current;
     return () => {
       cancelAnimationFrame(animationId);
+      observer.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       if (currentContainer) {

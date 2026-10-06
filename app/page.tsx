@@ -10,40 +10,10 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Salman Yousufzai | Creative Developer Portfolio",
-  description: "Explore the creative portfolio of Salman Yousufzai, a developer based in Swat, Pakistan, specializing in high-end web experiences and 3D design.",
+  description: "Salman Yousufzai is a developer and data scientist in Swat, Pakistan. A selection of websites, interfaces, and data-driven work.",
 }
 
-const marqueeItems = [
-  "Creative Development",
-  "UI/UX Design",
-  "Machine Learning",
-  "NLP",
-  "Deep Learning",
-  "Computer Vision",
-  "Data Architecture",
-  "Predictive Analytics",
-  "Big Data",
-  "Neural Networks",
-  "Model Architecture",
-  "Three.js",
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Tailwind CSS",
-  "GSAP Animations",
-  "Motion Design",
-  "Framer Motion",
-  "Vue.js",
-  "Nuxt",
-  "Svelte",
-  "Node.js",
-  "Python",
-  "WebGL",
-  "Supabase",
-  "PostgreSQL",
-  "GraphQL",
-  "REST APIs",
-]
+const marqueeItems = ["Creative development", "Design", "Data science", "Motion", "WebGL"]
 
 export default function HomePage() {
   return (

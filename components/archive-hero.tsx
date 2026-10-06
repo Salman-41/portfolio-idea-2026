@@ -15,7 +15,7 @@ interface ArchiveHeroProps {
   totalProjects: number;
 }
 
-const filters = ["All", "Web App", "E-commerce", "Creative", "3D/WebGL"];
+const filters = ["All", "Web App", "E-commerce"];
 
 /**
  * Archive Hero section component.
@@ -169,8 +169,8 @@ export function ArchiveHero({
 
         <div className="archive-hero-description max-w-2xl mx-auto mb-12">
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-medium">
-            {totalProjects} curated experiences showcasing expertise in creating
-            immersive digital products, from concept to deployment.
+            {totalProjects} projects, from financial dashboards to furniture shops.
+            Take a look at what went into each one.
           </p>
         </div>
 

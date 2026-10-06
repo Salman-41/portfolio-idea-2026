@@ -27,15 +27,14 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
 
     lenisRef.current.on("scroll", ScrollTrigger.update)
 
-    gsap.ticker.add((time) => {
-      lenisRef.current?.raf(time * 1000)
-    })
+    const tick = (time: number) => { lenisRef.current?.raf(time * 1000) }
+    gsap.ticker.add(tick)
 
     gsap.ticker.lagSmoothing(0)
 
     return () => {
       lenisRef.current?.destroy()
-      gsap.ticker.remove(lenisRef.current?.raf as gsap.TickerCallback)
+      gsap.ticker.remove(tick)
     }
   }, [])
 

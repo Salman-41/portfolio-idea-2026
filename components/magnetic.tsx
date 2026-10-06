@@ -11,13 +11,15 @@ interface MagneticProps {
 
 export function Magnetic({ children, strength = 0.3, className }: MagneticProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    const content = contentRef.current
+    if (!content || !el || window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)").matches) return
 
-    const xTo = gsap.quickTo(el, "x", { duration: 1, ease: "elastic.out(1, 0.3)" })
-    const yTo = gsap.quickTo(el, "y", { duration: 1, ease: "elastic.out(1, 0.3)" })
+    const xTo = gsap.quickTo(content, "x", { duration: 0.45, ease: "power3.out" })
+    const yTo = gsap.quickTo(content, "y", { duration: 0.45, ease: "power3.out" })
 
     const onMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e
@@ -39,12 +41,14 @@ export function Magnetic({ children, strength = 0.3, className }: MagneticProps)
     return () => {
       el.removeEventListener("mousemove", onMouseMove)
       el.removeEventListener("mouseleave", onMouseLeave)
+      gsap.killTweensOf(content)
+      gsap.set(content, { x: 0, y: 0 })
     }
   }, [strength])
 
   return (
     <div ref={ref} className={className}>
-      {children}
+      <div ref={contentRef}>{children}</div>
     </div>
   )
 }

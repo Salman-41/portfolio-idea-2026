@@ -4,60 +4,73 @@ import { useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import gsap from "gsap"
 
+const names: Record<string, string> = { "/": "Home", "/projects": "Selected work", "/about": "Behind the work", "/services": "Expertise", "/contact": "Let’s talk" }
+
 export function PageTransitionOverlay() {
   const pathname = usePathname()
-  const isFirstMount = useRef(true)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const overlay = document.getElementById("transition-overlay")
-    const bars = document.querySelectorAll(".transition-bar")
-
+    const overlay = overlayRef.current
     if (!overlay) return
-
-    // Skip animation on first mount (handled by preloader)
-    if (isFirstMount.current) {
-      isFirstMount.current = false
-      gsap.set(overlay, { display: "none" })
-      gsap.set(bars, { scaleY: 0 })
-      gsap.set("main", { opacity: 1, y: 0 })
-      return
+    const panels = overlay.querySelectorAll(".transition-panel")
+    const copy = overlay.querySelector(".transition-copy")
+    const reset = () => {
+      timelineRef.current?.kill()
+      gsap.set(overlay, { autoAlpha: 0 })
+      gsap.set(panels, { y: 0, yPercent: 100 })
+      overlay.dataset.active = "false"
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
+    const navigate = (event: Event) => {
+      const { pathname: target, navigate: push } = (event as CustomEvent<{ pathname: string; navigate: () => void }>).detail
+      if (overlay.dataset.active === "true") return
+      overlay.dataset.active = "true"
+      const title = overlay.querySelector(".transition-title")
+      if (title) title.textContent = names[target] || "Project story"
+      timelineRef.current?.kill()
+      gsap.set(overlay, { autoAlpha: 1 })
+      gsap.set(panels, { y: 0, yPercent: 100 })
+      gsap.set(copy, { opacity: 0, y: 20 })
+      timelineRef.current = gsap.timeline({ onComplete: push })
+        .to(panels, { yPercent: 0, duration: .55, stagger: .045, ease: "power4.inOut" })
+        .to(copy, { opacity: 1, y: 0, duration: .28, ease: "power2.out" }, .3)
+      // Keep navigation usable if a destination fails or is interrupted.
+      timeoutRef.current = setTimeout(reset, 6000)
+    }
+    window.addEventListener("portfolio:navigate", navigate)
+    return () => {
+      window.removeEventListener("portfolio:navigate", navigate)
+      reset()
+    }
+  }, [])
 
-    // ENTER: Bars slide out, reveal new page
-    const tl = gsap.timeline()
-    
-    tl.to(bars, {
-      scaleY: 0,
-      transformOrigin: "top",
-      duration: 0.4,
-      stagger: 0.04,
-      ease: "power3.inOut",
-    })
-    
-    tl.fromTo("main",
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
-      "-=0.25"
-    )
-    
-    tl.set(overlay, { display: "none" })
-
+  useEffect(() => {
+    const overlay = overlayRef.current
+    if (!overlay || overlay.dataset.active !== "true") return
+    timelineRef.current?.kill()
+    const panels = overlay.querySelectorAll(".transition-panel")
+    const copy = overlay.querySelector(".transition-copy")
+    timelineRef.current = gsap.timeline({ onComplete: () => {
+      gsap.set(overlay, { autoAlpha: 0 })
+      overlay.dataset.active = "false"
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    } })
+      .to(copy, { opacity: 0, y: -20, duration: .22, ease: "power2.in" }, .12)
+      .to(panels, { yPercent: -100, duration: .65, stagger: .045, ease: "power4.inOut" }, .22)
+    return () => { timelineRef.current?.kill() }
   }, [pathname])
 
   return (
-    <div
-      id="transition-overlay"
-      className="fixed inset-0 z-[9999] pointer-events-none flex"
-      style={{ display: "none" }}
-    >
-      {/* Simple horizontal bars for fast transitions */}
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className="transition-bar flex-1 h-full bg-background origin-bottom"
-          style={{ transform: "scaleY(0)" }}
-        />
-      ))}
+    <div ref={overlayRef} id="transition-overlay" className="portfolio-transition" aria-hidden="true" style={{ opacity: 0, visibility: "hidden" }}>
+      {[0, 1, 2].map(index => <div key={index} className="transition-panel" />)}
+      <div className="transition-copy">
+        <span className="transition-kicker">Salman Yousufzai / Portfolio</span>
+        <div className="transition-title">Selected work</div>
+        <div className="transition-signature"><span>Imagination engineered.</span><span>↗</span></div>
+      </div>
     </div>
   )
 }
